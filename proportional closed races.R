@@ -427,37 +427,670 @@ vot_1998_2014 <- list(vot_1998, vot_2002, vot_2006, vot_2010, vot_2014)
 save(vot_1998_2014, file = "//fs-eesp-01/EESP/Usuarios/arthur.fisch//Dropbox/LOCAL_ELECTIONS/repositorio_data/original_unzipped/vot_1998_2014.RData")
 
 
-################ Codes for nonregular elections
+################# Cleaning Candidates
 
-table(vot_1998$DESCRICAO_ELEICAO)
-table(cand_1998$DESCRICAO_ELEICAO)
+load("//fs-eesp-01/EESP/Usuarios/arthur.fisch/Dropbox/LOCAL_ELECTIONS/repositorio_data/original_unzipped/cand_2000_2016.RData")
+load("//fs-eesp-01/EESP/Usuarios/arthur.fisch/Dropbox/LOCAL_ELECTIONS/repositorio_data/original_unzipped/cand_1998_2014.RData")
 
-table(vot_2000$DESCRICAO_ELEICAO)
-table(cand_2000$DESCRICAO_ELEICAO)
+cand_1998 <- cand_1998_2014[[1]]
+cand_2000 <- cand_2000_2016[[1]]
+cand_2002 <- cand_1998_2014[[2]]
+cand_2004 <- cand_2000_2016[[2]]
+cand_2006 <- cand_1998_2014[[3]]
+cand_2008 <- cand_2000_2016[[3]]
+cand_2010 <- cand_1998_2014[[4]]
+cand_2012 <- cand_2000_2016[[4]]
+cand_2014 <- cand_1998_2014[[5]]
+cand_2016 <- cand_2000_2016[[5]]
 
-table(vot_2002$DESCRICAO_ELEICAO)
-table(cand_2002$DESCRICAO_ELEICAO)
+#1998
+cand_1998 <- mutate(cand_1998, id=rownames(cand_1998))
+problems <- cand_1998 %>% group_by(NUM_TURNO, NUMERO_CANDIDATO, CODIGO_CARGO, SIGLA_UE) %>%
+  summarise(total = n()) %>% filter(total > 1)
 
-table(vot_2004$DESCRICAO_ELEICAO)
-table(cand_2004$DESCRICAO_ELEICAO)
+casos <- cand_1998 %>% right_join(problems, by = c("NUM_TURNO", 
+                                                   "NUMERO_CANDIDATO", "CODIGO_CARGO", "SIGLA_UE"))
 
-table(vot_2006$DESCRICAO_ELEICAO)
-table(cand_2006$DESCRICAO_ELEICAO)
+#Control for repeated
+repeated_casos <- casos[duplicated(casos),]
 
-table(vot_2008$DESCRICAO_ELEICAO)
-table(cand_2008$DESCRICAO_ELEICAO)
+#But keeping only unique
+casos <- unique(casos)
 
-table(vot_2010$DESCRICAO_ELEICAO)
-table(cand_2010$DESCRICAO_ELEICAO)
+casos <- casos %>% filter(COD_SITUACAO_CANDIDATURA == 2 | 
+                            COD_SITUACAO_CANDIDATURA == 4)
 
-table(vot_2012$DESCRICAO_ELEICAO)
-table(cand_2012$DESCRICAO_ELEICAO)
+problems_caso <- casos %>% group_by(NUM_TURNO, NUMERO_CANDIDATO, CODIGO_CARGO, SIGLA_UE) %>%
+  summarise(total = n()) %>% filter(total > 1)
 
-table(vot_2014$DESCRICAO_ELEICAO)
-table(cand_2014$DESCRICAO_ELEICAO)
+wrong_ballot <- casos %>% right_join(problems_caso, by = c("NUM_TURNO", 
+                                                           "NUMERO_CANDIDATO", "CODIGO_CARGO", "SIGLA_UE"))
 
-table(vot_2016$DESCRICAO_ELEICAO)
-table(cand_2016$DESCRICAO_ELEICAO)
+#Exclude
+wrong_ballot <- wrong_ballot %>% mutate(key = paste0(SIGLA_UE, NUM_TURNO, NOME_URNA_CANDIDATO, 
+                                                     NUMERO_CANDIDATO, DESCRICAO_ELEICAO, 
+                                                     NUM_TITULO_ELEITORAL_CANDIDATO, CODIGO_CARGO, id)) 
+
+write.csv(wrong_ballot, file = paste0(dir, "cepesp_data/wrong_ballot.csv"))
+
+#WHAT TO EXCLUDE
+#cand_1998 <- cand_1998_2014[[1]]
+#cand_1998 <- mutate(cand_1998, id=rownames(cand_1998))
+problems <- cand_1998 %>% group_by(NUM_TURNO, NUMERO_CANDIDATO, CODIGO_CARGO, SIGLA_UE) %>%
+  summarise(total = n()) %>% filter(total > 1)
+
+casos <- cand_1998 %>% right_join(problems, by = c("NUM_TURNO", 
+                                                   "NUMERO_CANDIDATO", "CODIGO_CARGO", "SIGLA_UE"))
+
+
+#But keeping only unique
+casos <- unique(casos)
+casos_notvalid <- casos %>% filter(!(COD_SITUACAO_CANDIDATURA == 2 | 
+                                       COD_SITUACAO_CANDIDATURA == 4))
+casos_notvalid <- casos_notvalid %>% mutate(key = paste0(SIGLA_UE, NUM_TURNO, NOME_URNA_CANDIDATO, 
+                                                         NUMERO_CANDIDATO, DESCRICAO_ELEICAO, 
+                                                         NUM_TITULO_ELEITORAL_CANDIDATO, CODIGO_CARGO, id)) #save
+
+case_key <-  read_excel(paste0(dir, "cepesp_data/wrong_ballot1998_excl_Key.xlsx"))
+
+exclude <- c( case_key$key, casos_notvalid$key)
+
+cand_1998 <- cand_1998 %>% mutate(key = paste0(SIGLA_UE, NUM_TURNO, NOME_URNA_CANDIDATO, 
+                                               NUMERO_CANDIDATO, DESCRICAO_ELEICAO, 
+                                               NUM_TITULO_ELEITORAL_CANDIDATO, CODIGO_CARGO,id))
+
+cand_1998v2 <- cand_1998 %>% filter(!(key %in% exclude))
+cand_1998v2 <- cand_1998v2[,-ncol(cand_1998v2)]
+cand_1998v2$id<-NULL
+
+problems2 <- cand_1998v2 %>% group_by(NUM_TURNO, NUMERO_CANDIDATO, CODIGO_CARGO, SIGLA_UE) %>%
+  summarise(total = n()) %>% filter(total > 1)
+
+casos2 <- cand_1998v2 %>% right_join(problems2, by = c("NUM_TURNO", 
+                                                       "NUMERO_CANDIDATO", "CODIGO_CARGO", "SIGLA_UE"))
+repeated_casos2 <- casos2[duplicated(casos2),] #save
+
+repeated_casos2 <- repeated_casos2 %>% mutate(key = paste0(SIGLA_UE, NUM_TURNO, NOME_URNA_CANDIDATO, 
+                                                           NUMERO_CANDIDATO, DESCRICAO_ELEICAO, 
+                                                           NUM_TITULO_ELEITORAL_CANDIDATO, CODIGO_CARGO))
+
+exclude2 <- c( repeated_casos2$key)
+
+cand_1998v2 <- cand_1998v2 %>% mutate(key = paste0(SIGLA_UE, NUM_TURNO, NOME_URNA_CANDIDATO, 
+                                                   NUMERO_CANDIDATO, DESCRICAO_ELEICAO, 
+                                                   NUM_TITULO_ELEITORAL_CANDIDATO, CODIGO_CARGO))
+
+cand_1998v3 <- cand_1998v2 %>% filter(!(key %in% exclude2))
+cand_1998v3 <- cand_1998v3[,-ncol(cand_1998v3)]
+
+
+save(cand_1998v3, file = paste0(dir, "cepesp_data/cand_1998v3.Rda"))
+write.csv2(cand_1998v3, file = paste0(dir, "cepesp_data/cand_1998v3.csv"), row.names=FALSE, fileEncoding = "UTF-8")
+
+#Smell test
+temp <- cand_1998 %>% filter(key %in% exclude)
+stopifnot((nrow(cand_1998) - nrow(cand_1998v2)) == nrow(temp))
+
+#2000
+
+cand_2000v1 <- cand_2000 %>% filter(!(CODIGO_CARGO == 13 & NUM_TURNO == 2))
+
+problems <- cand_2000v1 %>% group_by(NUM_TURNO, NUMERO_CANDIDATO, CODIGO_CARGO, SIGLA_UE, 
+                                     DESCRICAO_ELEICAO) %>%
+  summarise(total = n()) %>% filter(total > 1)
+
+casos <- cand_2000v1 %>% right_join(problems, by = c("NUM_TURNO", 
+                                                     "NUMERO_CANDIDATO", "CODIGO_CARGO", "SIGLA_UE",
+                                                     "DESCRICAO_ELEICAO"))
+
+#Control for repeated
+repeated_casos <- casos[duplicated(casos),]
+
+#But keeping only unique
+casos <- unique(casos)
+
+casos <- casos %>% filter(COD_SITUACAO_CANDIDATURA == 1 |
+                            COD_SITUACAO_CANDIDATURA == 2 | 
+                            COD_SITUACAO_CANDIDATURA == 4)
+
+problems_caso <- casos %>% group_by(NUM_TURNO, NUMERO_CANDIDATO, CODIGO_CARGO, SIGLA_UE, DESCRICAO_ELEICAO) %>%
+  summarise(total = n()) %>% filter(total > 1)
+
+wrong_ballot <- casos %>% right_join(problems_caso, by = c("NUM_TURNO", 
+                                                           "NUMERO_CANDIDATO", "CODIGO_CARGO", "SIGLA_UE", 
+                                                           "DESCRICAO_ELEICAO"))
+
+#Exclude
+wrong_ballot <- wrong_ballot %>% mutate(key = paste0(SIGLA_UE, NUM_TURNO, NOME_URNA_CANDIDATO, 
+                                                     NUMERO_CANDIDATO)) 
+
+write.csv(wrong_ballot, file = paste0(dir, "cepesp_data/wrong_ballot_2000.csv"), row.names=FALSE ,sep=";", fileEncoding = "UTF-8")
+
+#2002
+problems <- cand_2002 %>% group_by(NUM_TURNO, NUMERO_CANDIDATO, CODIGO_CARGO, SIGLA_UE) %>%
+  summarise(total = n()) %>% filter(total > 1)
+
+casos <- cand_2002 %>% right_join(problems, by = c("NUM_TURNO", 
+                                                   "NUMERO_CANDIDATO", "CODIGO_CARGO", "SIGLA_UE"))
+
+#Control for repeated
+repeated_casos <- casos[duplicated(casos),]
+
+#But keeping only unique
+casos <- unique(casos)
+
+casos <- casos %>% filter(COD_SITUACAO_CANDIDATURA == 2 | 
+                            COD_SITUACAO_CANDIDATURA == 4)
+
+problems_caso <- casos %>% group_by(NUM_TURNO, NUMERO_CANDIDATO, CODIGO_CARGO, SIGLA_UE) %>%
+  summarise(total = n()) %>% filter(total > 1)
+
+#WHAT TO EXCLUDE
+cand_2002 <- cand_1998_2014[[2]]
+problems <- cand_2002 %>% group_by(NUM_TURNO, NUMERO_CANDIDATO, CODIGO_CARGO, SIGLA_UE) %>%
+  summarise(total = n()) %>% filter(total > 1)
+
+casos <- cand_2002 %>% right_join(problems, by = c("NUM_TURNO", 
+                                                   "NUMERO_CANDIDATO", "CODIGO_CARGO", "SIGLA_UE"))
+
+repeated_casos <- casos[duplicated(casos),] #save
+repeated_casos <- repeated_casos %>% mutate(key = paste0(SIGLA_UE, NUM_TURNO, NOME_URNA_CANDIDATO, 
+                                                         NUMERO_CANDIDATO, DESCRICAO_ELEICAO, 
+                                                         NUM_TITULO_ELEITORAL_CANDIDATO, CODIGO_CARGO, SEQUENCIAL_CANDIDATO)) #save
+
+#But keeping only unique
+casos <- unique(casos)
+casos_notvalid <- casos %>% filter(!(COD_SITUACAO_CANDIDATURA == 2 | 
+                                       COD_SITUACAO_CANDIDATURA == 4))
+casos_notvalid <- casos_notvalid %>% mutate(key = paste0(SIGLA_UE, NUM_TURNO, NOME_URNA_CANDIDATO, 
+                                                         NUMERO_CANDIDATO, DESCRICAO_ELEICAO, 
+                                                         NUM_TITULO_ELEITORAL_CANDIDATO, CODIGO_CARGO, SEQUENCIAL_CANDIDATO)) #save
+
+exclude <- c(repeated_casos$key, casos_notvalid$key)
+
+cand_2002 <- cand_2002 %>% mutate(key = paste0(SIGLA_UE, NUM_TURNO, NOME_URNA_CANDIDATO, 
+                                               NUMERO_CANDIDATO, DESCRICAO_ELEICAO, 
+                                               NUM_TITULO_ELEITORAL_CANDIDATO, CODIGO_CARGO, SEQUENCIAL_CANDIDATO))
+
+cand_2002v2 <- cand_2002 %>% filter(!(key %in% exclude))
+cand_2002v2 <- cand_2002v2[,-ncol(cand_2002v2)]
+
+save(cand_2002v2, file = paste0(dir, "cepesp_data/cand_2002v2.Rda"))
+write.csv2(cand_2002v2, file = paste0(dir, "cepesp_data/cand_2002v2.csv"), row.names=FALSE , fileEncoding = "UTF-8")
+
+#Smell test
+temp <- cand_2002 %>% filter(key %in% exclude)
+stopifnot((nrow(cand_2002) - nrow(cand_2002v2)) == nrow(temp))
+
+#2004
+problems <- cand_2004 %>% group_by(NUM_TURNO, NUMERO_CANDIDATO, CODIGO_CARGO, SIGLA_UE) %>%
+  summarise(total = n()) %>% filter(total > 1)
+
+casos <- cand_2004 %>% right_join(problems, by = c("NUM_TURNO", 
+                                                   "NUMERO_CANDIDATO", "CODIGO_CARGO", "SIGLA_UE"))
+
+#Control for repeated
+repeated_casos <- casos[duplicated(casos),]
+
+#But keeping only unique
+casos <- unique(casos)
+
+casos <- casos %>% filter(COD_SITUACAO_CANDIDATURA == 2 | 
+                            COD_SITUACAO_CANDIDATURA == 4)
+
+problems_caso <- casos %>% group_by(NUM_TURNO, NUMERO_CANDIDATO, CODIGO_CARGO, SIGLA_UE) %>%
+  summarise(total = n()) %>% filter(total > 1)
+
+
+#WHAT TO EXCLUDE
+cand_2004 <- cand_2000_2016[[2]]
+problems <- cand_2004 %>% group_by(NUM_TURNO, NUMERO_CANDIDATO, CODIGO_CARGO, SIGLA_UE) %>%
+  summarise(total = n()) %>% filter(total > 1)
+
+casos <- cand_2004 %>% right_join(problems, by = c("NUM_TURNO", 
+                                                   "NUMERO_CANDIDATO", "CODIGO_CARGO", "SIGLA_UE"))
+
+repeated_casos <- casos[duplicated(casos),] #save
+repeated_casos <- repeated_casos %>% mutate(key = paste0(SIGLA_UE, NUM_TURNO, NOME_URNA_CANDIDATO, 
+                                                         NUMERO_CANDIDATO, DESCRICAO_ELEICAO, 
+                                                         NUM_TITULO_ELEITORAL_CANDIDATO, CODIGO_CARGO, SEQUENCIAL_CANDIDATO)) #save
+
+#But keeping only unique
+casos <- unique(casos)
+casos_notvalid <- casos %>% filter(!(COD_SITUACAO_CANDIDATURA == 2 | 
+                                       COD_SITUACAO_CANDIDATURA == 4))
+casos_notvalid <- casos_notvalid %>% mutate(key = paste0(SIGLA_UE, NUM_TURNO, NOME_URNA_CANDIDATO, 
+                                                         NUMERO_CANDIDATO, DESCRICAO_ELEICAO, 
+                                                         NUM_TITULO_ELEITORAL_CANDIDATO, CODIGO_CARGO, SEQUENCIAL_CANDIDATO)) #save
+
+exclude <- c(repeated_casos$key, casos_notvalid$key)
+
+cand_2004 <- cand_2004 %>% mutate(key = paste0(SIGLA_UE, NUM_TURNO, NOME_URNA_CANDIDATO, 
+                                               NUMERO_CANDIDATO, DESCRICAO_ELEICAO, 
+                                               NUM_TITULO_ELEITORAL_CANDIDATO, CODIGO_CARGO, SEQUENCIAL_CANDIDATO))
+
+cand_2004v2 <- cand_2004 %>% filter(!(key %in% exclude))
+cand_2004v2 <- cand_2004v2[,-ncol(cand_2004v2)]
+
+save(cand_2004v2, file = paste0(dir, "cepesp_data/cand_2004v2.Rda"))
+write.csv2(cand_2004v2, file = paste0(dir, "cepesp_data/cand_2004v2.csv"), row.names=FALSE , fileEncoding = "UTF-8")
+
+#Smell test
+temp <- cand_2004 %>% filter(key %in% exclude)
+stopifnot((nrow(cand_2004) - nrow(cand_2004v2)) == nrow(temp))
+
+#2006
+problems <- cand_2006 %>% group_by(NUM_TURNO, NUMERO_CANDIDATO, CODIGO_CARGO, SIGLA_UE) %>%
+  summarise(total = n()) %>% filter(total > 1)
+
+casos <- cand_2006 %>% right_join(problems, by = c("NUM_TURNO", 
+                                                   "NUMERO_CANDIDATO", "CODIGO_CARGO", "SIGLA_UE"))
+
+#Control for repeated
+repeated_casos <- casos[duplicated(casos),]
+
+#But keeping only unique
+casos <- unique(casos)
+
+casos <- casos %>% filter(COD_SITUACAO_CANDIDATURA == 2 | 
+                            COD_SITUACAO_CANDIDATURA == 4 | COD_SITUACAO_CANDIDATURA == 16)
+
+problems_caso <- casos %>% group_by(NUM_TURNO, NUMERO_CANDIDATO, CODIGO_CARGO, SIGLA_UE) %>%
+  summarise(total = n()) %>% filter(total > 1)
+
+#WHAT TO EXCLUDE
+cand_2006 <- cand_1998_2014[[3]]
+problems <- cand_2006 %>% group_by(NUM_TURNO, NUMERO_CANDIDATO, CODIGO_CARGO, SIGLA_UE) %>%
+  summarise(total = n()) %>% filter(total > 1)
+
+casos <- cand_2006 %>% right_join(problems, by = c("NUM_TURNO", 
+                                                   "NUMERO_CANDIDATO", "CODIGO_CARGO", "SIGLA_UE"))
+
+repeated_casos <- casos[duplicated(casos),] #save
+repeated_casos <- repeated_casos %>% mutate(key = paste0(SIGLA_UE, NUM_TURNO, NOME_URNA_CANDIDATO, 
+                                                         NUMERO_CANDIDATO, DESCRICAO_ELEICAO, 
+                                                         NUM_TITULO_ELEITORAL_CANDIDATO, CODIGO_CARGO, SEQUENCIAL_CANDIDATO)) #save
+
+#But keeping only unique
+casos <- unique(casos)
+casos_notvalid <- casos %>% filter(!(COD_SITUACAO_CANDIDATURA == 2 | 
+                                       COD_SITUACAO_CANDIDATURA == 4 | COD_SITUACAO_CANDIDATURA == 16))
+casos_notvalid <- casos_notvalid %>% mutate(key = paste0(SIGLA_UE, NUM_TURNO, NOME_URNA_CANDIDATO, 
+                                                         NUMERO_CANDIDATO, DESCRICAO_ELEICAO, 
+                                                         NUM_TITULO_ELEITORAL_CANDIDATO, CODIGO_CARGO, SEQUENCIAL_CANDIDATO)) #save
+
+exclude <- c(repeated_casos$key, casos_notvalid$key)
+
+cand_2006 <- cand_2006 %>% mutate(key = paste0(SIGLA_UE, NUM_TURNO, NOME_URNA_CANDIDATO, 
+                                               NUMERO_CANDIDATO, DESCRICAO_ELEICAO, 
+                                               NUM_TITULO_ELEITORAL_CANDIDATO, CODIGO_CARGO, SEQUENCIAL_CANDIDATO))
+
+cand_2006v2 <- cand_2006 %>% filter(!(key %in% exclude))
+cand_2006v2 <- cand_2006v2[,-ncol(cand_2006v2)]
+
+save(cand_2006v2, file = paste0(dir, "cepesp_data/cand_2006v2.Rda"))
+write.csv2(cand_2006v2, file = paste0(dir, "cepesp_data/cand_2006v2.csv"), row.names=FALSE, fileEncoding = "UTF-8")
+
+#Smell test
+temp <- cand_2006 %>% filter(key %in% exclude)
+stopifnot((nrow(cand_2006) - nrow(cand_2006v2)) == nrow(temp))
+
+#2008
+problems <- cand_2008 %>% group_by(NUM_TURNO, NUMERO_CANDIDATO, CODIGO_CARGO, SIGLA_UE, 
+                                   DESCRICAO_ELEICAO) %>%
+  summarise(total = n()) %>% filter(total > 1)
+
+casos <- cand_2008 %>% right_join(problems, by = c("NUM_TURNO", 
+                                                   "NUMERO_CANDIDATO", "CODIGO_CARGO", "SIGLA_UE", 
+                                                   "DESCRICAO_ELEICAO"))
+
+#Control for repeated
+repeated_casos <- casos[duplicated(casos),]
+
+#But keeping only unique
+casos <- unique(casos)
+
+casos <- casos %>% filter(COD_SITUACAO_CANDIDATURA == 2 | 
+                            COD_SITUACAO_CANDIDATURA == 4 |
+                            COD_SITUACAO_CANDIDATURA == 8 |
+                            COD_SITUACAO_CANDIDATURA == 16 | 
+                            COD_SITUACAO_CANDIDATURA == 17)
+
+problems_caso <- casos %>% group_by(NUM_TURNO, NUMERO_CANDIDATO, CODIGO_CARGO, SIGLA_UE, 
+                                    DESCRICAO_ELEICAO) %>%
+  summarise(total = n()) %>% filter(total > 1)
+
+#WHAT TO EXCLUDE
+cand_2008 <- cand_2000_2016[[3]]
+problems <- cand_2008 %>% group_by(NUM_TURNO, NUMERO_CANDIDATO, CODIGO_CARGO, SIGLA_UE, 
+                                   DESCRICAO_ELEICAO) %>%
+  summarise(total = n()) %>% filter(total > 1)
+
+casos <- cand_2008 %>% right_join(problems, by = c("NUM_TURNO", 
+                                                   "NUMERO_CANDIDATO", "CODIGO_CARGO", "SIGLA_UE", 
+                                                   "DESCRICAO_ELEICAO"))
+
+repeated_casos <- casos[duplicated(casos),] #save
+repeated_casos <- repeated_casos %>% mutate(key = paste0(SIGLA_UE, NUM_TURNO, NOME_URNA_CANDIDATO, 
+                                                         NUMERO_CANDIDATO, DESCRICAO_ELEICAO, 
+                                                         NUM_TITULO_ELEITORAL_CANDIDATO, CODIGO_CARGO, SEQUENCIAL_CANDIDATO)) #save
+
+#But keeping only unique
+casos <- unique(casos)
+casos_notvalid <- casos %>% filter(!(COD_SITUACAO_CANDIDATURA == 2 | 
+                                       COD_SITUACAO_CANDIDATURA == 4 |
+                                       COD_SITUACAO_CANDIDATURA == 8 |
+                                       COD_SITUACAO_CANDIDATURA == 16 | 
+                                       COD_SITUACAO_CANDIDATURA == 17))
+
+
+casos_notvalid <- casos_notvalid %>% mutate(key = paste0(SIGLA_UE, NUM_TURNO, NOME_URNA_CANDIDATO, 
+                                                         NUMERO_CANDIDATO, DESCRICAO_ELEICAO, 
+                                                         NUM_TITULO_ELEITORAL_CANDIDATO, CODIGO_CARGO, SEQUENCIAL_CANDIDATO)) #save
+
+exclude <- c(repeated_casos$key, casos_notvalid$key)
+
+cand_2008 <- cand_2008 %>% mutate(key = paste0(SIGLA_UE, NUM_TURNO, NOME_URNA_CANDIDATO, 
+                                               NUMERO_CANDIDATO, DESCRICAO_ELEICAO, 
+                                               NUM_TITULO_ELEITORAL_CANDIDATO, CODIGO_CARGO, SEQUENCIAL_CANDIDATO))
+
+cand_2008v2 <- cand_2008 %>% filter(!(key %in% exclude))
+cand_2008v2 <- cand_2008v2[,-ncol(cand_2008v2)]
+
+save(cand_2008v2, file = paste0(dir, "cepesp_data/cand_2008v2.Rda"))
+write.csv2(cand_2008v2, file = paste0(dir, "cepesp_data/cand_2008v2.csv"), row.names=FALSE , fileEncoding = "UTF-8")
+
+#Smell test
+temp <- cand_2008 %>% filter(key %in% exclude)
+stopifnot((nrow(cand_2008) - nrow(cand_2008v2)) == nrow(temp))
+
+#2010
+problems <- cand_2010 %>% group_by(NUM_TURNO, NUMERO_CANDIDATO, CODIGO_CARGO, SIGLA_UE, 
+                                   DESCRICAO_ELEICAO) %>%
+  summarise(total = n()) %>% filter(total > 1)
+
+casos <- cand_2010 %>% right_join(problems, by = c("NUM_TURNO", 
+                                                   "NUMERO_CANDIDATO", "CODIGO_CARGO", "SIGLA_UE", 
+                                                   "DESCRICAO_ELEICAO"))
+
+#Control for repeated
+repeated_casos <- casos[duplicated(casos),]
+
+#But keeping only unique
+casos <- unique(casos)
+
+casos <- casos %>% filter(COD_SITUACAO_CANDIDATURA == 2 | 
+                            COD_SITUACAO_CANDIDATURA == 4 |
+                            COD_SITUACAO_CANDIDATURA == 16 | 
+                            COD_SITUACAO_CANDIDATURA == 17 |
+                            COD_SITUACAO_CANDIDATURA == 18)
+
+problems_caso <- casos %>% group_by(NUM_TURNO, NUMERO_CANDIDATO, CODIGO_CARGO, SIGLA_UE, 
+                                    DESCRICAO_ELEICAO) %>%
+  summarise(total = n()) %>% filter(total > 1)
+
+#WHAT TO EXCLUDE
+cand_2010 <- cand_1998_2014[[4]]
+problems <- cand_2010 %>% group_by(NUM_TURNO, NUMERO_CANDIDATO, CODIGO_CARGO, SIGLA_UE, 
+                                   DESCRICAO_ELEICAO) %>%
+  summarise(total = n()) %>% filter(total > 1)
+
+casos <- cand_2010 %>% right_join(problems, by = c("NUM_TURNO", 
+                                                   "NUMERO_CANDIDATO", "CODIGO_CARGO", "SIGLA_UE", 
+                                                   "DESCRICAO_ELEICAO"))
+
+repeated_casos <- casos[duplicated(casos),] #save
+repeated_casos <- repeated_casos %>% mutate(key = paste0(SIGLA_UE, NUM_TURNO, NOME_URNA_CANDIDATO, 
+                                                         NUMERO_CANDIDATO, DESCRICAO_ELEICAO, 
+                                                         NUM_TITULO_ELEITORAL_CANDIDATO, CODIGO_CARGO, SEQUENCIAL_CANDIDATO)) #save
+
+#But keeping only unique
+casos <- unique(casos)
+casos_notvalid <- casos %>% filter(!(COD_SITUACAO_CANDIDATURA == 2 | 
+                                       COD_SITUACAO_CANDIDATURA == 4 |
+                                       COD_SITUACAO_CANDIDATURA == 16 | 
+                                       COD_SITUACAO_CANDIDATURA == 17 |
+                                       COD_SITUACAO_CANDIDATURA == 18))
+
+casos_notvalid <- casos_notvalid %>% mutate(key = paste0(SIGLA_UE, NUM_TURNO, NOME_URNA_CANDIDATO, 
+                                                         NUMERO_CANDIDATO, DESCRICAO_ELEICAO, SEQUENCIAL_CANDIDATO,
+                                                         NUM_TITULO_ELEITORAL_CANDIDATO, CODIGO_CARGO, SEQUENCIAL_CANDIDATO)) #save
+
+exclude <- c(repeated_casos$key, casos_notvalid$key)
+
+cand_2010 <- cand_2010 %>% mutate(key = paste0(SIGLA_UE, NUM_TURNO, NOME_URNA_CANDIDATO, 
+                                               NUMERO_CANDIDATO, DESCRICAO_ELEICAO,SEQUENCIAL_CANDIDATO,
+                                               NUM_TITULO_ELEITORAL_CANDIDATO, CODIGO_CARGO, SEQUENCIAL_CANDIDATO))
+
+cand_2010v2 <- cand_2010 %>% filter(!(key %in% exclude))
+cand_2010v2 <- cand_2010v2[,-ncol(cand_2010v2)]
+
+save(cand_2010v2, file = paste0(dir, "cepesp_data/cand_2010v2.Rda"))
+write.csv2(cand_2010v2, file = paste0(dir, "cepesp_data/cand_2010v2.csv"), row.names=FALSE , fileEncoding = "UTF-8")
+
+#Smell test
+temp <- cand_2010 %>% filter(key %in% exclude)
+stopifnot((nrow(cand_2010) - nrow(cand_2010v2)) == nrow(temp))
+
+#2012
+problems <- cand_2012 %>% group_by(NUM_TURNO, NUMERO_CANDIDATO, CODIGO_CARGO, SIGLA_UE, 
+                                   DESCRICAO_ELEICAO) %>%
+  summarise(total = n()) %>% filter(total > 1)
+
+casos <- cand_2012 %>% right_join(problems, by = c("NUM_TURNO", 
+                                                   "NUMERO_CANDIDATO", "CODIGO_CARGO", "SIGLA_UE", 
+                                                   "DESCRICAO_ELEICAO"))
+
+#Control for repeated
+repeated_casos <- casos[duplicated(casos),]
+
+#But keeping only unique
+casos <- unique(casos)
+
+casos <- casos %>% filter(COD_SITUACAO_CANDIDATURA == 2 | 
+                            COD_SITUACAO_CANDIDATURA == 4 |
+                            COD_SITUACAO_CANDIDATURA == 8 |
+                            COD_SITUACAO_CANDIDATURA == 16 | 
+                            COD_SITUACAO_CANDIDATURA == 17 |
+                            COD_SITUACAO_CANDIDATURA == 18)
+
+problems_caso <- casos %>% group_by(NUM_TURNO, NUMERO_CANDIDATO, CODIGO_CARGO, SIGLA_UE, 
+                                    DESCRICAO_ELEICAO) %>%
+  summarise(total = n()) %>% filter(total > 1)
+
+#WHAT TO EXCLUDE
+cand_2012 <- cand_2000_2016[[4]]
+problems <- cand_2012 %>% group_by(NUM_TURNO, NUMERO_CANDIDATO, CODIGO_CARGO, SIGLA_UE, 
+                                   DESCRICAO_ELEICAO) %>%
+  summarise(total = n()) %>% filter(total > 1)
+
+casos <- cand_2012 %>% right_join(problems, by = c("NUM_TURNO", 
+                                                   "NUMERO_CANDIDATO", "CODIGO_CARGO", "SIGLA_UE", 
+                                                   "DESCRICAO_ELEICAO"))
+
+repeated_casos <- casos[duplicated(casos),] #save
+repeated_casos <- repeated_casos %>% mutate(key = paste0(SIGLA_UE, NUM_TURNO, NOME_URNA_CANDIDATO, 
+                                                         NUMERO_CANDIDATO, DESCRICAO_ELEICAO,
+                                                         NUM_TITULO_ELEITORAL_CANDIDATO, CODIGO_CARGO, SEQUENCIAL_CANDIDATO)) #save
+
+#But keeping only unique
+casos <- unique(casos)
+casos_notvalid <- casos %>% filter(!(COD_SITUACAO_CANDIDATURA == 2 | 
+                                       COD_SITUACAO_CANDIDATURA == 4 |
+                                       COD_SITUACAO_CANDIDATURA == 8 |
+                                       COD_SITUACAO_CANDIDATURA == 16 | 
+                                       COD_SITUACAO_CANDIDATURA == 17 |
+                                       COD_SITUACAO_CANDIDATURA == 18))
+
+casos_notvalid <- casos_notvalid %>% mutate(key = paste0(SIGLA_UE, NUM_TURNO, NOME_URNA_CANDIDATO, 
+                                                         NUMERO_CANDIDATO, DESCRICAO_ELEICAO, 
+                                                         NUM_TITULO_ELEITORAL_CANDIDATO, CODIGO_CARGO, SEQUENCIAL_CANDIDATO)) #save
+
+exclude <- c(repeated_casos$key, casos_notvalid$key)
+
+cand_2012 <- cand_2012 %>% mutate(key = paste0(SIGLA_UE, NUM_TURNO, NOME_URNA_CANDIDATO, 
+                                               NUMERO_CANDIDATO, DESCRICAO_ELEICAO, 
+                                               NUM_TITULO_ELEITORAL_CANDIDATO, CODIGO_CARGO, SEQUENCIAL_CANDIDATO))
+
+cand_2012v2 <- cand_2012 %>% filter(!(key %in% exclude))
+cand_2012v2 <- cand_2012v2[,-ncol(cand_2012v2)]
+
+save(cand_2012v2, file = paste0(dir, "cepesp_data/cand_2012v2.Rda"))
+write.csv2(cand_2012v2, file = paste0(dir, "cepesp_data/cand_2012v2.csv"), row.names=FALSE , fileEncoding = "UTF-8")
+
+#Smell test
+temp <- cand_2012 %>% filter(key %in% exclude)
+stopifnot((nrow(cand_2012) - nrow(cand_2012v2)) == nrow(temp))
+
+#2014
+problems <- cand_2014 %>% group_by(NUM_TURNO, NUMERO_CANDIDATO, CODIGO_CARGO, SIGLA_UE, 
+                                   DESCRICAO_ELEICAO) %>%
+  summarise(total = n()) %>% filter(total > 1)
+
+casos <- cand_2014 %>% right_join(problems, by = c("NUM_TURNO", 
+                                                   "NUMERO_CANDIDATO", "CODIGO_CARGO", "SIGLA_UE", 
+                                                   "DESCRICAO_ELEICAO"))
+
+#Control for repeated
+repeated_casos <- casos[duplicated(casos),]
+
+#But keeping only unique
+casos <- unique(casos)
+
+casos <- casos %>% filter(COD_SITUACAO_CANDIDATURA == 2 | 
+                            COD_SITUACAO_CANDIDATURA == 4 |
+                            COD_SITUACAO_CANDIDATURA == 16 | 
+                            COD_SITUACAO_CANDIDATURA == 17)
+
+problems_caso <- casos %>% group_by(NUM_TURNO, NUMERO_CANDIDATO, CODIGO_CARGO, SIGLA_UE, 
+                                    DESCRICAO_ELEICAO) %>%
+  summarise(total = n()) %>% filter(total > 1)
+
+#WHAT TO EXCLUDE
+cand_2014 <- cand_1998_2014[[5]]
+problems <- cand_2014 %>% group_by(NUM_TURNO, NUMERO_CANDIDATO, CODIGO_CARGO, SIGLA_UE, 
+                                   DESCRICAO_ELEICAO) %>%
+  summarise(total = n()) %>% filter(total > 1)
+
+casos <- cand_2014 %>% right_join(problems, by = c("NUM_TURNO", 
+                                                   "NUMERO_CANDIDATO", "CODIGO_CARGO", "SIGLA_UE", 
+                                                   "DESCRICAO_ELEICAO"))
+
+repeated_casos <- casos[duplicated(casos),] #save
+repeated_casos <- repeated_casos %>% mutate(key = paste0(SIGLA_UE, NUM_TURNO, NOME_URNA_CANDIDATO, 
+                                                         NUMERO_CANDIDATO, DESCRICAO_ELEICAO, 
+                                                         NUM_TITULO_ELEITORAL_CANDIDATO, CODIGO_CARGO, SEQUENCIAL_CANDIDATO)) #save
+
+#But keeping only unique
+casos <- unique(casos)
+casos_notvalid <- casos %>% filter(!(COD_SITUACAO_CANDIDATURA == 2 | 
+                                       COD_SITUACAO_CANDIDATURA == 4 |
+                                       COD_SITUACAO_CANDIDATURA == 16 | 
+                                       COD_SITUACAO_CANDIDATURA == 17))
+
+casos_notvalid <- casos_notvalid %>% mutate(key = paste0(SIGLA_UE, NUM_TURNO, NOME_URNA_CANDIDATO, 
+                                                         NUMERO_CANDIDATO, DESCRICAO_ELEICAO, 
+                                                         NUM_TITULO_ELEITORAL_CANDIDATO, CODIGO_CARGO, SEQUENCIAL_CANDIDATO)) #save
+
+exclude <- c(repeated_casos$key, casos_notvalid$key)
+
+cand_2014 <- cand_2014 %>% mutate(key = paste0(SIGLA_UE, NUM_TURNO, NOME_URNA_CANDIDATO, 
+                                               NUMERO_CANDIDATO, DESCRICAO_ELEICAO, 
+                                               NUM_TITULO_ELEITORAL_CANDIDATO, CODIGO_CARGO, SEQUENCIAL_CANDIDATO))
+
+cand_2014v2 <- cand_2014 %>% filter(!(key %in% exclude))
+cand_2014v2 <- cand_2014v2[,-ncol(cand_2014v2)]
+
+save(cand_2014v2, file = paste0(dir, "cepesp_data/cand_2014v2.Rda"))
+write.csv2(cand_2014v2, file = paste0(dir, "cepesp_data/cand_2014v2.csv"), row.names=FALSE , fileEncoding = "UTF-8")
+
+#Smell test
+temp <- cand_2014 %>% filter(key %in% exclude)
+stopifnot((nrow(cand_2014) - nrow(cand_2014v2)) == nrow(temp))
+
+#2016
+problems <- cand_2016 %>% group_by(NUM_TURNO, NUMERO_CANDIDATO, CODIGO_CARGO, SIGLA_UE, 
+                                   DESCRICAO_ELEICAO) %>%
+  summarise(total = n()) %>% filter(total > 1)
+
+casos <- cand_2016 %>% right_join(problems, by = c("NUM_TURNO", 
+                                                   "NUMERO_CANDIDATO", "CODIGO_CARGO", "SIGLA_UE", 
+                                                   "DESCRICAO_ELEICAO"))
+
+#Control for repeated
+repeated_casos <- casos[duplicated(casos),]
+
+#But keeping only unique
+casos <- unique(casos)
+
+casos <- casos %>% filter(COD_SITUACAO_CANDIDATURA == 2 | 
+                            COD_SITUACAO_CANDIDATURA == 4 |
+                            COD_SITUACAO_CANDIDATURA == 8 |
+                            COD_SITUACAO_CANDIDATURA == 16 | 
+                            COD_SITUACAO_CANDIDATURA == 17 |
+                            COD_SITUACAO_CANDIDATURA == 18 |
+                            COD_SITUACAO_CANDIDATURA == 19)
+
+problems_caso <- casos %>% group_by(NUM_TURNO, NUMERO_CANDIDATO, CODIGO_CARGO, SIGLA_UE, 
+                                    DESCRICAO_ELEICAO) %>%
+  summarise(total = n()) %>% filter(total > 1)
+
+#WHAT TO EXCLUDE
+cand_2016 <- cand_2000_2016[[5]]
+problems <- cand_2016 %>% group_by(NUM_TURNO, NUMERO_CANDIDATO, CODIGO_CARGO, SIGLA_UE, 
+                                   DESCRICAO_ELEICAO) %>%
+  summarise(total = n()) %>% filter(total > 1)
+
+casos <- cand_2016 %>% right_join(problems, by = c("NUM_TURNO", 
+                                                   "NUMERO_CANDIDATO", "CODIGO_CARGO", "SIGLA_UE", 
+                                                   "DESCRICAO_ELEICAO"))
+
+repeated_casos <- casos[duplicated(casos),] #save
+repeated_casos <- repeated_casos %>% mutate(key = paste0(SIGLA_UE, NUM_TURNO, NOME_URNA_CANDIDATO, 
+                                                         NUMERO_CANDIDATO, DESCRICAO_ELEICAO, 
+                                                         NUM_TITULO_ELEITORAL_CANDIDATO, CODIGO_CARGO, SEQUENCIAL_CANDIDATO)) #save
+
+#But keeping only unique
+casos <- unique(casos)
+casos_notvalid <- casos %>% filter(!(COD_SITUACAO_CANDIDATURA == 2 | 
+                                       COD_SITUACAO_CANDIDATURA == 4 |
+                                       COD_SITUACAO_CANDIDATURA == 8 |
+                                       COD_SITUACAO_CANDIDATURA == 16 | 
+                                       COD_SITUACAO_CANDIDATURA == 17 |
+                                       COD_SITUACAO_CANDIDATURA == 18 |
+                                       COD_SITUACAO_CANDIDATURA == 19))
+
+casos_notvalid <- casos_notvalid %>% mutate(key = paste0(SIGLA_UE, NUM_TURNO, NOME_URNA_CANDIDATO, 
+                                                         NUMERO_CANDIDATO, DESCRICAO_ELEICAO, 
+                                                         NUM_TITULO_ELEITORAL_CANDIDATO, CODIGO_CARGO, SEQUENCIAL_CANDIDATO)) #save
+
+exclude <- c(repeated_casos$key, casos_notvalid$key)
+
+cand_2016 <- cand_2016 %>% mutate(key = paste0(SIGLA_UE, NUM_TURNO, NOME_URNA_CANDIDATO, 
+                                               NUMERO_CANDIDATO, DESCRICAO_ELEICAO, 
+                                               NUM_TITULO_ELEITORAL_CANDIDATO, CODIGO_CARGO, SEQUENCIAL_CANDIDATO))
+
+cand_2016v2 <- cand_2016 %>% filter(!(key %in% exclude))
+cand_2016v2 <- cand_2016v2[,-ncol(cand_2016v2)]
+
+save(cand_2016v2, file = paste0(dir, "cepesp_data/cand_2016v2.Rda"))
+write.csv2(cand_2016v2, file = paste0(dir, "cepesp_data/cand_2016v2.csv"), row.names=FALSE, fileEncoding = "UTF-8")
+
+#Smell test
+temp <- cand_2016 %>% filter(key %in% exclude)
+stopifnot((nrow(cand_2016) - nrow(cand_2016v2)) == nrow(temp))
+
+
+#consolidating
+
+cand_2000_2016v2 <- list(cand_2000, cand_2004v2, cand_2008v2, cand_2012v2, cand_2016v2)
+save(cand_2000_2016v2, file = "//fs-eesp-01/EESP/Usuarios/arthur.fisch//Dropbox/LOCAL_ELECTIONS/repositorio_data/original_unzipped/cand_2000_2016v2.RData")
+
+cand_1998_2014v2 <- list(cand_1998v3, cand_2002v2, cand_2006v2, cand_2010v2, cand_2014v2)
+save(cand_1998_2014v2, file = "//fs-eesp-01/EESP/Usuarios/arthur.fisch//Dropbox/LOCAL_ELECTIONS/repositorio_data/original_unzipped/cand_1998_2014v2.RData")
+
+
+
 
 ##########################################
 ########## MERGING #######################
@@ -467,9 +1100,11 @@ table(cand_2016$DESCRICAO_ELEICAO)
 
 ################# GENERAL ELECTIONS ###################
 
+rm(list=ls())
+
 
 load("//fs-eesp-01/EESP/Usuarios/arthur.fisch/Dropbox/LOCAL_ELECTIONS/repositorio_data/original_unzipped/vot_1998_2014.RData")
-load("//fs-eesp-01/EESP/Usuarios/arthur.fisch/Dropbox/LOCAL_ELECTIONS/repositorio_data/original_unzipped/cand_1998_2014.RData")
+load("//fs-eesp-01/EESP/Usuarios/arthur.fisch/Dropbox/LOCAL_ELECTIONS/repositorio_data/original_unzipped/cand_1998_2014v2.RData")
 
 #######Elections 2002 ###########
 
@@ -477,7 +1112,7 @@ load("//fs-eesp-01/EESP/Usuarios/arthur.fisch/Dropbox/LOCAL_ELECTIONS/repositori
 library(dplyr)
 
 vot_2002 <- vot_1998_2014[[2]]
-cand_2002 <- cand_1998_2014[[2]]
+cand_2002 <- cand_1998_2014v2[[2]]
 
 vot_2002<- vot_2002 %>% rename(SEQUENCIAL_CANDIDATO = SQ_CANDIDATO)
 
@@ -625,7 +1260,7 @@ distrital_dep_2002 <- distrital_dep_2002 %>%
 library(dplyr)
 
 vot_2006 <- vot_1998_2014[[3]]
-cand_2006 <- cand_1998_2014[[3]]
+cand_2006 <- cand_1998_2014v2[[3]]
 
 vot_2006<- vot_2006 %>% rename(SEQUENCIAL_CANDIDATO = SQ_CANDIDATO)
 
@@ -773,9 +1408,9 @@ distrital_dep_2006 <- distrital_dep_2006 %>%
 library(dplyr)
 
 vot_2010 <- vot_1998_2014[[4]]
-cand_2010 <- cand_1998_2014[[4]]
+cand_2010 <- cand_1998_2014v2[[4]]
 
-vot_2014<- vot_2014 %>% rename(SEQUENCIAL_CANDIDATO = SQ_CANDIDATO)
+vot_2010<- vot_2010 %>% rename(SEQUENCIAL_CANDIDATO = SQ_CANDIDATO)
 
 
 #consolidating votes per candidate
@@ -921,7 +1556,7 @@ distrital_dep_2010 <- distrital_dep_2010 %>%
 library(dplyr)
 
 vot_2014 <- vot_1998_2014[[5]]
-cand_2014 <- cand_1998_2014[[5]]
+cand_2014 <- cand_1998_2014v2[[5]]
 
 vot_2014<- vot_2014 %>% rename(SEQUENCIAL_CANDIDATO = SQ_CANDIDATO)
 
@@ -1067,7 +1702,7 @@ distrital_dep_2014 <- distrital_dep_2014 %>%
 
 
 load("//fs-eesp-01/EESP/Usuarios/arthur.fisch/Dropbox/LOCAL_ELECTIONS/repositorio_data/original_unzipped/vot_2000_2016.RData")
-load("//fs-eesp-01/EESP/Usuarios/arthur.fisch/Dropbox/LOCAL_ELECTIONS/repositorio_data/original_unzipped/cand_2000_2016.RData")
+load("//fs-eesp-01/EESP/Usuarios/arthur.fisch/Dropbox/LOCAL_ELECTIONS/repositorio_data/original_unzipped/cand_2000_2016v2.RData")
 
 #######Elections 2004 ###########
 
@@ -1075,7 +1710,7 @@ load("//fs-eesp-01/EESP/Usuarios/arthur.fisch/Dropbox/LOCAL_ELECTIONS/repositori
 library(dplyr)
 
 vot_2004 <- vot_2000_2016[[2]]
-cand_2004 <- cand_2000_2016[[2]]
+cand_2004 <- cand_2000_2016v2[[2]]
 
 vot_2004<- vot_2004 %>% rename(SEQUENCIAL_CANDIDATO = SQ_CANDIDATO)
 
@@ -1149,7 +1784,7 @@ ver_2004 <- ver_2004 %>%
 library(dplyr)
 
 vot_2008 <- vot_2000_2016[[3]]
-cand_2008 <- cand_2000_2016[[3]]
+cand_2008 <- cand_2000_2016v2[[3]]
 
 vot_2008<- vot_2008 %>% rename(SEQUENCIAL_CANDIDATO = SQ_CANDIDATO)
 
@@ -1224,7 +1859,7 @@ ver_2008 <- ver_2008 %>%
 library(dplyr)
 
 vot_2012 <- vot_2000_2016[[4]]
-cand_2012 <- cand_2000_2016[[4]]
+cand_2012 <- cand_2000_2016v2[[4]]
 
 vot_2012<- vot_2012 %>% rename(SEQUENCIAL_CANDIDATO = SQ_CANDIDATO)
 
@@ -1298,7 +1933,7 @@ ver_2012 <- ver_2012 %>%
 library(dplyr)
 
 vot_2016 <- vot_2000_2016[[5]]
-cand_2016 <- cand_2000_2016[[5]]
+cand_2016 <- cand_2000_2016v2[[5]]
 
 vot_2016<- vot_2016 %>% rename(SEQUENCIAL_CANDIDATO = SQ_CANDIDATO)
 
@@ -1365,3 +2000,253 @@ ver_2016 <- ver_2016 %>%
   arrange (idleg2, desc(VOTOS)) %>%
   group_by(idleg2) %>% 
   mutate(flag = ifelse( (rank(c(idleg2), ties.method = "last")==1 & resultado2=="Eleito"),1,0))
+
+
+#write.csv(ver_2016, "ver_2016.csv")
+
+######################################## 
+
+distrital_dep_2002_2014 <- list(distrital_dep_2002, distrital_dep_2006, distrital_dep_2010, distrital_dep_2014)
+save(distrital_dep_2002_2014, file = "//fs-eesp-01/EESP/Usuarios/arthur.fisch//Dropbox/LOCAL_ELECTIONS/repositorio_data/original_unzipped/distrital_dep_2002_2014.RData")
+
+state_dep_2002_2014 <- list(state_dep_2002, state_dep_2006, state_dep_2010, state_dep_2014)
+save(state_dep_2002_2014, file = "//fs-eesp-01/EESP/Usuarios/arthur.fisch//Dropbox/LOCAL_ELECTIONS/repositorio_data/original_unzipped/state_dep_2002_2014.RData")
+
+fed_dep_2002_2014 <- list(fed_dep_2002, fed_dep_2006, fed_dep_2010, fed_dep_2014)
+save(fed_dep_2002_2014, file = "//fs-eesp-01/EESP/Usuarios/arthur.fisch//Dropbox/LOCAL_ELECTIONS/repositorio_data/original_unzipped/fed_dep_2002_2014.RData")
+
+ver_2004_2016 <- list(ver_2004, ver_2008, ver_2012, ver_2016)
+save(ver_2004_2016, file = "//fs-eesp-01/EESP/Usuarios/arthur.fisch//Dropbox/LOCAL_ELECTIONS/repositorio_data/original_unzipped/ver_2004_2016.RData")
+
+
+########################################
+
+rm(list=ls())
+
+load("//fs-eesp-01/EESP/Usuarios/arthur.fisch//Dropbox/LOCAL_ELECTIONS/repositorio_data/original_unzipped/distrital_dep_2002_2014.RData")
+load("//fs-eesp-01/EESP/Usuarios/arthur.fisch//Dropbox/LOCAL_ELECTIONS/repositorio_data/original_unzipped/state_dep_2002_2014.RData")
+load("//fs-eesp-01/EESP/Usuarios/arthur.fisch//Dropbox/LOCAL_ELECTIONS/repositorio_data/original_unzipped/fed_dep_2002_2014.RData")
+load("//fs-eesp-01/EESP/Usuarios/arthur.fisch//Dropbox/LOCAL_ELECTIONS/repositorio_data/original_unzipped/ver_2004_2016.RData")
+
+#######################################
+
+#fed dep
+
+fed_dep_2002 <- fed_dep_2002_2014[[1]]
+fed_dep_2006 <- fed_dep_2002_2014[[2]]
+fed_dep_2010 <- fed_dep_2002_2014[[3]]
+fed_dep_2014 <- fed_dep_2002_2014[[4]]
+
+
+#state dep
+
+state_dep_2002 <- state_dep_2002_2014[[1]]
+state_dep_2006 <- state_dep_2002_2014[[2]]
+state_dep_2010 <- state_dep_2002_2014[[3]]
+state_dep_2014 <- state_dep_2002_2014[[4]]
+
+#distrital dep
+
+distrital_dep_2002 <- distrital_dep_2002_2014[[1]]
+distrital_dep_2006 <- distrital_dep_2002_2014[[2]]
+distrital_dep_2010 <- distrital_dep_2002_2014[[3]]
+distrital_dep_2014 <- distrital_dep_2002_2014[[4]]
+
+# vereadores
+
+ver_2004 <- ver_2004_2016[[1]]
+ver_2008 <- ver_2004_2016[[2]]
+ver_2012 <- ver_2004_2016[[3]]
+ver_2016 <- ver_2004_2016[[4]]
+
+##### function to calculate threshold
+
+# Porcentagem dos ultimos eleitos
+
+threshold_simples <- function(data,y){
+  
+  #ultimo eleito
+  
+  data_ult_ele <- data %>%
+    filter(flag==1)
+  
+  #primeiro suplente
+  data_pri_supl <-data%>%
+    filter(prim_supl==1)
+  
+  ## só colunas que importam
+  
+  votos_ult_ele <- data_ult_ele%>%
+    select(idleg, VOTOS)
+  
+  votos_pri_supl <- data_pri_supl%>%
+    select(idleg, VOTOS)
+  
+  ## merging
+  
+  votos_thresh <- merge(x=votos_ult_ele, y=votos_pri_supl, by="idleg")
+ 
+  ## calculating threshold
+  
+  votos_thresh$threshold<- votos_thresh$VOTOS.x * (1-y)
+  
+  ### eliminating unnecessary columns
+  
+  votos_thresh<- votos_thresh%>%
+    select(idleg, threshold)
+  
+  ### bringing back the threshold
+  
+  data_final <- merge(x=data, y=votos_thresh, by="idleg")
+  
+  ### cutting the observations that are not in the threshold
+  
+  data_final_supl<-data_final%>%
+    filter( !(resultado2=="Eleito") & VOTOS>threshold)
+  
+  data_final_ult<-data_final%>%
+    filter(flag==1)
+  
+  data_final2<-rbind(data_final_ult,data_final_supl)
+  
+  data_final2<-data_final2%>%
+    arrange(desc(idleg, VOTOS))
+  
+  ### resultados cortados
+  return(data_final2) 
+}
+
+
+### simple tests
+x <- threshold_simples(data=distrital_dep_2014, y=1)
+
+#teste<-distrital_dep_2014%>%
+#  filter(!(resultado2=="Não eleito"))
+
+
+#teste2<-distrital_dep_2014%>%
+#  filter((resultado2=="Eleito") & !(flag==1))
+
+############ 
+
+threshold_media <- function(data,y){
+  
+  #ultimo eleito
+  
+  data_ult_ele <- data %>%
+    filter(flag==1)
+  
+  #primeiro suplente
+  data_pri_supl <-data%>%
+    filter(prim_supl==1)
+  
+  ## só colunas que importam
+  
+  votos_ult_ele <- data_ult_ele%>%
+    select(idleg, VOTOS)
+  
+  votos_pri_supl <- data_pri_supl%>%
+    select(idleg, VOTOS)
+  
+  ## merging
+  
+  votos_thresh <- merge(x=votos_ult_ele, y=votos_pri_supl, by="idleg")
+  
+  ## calculating threshold
+  
+  votos_thresh$threshold<- ((votos_thresh$VOTOS.x+votos_thresh$VOTOS.y)/2)
+  
+  ### eliminating unnecessary columns
+  
+  votos_thresh<- votos_thresh%>%
+    select(idleg, threshold)
+  
+  ### bringing back the threshold
+  
+  data_final <- merge(x=data, y=votos_thresh, by="idleg")
+  
+  data_final$distthresh <-(data_final$VOTOS/data_final$threshold)
+  
+  ### cutting the observations that are not in the threshold
+  
+  data_final_nele<-data_final%>%
+    filter( !(resultado2=="Eleito") & distthresh>(1-y))
+  
+  data_final_ele<-data_final%>%
+    filter( (resultado2=="Eleito") & distthresh<(1+y))
+  
+  data_final2<-rbind(data_final_ele,data_final_nele)
+  
+  data_final2<-data_final2%>%
+    arrange(desc(idleg, VOTOS))
+  
+  ### resultados cortados
+  return(data_final2) 
+}
+
+#teste
+x <- threshold_media(data=distrital_dep_2014, y=0.15)
+x2 <- threshold_simples(data=distrital_dep_2014, y=0.15)
+
+
+################
+# funcao soma
+
+threshold_soma <- function(data,y){
+  
+  #ultimo eleito
+  
+  data_ult_ele <- data %>%
+    filter(flag==1)
+  
+  #primeiro suplente
+  data_pri_supl <-data%>%
+    filter(prim_supl==1)
+  
+  ## só colunas que importam
+  
+  votos_ult_ele <- data_ult_ele%>%
+    select(idleg, VOTOS)
+  
+  votos_pri_supl <- data_pri_supl%>%
+    select(idleg, VOTOS)
+  
+  ## merging
+  
+  votos_thresh <- merge(x=votos_ult_ele, y=votos_pri_supl, by="idleg")
+  
+  ## calculating threshold
+  
+  votos_thresh$threshold<- ((votos_thresh$VOTOS.x+votos_thresh$VOTOS.y))
+  
+  ### eliminating unnecessary columns
+  
+  votos_thresh<- votos_thresh%>%
+    select(idleg, threshold)
+  
+  ### bringing back the threshold
+  
+  data_final <- merge(x=data, y=votos_thresh, by="idleg")
+  
+  data_final$distthresh <- (data_final$VOTOS/data_final$threshold)
+  
+  ### cutting the observations that are not in the threshold
+  
+  data_final_nele<-data_final%>%
+    filter( !(resultado2=="Eleito") & (distthresh/0.5)>(1-y))
+  
+  data_final_ele<-data_final%>%
+    filter( (resultado2=="Eleito") & (distthresh/0.5)<(1+y))
+  
+  data_final2<-rbind(data_final_ele,data_final_nele)
+  
+  data_final2<-data_final2%>%
+    arrange(desc(idleg, VOTOS))
+  
+  ### resultados cortados
+  return(data_final2) 
+}
+
+x <- threshold_media(data=distrital_dep_2014, y=0.15)
+x2 <- threshold_simples(data=distrital_dep_2014, y=0.15)
+x3 <- threshold_soma(data=distrital_dep_2014, y=0.15)
