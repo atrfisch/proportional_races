@@ -1141,10 +1141,6 @@ problems <- cand_2002v2 %>% group_by(NUM_TURNO, NUMERO_CANDIDATO, CODIGO_CARGO, 
 casos <- cand_2002v2 %>% right_join(problems, by = c("NUM_TURNO", 
                                                    "NUMERO_CANDIDATO", "CODIGO_CARGO", "SIGLA_UE"))
 
-######
-###### necessidade de filtrar pelos candidatos repeditos
-######
-
 #### FEDERAL DEPUTY ####
 
 #filter to only Federal representatives
@@ -1179,6 +1175,15 @@ fed_dep_2002 <- fed_dep_2002 %>%
   arrange (idleg2, desc(VOTOS)) %>%
   group_by(idleg2) %>% 
   mutate(flag = ifelse( (rank(c(idleg2), ties.method = "last")==1 & resultado2=="Eleito"),1,0))
+
+fed_dep_2002<-fed_dep_2002%>%
+  dplyr::select(DATA_GERACAO, HORA_GERACAO, ANO_ELEICAO.x, NUM_TURNO, DESCRICAO_CARGO.x, SIGLA_UF, SIGLA_UE, DESCRICAO_UE, 
+         CODIGO_CARGO, DESCRICAO_CARGO.x, NOME_CANDIDATO.x, SEQUENCIAL_CANDIDATO, NUMERO_CANDIDATO, CPF_CANDIDATO, 
+         NOME_URNA_CANDIDATO.x, COD_SITUACAO_CANDIDATURA, DES_SITUACAO_CANDIDATURA, NUMERO_PARTIDO, SIGLA_PARTIDO.x,
+         NOME_PARTIDO,CODIGO_LEGENDA, SIGLA_LEGENDA, COMPOSICAO_LEGENDA, NOME_COLIGACAO, CODIGO_OCUPACAO, DESCRICAO_OCUPACAO,
+         DATA_NASCIMENTO, NUM_TITULO_ELEITORAL_CANDIDATO, IDADE_DATA_ELEICAO, CODIGO_SEXO, COD_GRAU_INSTRUCAO, CODIGO_ESTADO_CIVIL,
+         DESCRICAO_ESTADO_CIVIL, CODIGO_NACIONALIDADE, DESCRICAO_NACIONALIDADE, SIGLA_UF_NASCIMENTO, CODIGO_MUNICIPIO_NASCIMENTO,
+         NOME_MUNICIPIO_NASCIMENTO, DESPESA_MAX_CAMPANHA, COD_SIT_TOT_TURNO, DESC_SIT_TOT_TURNO,VOTOS,sq_legenda2,idleg, idleg2, rank, rank2, resultado2, prim_supl, flag)
 
 
 #### STATE DEPUTY ####
@@ -1216,7 +1221,17 @@ state_dep_2002 <- state_dep_2002 %>%
   group_by(idleg2) %>% 
   mutate(flag = ifelse( (rank(c(idleg2), ties.method = "last")==1 & resultado2=="Eleito"),1,0))
 
+state_dep_2002<-state_dep_2002%>%
+  dplyr::select(DATA_GERACAO, HORA_GERACAO, ANO_ELEICAO.x, NUM_TURNO, DESCRICAO_CARGO.x, SIGLA_UF, SIGLA_UE, DESCRICAO_UE, 
+                CODIGO_CARGO, DESCRICAO_CARGO.x, NOME_CANDIDATO.x, SEQUENCIAL_CANDIDATO, NUMERO_CANDIDATO, CPF_CANDIDATO, 
+                NOME_URNA_CANDIDATO.x, COD_SITUACAO_CANDIDATURA, DES_SITUACAO_CANDIDATURA, NUMERO_PARTIDO, SIGLA_PARTIDO.x,
+                NOME_PARTIDO,CODIGO_LEGENDA, SIGLA_LEGENDA, COMPOSICAO_LEGENDA, NOME_COLIGACAO, CODIGO_OCUPACAO, DESCRICAO_OCUPACAO,
+                DATA_NASCIMENTO, NUM_TITULO_ELEITORAL_CANDIDATO, IDADE_DATA_ELEICAO, CODIGO_SEXO, COD_GRAU_INSTRUCAO, CODIGO_ESTADO_CIVIL,
+                DESCRICAO_ESTADO_CIVIL, CODIGO_NACIONALIDADE, DESCRICAO_NACIONALIDADE, SIGLA_UF_NASCIMENTO, CODIGO_MUNICIPIO_NASCIMENTO,
+                NOME_MUNICIPIO_NASCIMENTO, DESPESA_MAX_CAMPANHA, COD_SIT_TOT_TURNO, DESC_SIT_TOT_TURNO,VOTOS,sq_legenda2,idleg, idleg2, rank, rank2, resultado2, prim_supl, flag)
 
+
+ 
 
 #### DISTRITAL DEPUTY ####
 
@@ -1254,6 +1269,18 @@ distrital_dep_2002 <- distrital_dep_2002 %>%
   mutate(flag = ifelse( (rank(c(idleg2), ties.method = "last")==1 & resultado2=="Eleito"),1,0))
 
 
+distrital_dep_2002<-distrital_dep_2002%>%
+  dplyr::select(DATA_GERACAO, HORA_GERACAO, ANO_ELEICAO.x, NUM_TURNO, DESCRICAO_CARGO.x, SIGLA_UF, SIGLA_UE, DESCRICAO_UE, 
+                CODIGO_CARGO, DESCRICAO_CARGO.x, NOME_CANDIDATO.x, SEQUENCIAL_CANDIDATO, NUMERO_CANDIDATO, CPF_CANDIDATO, 
+                NOME_URNA_CANDIDATO.x, COD_SITUACAO_CANDIDATURA, DES_SITUACAO_CANDIDATURA, NUMERO_PARTIDO, SIGLA_PARTIDO.x,
+                NOME_PARTIDO,CODIGO_LEGENDA, SIGLA_LEGENDA, COMPOSICAO_LEGENDA, NOME_COLIGACAO, CODIGO_OCUPACAO, DESCRICAO_OCUPACAO,
+                DATA_NASCIMENTO, NUM_TITULO_ELEITORAL_CANDIDATO, IDADE_DATA_ELEICAO, CODIGO_SEXO, COD_GRAU_INSTRUCAO, CODIGO_ESTADO_CIVIL,
+                DESCRICAO_ESTADO_CIVIL, CODIGO_NACIONALIDADE, DESCRICAO_NACIONALIDADE, SIGLA_UF_NASCIMENTO, CODIGO_MUNICIPIO_NASCIMENTO,
+                NOME_MUNICIPIO_NASCIMENTO, DESPESA_MAX_CAMPANHA, COD_SIT_TOT_TURNO, DESC_SIT_TOT_TURNO,VOTOS,sq_legenda2,idleg, idleg2, rank, rank2, resultado2, prim_supl, flag)
+
+
+
+
 #######Elections 2006 ###########
 
 
@@ -1289,9 +1316,6 @@ problems <- cand_2006v2 %>% group_by(NUM_TURNO, NUMERO_CANDIDATO, CODIGO_CARGO, 
 casos <- cand_2006v2 %>% right_join(problems, by = c("NUM_TURNO", 
                                                      "NUMERO_CANDIDATO", "CODIGO_CARGO", "SIGLA_UE"))
 
-######
-###### necessidade de filtrar pelos candidatos repeditos
-######
 
 #### FEDERAL DEPUTY ####
 
@@ -1328,6 +1352,17 @@ fed_dep_2006 <- fed_dep_2006 %>%
   group_by(idleg2) %>% 
   mutate(flag = ifelse( (rank(c(idleg2), ties.method = "last")==1 & resultado2=="Eleito"),1,0))
 
+fed_dep_2006<-fed_dep_2006%>%
+  dplyr::select(DATA_GERACAO, HORA_GERACAO, ANO_ELEICAO.x, NUM_TURNO, DESCRICAO_CARGO.x, SIGLA_UF, SIGLA_UE, DESCRICAO_UE, 
+                CODIGO_CARGO, DESCRICAO_CARGO.x, NOME_CANDIDATO.x, SEQUENCIAL_CANDIDATO, NUMERO_CANDIDATO, CPF_CANDIDATO, 
+                NOME_URNA_CANDIDATO.x, COD_SITUACAO_CANDIDATURA, DES_SITUACAO_CANDIDATURA, NUMERO_PARTIDO, SIGLA_PARTIDO.x,
+                NOME_PARTIDO,CODIGO_LEGENDA, SIGLA_LEGENDA, COMPOSICAO_LEGENDA, NOME_COLIGACAO, CODIGO_OCUPACAO, DESCRICAO_OCUPACAO,
+                DATA_NASCIMENTO, NUM_TITULO_ELEITORAL_CANDIDATO, IDADE_DATA_ELEICAO, CODIGO_SEXO, COD_GRAU_INSTRUCAO, CODIGO_ESTADO_CIVIL,
+                DESCRICAO_ESTADO_CIVIL, CODIGO_NACIONALIDADE, DESCRICAO_NACIONALIDADE, SIGLA_UF_NASCIMENTO, CODIGO_MUNICIPIO_NASCIMENTO,
+                NOME_MUNICIPIO_NASCIMENTO, DESPESA_MAX_CAMPANHA, COD_SIT_TOT_TURNO, DESC_SIT_TOT_TURNO,VOTOS,sq_legenda2,idleg, idleg2, rank, rank2, resultado2, prim_supl, flag)
+
+
+
 
 #### STATE DEPUTY ####
 
@@ -1363,6 +1398,18 @@ state_dep_2006 <- state_dep_2006 %>%
   arrange (idleg2, desc(VOTOS)) %>%
   group_by(idleg2) %>% 
   mutate(flag = ifelse( (rank(c(idleg2), ties.method = "last")==1 & resultado2=="Eleito"),1,0))
+
+state_dep_2006<-state_dep_2006%>%
+  dplyr::select(DATA_GERACAO, HORA_GERACAO, ANO_ELEICAO.x, NUM_TURNO, DESCRICAO_CARGO.x, SIGLA_UF, SIGLA_UE, DESCRICAO_UE, 
+                CODIGO_CARGO, DESCRICAO_CARGO.x, NOME_CANDIDATO.x, SEQUENCIAL_CANDIDATO, NUMERO_CANDIDATO, CPF_CANDIDATO, 
+                NOME_URNA_CANDIDATO.x, COD_SITUACAO_CANDIDATURA, DES_SITUACAO_CANDIDATURA, NUMERO_PARTIDO, SIGLA_PARTIDO.x,
+                NOME_PARTIDO,CODIGO_LEGENDA, SIGLA_LEGENDA, COMPOSICAO_LEGENDA, NOME_COLIGACAO, CODIGO_OCUPACAO, DESCRICAO_OCUPACAO,
+                DATA_NASCIMENTO, NUM_TITULO_ELEITORAL_CANDIDATO, IDADE_DATA_ELEICAO, CODIGO_SEXO, COD_GRAU_INSTRUCAO, CODIGO_ESTADO_CIVIL,
+                DESCRICAO_ESTADO_CIVIL, CODIGO_NACIONALIDADE, DESCRICAO_NACIONALIDADE, SIGLA_UF_NASCIMENTO, CODIGO_MUNICIPIO_NASCIMENTO,
+                NOME_MUNICIPIO_NASCIMENTO, DESPESA_MAX_CAMPANHA, COD_SIT_TOT_TURNO, DESC_SIT_TOT_TURNO,VOTOS,sq_legenda2,idleg, idleg2, rank, rank2, resultado2, prim_supl, flag)
+
+
+
 
 
 
@@ -1402,6 +1449,19 @@ distrital_dep_2006 <- distrital_dep_2006 %>%
   group_by(idleg2) %>% 
   mutate(flag = ifelse( (rank(c(idleg2), ties.method = "last")==1 & resultado2=="Eleito"),1,0))
 
+distrital_dep_2006<-distrital_dep_2006%>%
+  dplyr::select(DATA_GERACAO, HORA_GERACAO, ANO_ELEICAO.x, NUM_TURNO, DESCRICAO_CARGO.x, SIGLA_UF, SIGLA_UE, DESCRICAO_UE, 
+                CODIGO_CARGO, DESCRICAO_CARGO.x, NOME_CANDIDATO.x, SEQUENCIAL_CANDIDATO, NUMERO_CANDIDATO, CPF_CANDIDATO, 
+                NOME_URNA_CANDIDATO.x, COD_SITUACAO_CANDIDATURA, DES_SITUACAO_CANDIDATURA, NUMERO_PARTIDO, SIGLA_PARTIDO.x,
+                NOME_PARTIDO,CODIGO_LEGENDA, SIGLA_LEGENDA, COMPOSICAO_LEGENDA, NOME_COLIGACAO, CODIGO_OCUPACAO, DESCRICAO_OCUPACAO,
+                DATA_NASCIMENTO, NUM_TITULO_ELEITORAL_CANDIDATO, IDADE_DATA_ELEICAO, CODIGO_SEXO, COD_GRAU_INSTRUCAO, CODIGO_ESTADO_CIVIL,
+                DESCRICAO_ESTADO_CIVIL, CODIGO_NACIONALIDADE, DESCRICAO_NACIONALIDADE, SIGLA_UF_NASCIMENTO, CODIGO_MUNICIPIO_NASCIMENTO,
+                NOME_MUNICIPIO_NASCIMENTO, DESPESA_MAX_CAMPANHA, COD_SIT_TOT_TURNO, DESC_SIT_TOT_TURNO,VOTOS,sq_legenda2,idleg, idleg2, rank, rank2, resultado2, prim_supl, flag)
+
+
+
+
+
 #######Elections 2010 ###########
 
 
@@ -1437,9 +1497,7 @@ problems <- cand_2010v2 %>% group_by(NUM_TURNO, NUMERO_CANDIDATO, CODIGO_CARGO, 
 casos <- cand_2010v2 %>% right_join(problems, by = c("NUM_TURNO", 
                                                      "NUMERO_CANDIDATO", "CODIGO_CARGO", "SIGLA_UE"))
 
-######
-###### necessidade de filtrar pelos candidatos repeditos
-######
+
 
 #### FEDERAL DEPUTY ####
 
@@ -1476,6 +1534,18 @@ fed_dep_2010 <- fed_dep_2010 %>%
   group_by(idleg2) %>% 
   mutate(flag = ifelse( (rank(c(idleg2), ties.method = "last")==1 & resultado2=="Eleito"),1,0))
 
+fed_dep_2010<-fed_dep_2010%>%
+  dplyr::select(DATA_GERACAO, HORA_GERACAO, ANO_ELEICAO.x, NUM_TURNO, DESCRICAO_CARGO.x, SIGLA_UF, SIGLA_UE, DESCRICAO_UE, 
+                CODIGO_CARGO, DESCRICAO_CARGO.x, NOME_CANDIDATO.x, SEQUENCIAL_CANDIDATO, NUMERO_CANDIDATO, CPF_CANDIDATO, 
+                NOME_URNA_CANDIDATO.x, COD_SITUACAO_CANDIDATURA, DES_SITUACAO_CANDIDATURA, NUMERO_PARTIDO, SIGLA_PARTIDO.x,
+                NOME_PARTIDO,CODIGO_LEGENDA, SIGLA_LEGENDA, COMPOSICAO_LEGENDA, NOME_COLIGACAO, CODIGO_OCUPACAO, DESCRICAO_OCUPACAO,
+                DATA_NASCIMENTO, NUM_TITULO_ELEITORAL_CANDIDATO, IDADE_DATA_ELEICAO, CODIGO_SEXO, COD_GRAU_INSTRUCAO, CODIGO_ESTADO_CIVIL,
+                DESCRICAO_ESTADO_CIVIL, CODIGO_NACIONALIDADE, DESCRICAO_NACIONALIDADE, SIGLA_UF_NASCIMENTO, CODIGO_MUNICIPIO_NASCIMENTO,
+                NOME_MUNICIPIO_NASCIMENTO, DESPESA_MAX_CAMPANHA, COD_SIT_TOT_TURNO, DESC_SIT_TOT_TURNO,VOTOS,sq_legenda2,idleg, idleg2, rank, rank2, resultado2, prim_supl, flag)
+
+
+
+
 
 #### STATE DEPUTY ####
 
@@ -1511,6 +1581,16 @@ state_dep_2010 <- state_dep_2010 %>%
   arrange (idleg2, desc(VOTOS)) %>%
   group_by(idleg2) %>% 
   mutate(flag = ifelse( (rank(c(idleg2), ties.method = "last")==1 & resultado2=="Eleito"),1,0))
+
+state_dep_2010<-state_dep_2010%>%
+  dplyr::select(DATA_GERACAO, HORA_GERACAO, ANO_ELEICAO.x, NUM_TURNO, DESCRICAO_CARGO.x, SIGLA_UF, SIGLA_UE, DESCRICAO_UE, 
+                CODIGO_CARGO, DESCRICAO_CARGO.x, NOME_CANDIDATO.x, SEQUENCIAL_CANDIDATO, NUMERO_CANDIDATO, CPF_CANDIDATO, 
+                NOME_URNA_CANDIDATO.x, COD_SITUACAO_CANDIDATURA, DES_SITUACAO_CANDIDATURA, NUMERO_PARTIDO, SIGLA_PARTIDO.x,
+                NOME_PARTIDO,CODIGO_LEGENDA, SIGLA_LEGENDA, COMPOSICAO_LEGENDA, NOME_COLIGACAO, CODIGO_OCUPACAO, DESCRICAO_OCUPACAO,
+                DATA_NASCIMENTO, NUM_TITULO_ELEITORAL_CANDIDATO, IDADE_DATA_ELEICAO, CODIGO_SEXO, COD_GRAU_INSTRUCAO, CODIGO_ESTADO_CIVIL,
+                DESCRICAO_ESTADO_CIVIL, CODIGO_NACIONALIDADE, DESCRICAO_NACIONALIDADE, SIGLA_UF_NASCIMENTO, CODIGO_MUNICIPIO_NASCIMENTO,
+                NOME_MUNICIPIO_NASCIMENTO, DESPESA_MAX_CAMPANHA, COD_SIT_TOT_TURNO, DESC_SIT_TOT_TURNO,VOTOS,sq_legenda2,idleg, idleg2, rank, rank2, resultado2, prim_supl, flag)
+
 
 
 
@@ -1549,6 +1629,19 @@ distrital_dep_2010 <- distrital_dep_2010 %>%
   arrange (idleg2, desc(VOTOS)) %>%
   group_by(idleg2) %>% 
   mutate(flag = ifelse( (rank(c(idleg2), ties.method = "last")==1 & resultado2=="Eleito"),1,0))
+
+distrital_dep_2010<-distrital_dep_2010%>%
+  dplyr::select(DATA_GERACAO, HORA_GERACAO, ANO_ELEICAO.x, NUM_TURNO, DESCRICAO_CARGO.x, SIGLA_UF, SIGLA_UE, DESCRICAO_UE, 
+                CODIGO_CARGO, DESCRICAO_CARGO.x, NOME_CANDIDATO.x, SEQUENCIAL_CANDIDATO, NUMERO_CANDIDATO, CPF_CANDIDATO, 
+                NOME_URNA_CANDIDATO.x, COD_SITUACAO_CANDIDATURA, DES_SITUACAO_CANDIDATURA, NUMERO_PARTIDO, SIGLA_PARTIDO.x,
+                NOME_PARTIDO,CODIGO_LEGENDA, SIGLA_LEGENDA, COMPOSICAO_LEGENDA, NOME_COLIGACAO, CODIGO_OCUPACAO, DESCRICAO_OCUPACAO,
+                DATA_NASCIMENTO, NUM_TITULO_ELEITORAL_CANDIDATO, IDADE_DATA_ELEICAO, CODIGO_SEXO, COD_GRAU_INSTRUCAO, CODIGO_ESTADO_CIVIL,
+                DESCRICAO_ESTADO_CIVIL, CODIGO_NACIONALIDADE, DESCRICAO_NACIONALIDADE, SIGLA_UF_NASCIMENTO, CODIGO_MUNICIPIO_NASCIMENTO,
+                NOME_MUNICIPIO_NASCIMENTO, DESPESA_MAX_CAMPANHA, COD_SIT_TOT_TURNO, DESC_SIT_TOT_TURNO,VOTOS,sq_legenda2,idleg, idleg2, rank, rank2, resultado2, prim_supl, flag)
+
+
+ 
+
 
 #######Elections 2014 ###########
 
@@ -1624,6 +1717,17 @@ fed_dep_2014 <- fed_dep_2014 %>%
   group_by(idleg2) %>% 
   mutate(flag = ifelse( (rank(c(idleg2), ties.method = "last")==1 & resultado2=="Eleito"),1,0))
 
+fed_dep_2014<-fed_dep_2014%>%
+  dplyr::select(DATA_GERACAO, HORA_GERACAO, ANO_ELEICAO.x, NUM_TURNO, DESCRICAO_CARGO.x, SIGLA_UF, SIGLA_UE, DESCRICAO_UE, 
+                CODIGO_CARGO, DESCRICAO_CARGO.x, NOME_CANDIDATO.x, SEQUENCIAL_CANDIDATO, NUMERO_CANDIDATO, CPF_CANDIDATO, 
+                NOME_URNA_CANDIDATO.x, COD_SITUACAO_CANDIDATURA, DES_SITUACAO_CANDIDATURA, NUMERO_PARTIDO, SIGLA_PARTIDO.x,
+                NOME_PARTIDO,CODIGO_LEGENDA, SIGLA_LEGENDA, COMPOSICAO_LEGENDA, NOME_COLIGACAO, CODIGO_OCUPACAO, DESCRICAO_OCUPACAO,
+                DATA_NASCIMENTO, NUM_TITULO_ELEITORAL_CANDIDATO, IDADE_DATA_ELEICAO, CODIGO_SEXO, COD_GRAU_INSTRUCAO, CODIGO_ESTADO_CIVIL,
+                DESCRICAO_ESTADO_CIVIL, CODIGO_NACIONALIDADE, DESCRICAO_NACIONALIDADE, SIGLA_UF_NASCIMENTO, CODIGO_MUNICIPIO_NASCIMENTO,
+                NOME_MUNICIPIO_NASCIMENTO, DESPESA_MAX_CAMPANHA, COD_SIT_TOT_TURNO, DESC_SIT_TOT_TURNO,VOTOS,sq_legenda2,idleg, idleg2, rank, rank2, resultado2, prim_supl, flag)
+
+
+
 
 #### STATE DEPUTY ####
 
@@ -1659,6 +1763,16 @@ state_dep_2014 <- state_dep_2014 %>%
   arrange (idleg2, desc(VOTOS)) %>%
   group_by(idleg2) %>% 
   mutate(flag = ifelse( (rank(c(idleg2), ties.method = "last")==1 & resultado2=="Eleito"),1,0))
+
+state_dep_2014<-state_dep_2014%>%
+  dplyr::select(DATA_GERACAO, HORA_GERACAO, ANO_ELEICAO.x, NUM_TURNO, DESCRICAO_CARGO.x, SIGLA_UF, SIGLA_UE, DESCRICAO_UE, 
+                CODIGO_CARGO, DESCRICAO_CARGO.x, NOME_CANDIDATO.x, SEQUENCIAL_CANDIDATO, NUMERO_CANDIDATO, CPF_CANDIDATO, 
+                NOME_URNA_CANDIDATO.x, COD_SITUACAO_CANDIDATURA, DES_SITUACAO_CANDIDATURA, NUMERO_PARTIDO, SIGLA_PARTIDO.x,
+                NOME_PARTIDO,CODIGO_LEGENDA, SIGLA_LEGENDA, COMPOSICAO_LEGENDA, NOME_COLIGACAO, CODIGO_OCUPACAO, DESCRICAO_OCUPACAO,
+                DATA_NASCIMENTO, NUM_TITULO_ELEITORAL_CANDIDATO, IDADE_DATA_ELEICAO, CODIGO_SEXO, COD_GRAU_INSTRUCAO, CODIGO_ESTADO_CIVIL,
+                DESCRICAO_ESTADO_CIVIL, CODIGO_NACIONALIDADE, DESCRICAO_NACIONALIDADE, SIGLA_UF_NASCIMENTO, CODIGO_MUNICIPIO_NASCIMENTO,
+                NOME_MUNICIPIO_NASCIMENTO, DESPESA_MAX_CAMPANHA, COD_SIT_TOT_TURNO, DESC_SIT_TOT_TURNO,VOTOS,sq_legenda2,idleg, idleg2, rank, rank2, resultado2, prim_supl, flag)
+
 
 
 
@@ -1697,6 +1811,19 @@ distrital_dep_2014 <- distrital_dep_2014 %>%
   arrange (idleg2, desc(VOTOS)) %>%
   group_by(idleg2) %>% 
   mutate(flag = ifelse( (rank(c(idleg2), ties.method = "last")==1 & resultado2=="Eleito"),1,0))
+
+
+distrital_dep_2014<-distrital_dep_2014%>%
+  dplyr::select(DATA_GERACAO, HORA_GERACAO, ANO_ELEICAO.x, NUM_TURNO, DESCRICAO_CARGO.x, SIGLA_UF, SIGLA_UE, DESCRICAO_UE, 
+                CODIGO_CARGO, DESCRICAO_CARGO.x, NOME_CANDIDATO.x, SEQUENCIAL_CANDIDATO, NUMERO_CANDIDATO, CPF_CANDIDATO, 
+                NOME_URNA_CANDIDATO.x, COD_SITUACAO_CANDIDATURA, DES_SITUACAO_CANDIDATURA, NUMERO_PARTIDO, SIGLA_PARTIDO.x,
+                NOME_PARTIDO,CODIGO_LEGENDA, SIGLA_LEGENDA, COMPOSICAO_LEGENDA, NOME_COLIGACAO, CODIGO_OCUPACAO, DESCRICAO_OCUPACAO,
+                DATA_NASCIMENTO, NUM_TITULO_ELEITORAL_CANDIDATO, IDADE_DATA_ELEICAO, CODIGO_SEXO, COD_GRAU_INSTRUCAO, CODIGO_ESTADO_CIVIL,
+                DESCRICAO_ESTADO_CIVIL, CODIGO_NACIONALIDADE, DESCRICAO_NACIONALIDADE, SIGLA_UF_NASCIMENTO, CODIGO_MUNICIPIO_NASCIMENTO,
+                NOME_MUNICIPIO_NASCIMENTO, DESPESA_MAX_CAMPANHA, COD_SIT_TOT_TURNO, DESC_SIT_TOT_TURNO,VOTOS,sq_legenda2,idleg, idleg2, rank, rank2, resultado2, prim_supl, flag)
+
+
+ 
 
 ################# CITY COUNSIL ELECTIONS ###################
 
@@ -1778,6 +1905,21 @@ ver_2004 <- ver_2004 %>%
   group_by(idleg2) %>% 
   mutate(flag = ifelse( (rank(c(idleg2), ties.method = "last")==1 & resultado2=="Eleito"),1,0))
 
+
+ver_2004<-ver_2004%>%
+  dplyr::select(DATA_GERACAO, HORA_GERACAO, ANO_ELEICAO.x, NUM_TURNO, DESCRICAO_CARGO.x, SIGLA_UF, SIGLA_UE, DESCRICAO_UE, 
+                CODIGO_CARGO, DESCRICAO_CARGO.x, NOME_CANDIDATO.x, SEQUENCIAL_CANDIDATO, NUMERO_CANDIDATO, CPF_CANDIDATO, 
+                NOME_URNA_CANDIDATO.x, COD_SITUACAO_CANDIDATURA, DES_SITUACAO_CANDIDATURA, NUMERO_PARTIDO, SIGLA_PARTIDO.x,
+                NOME_PARTIDO,CODIGO_LEGENDA, SIGLA_LEGENDA, COMPOSICAO_LEGENDA, NOME_COLIGACAO, CODIGO_OCUPACAO, DESCRICAO_OCUPACAO,
+                DATA_NASCIMENTO, NUM_TITULO_ELEITORAL_CANDIDATO, IDADE_DATA_ELEICAO, CODIGO_SEXO, COD_GRAU_INSTRUCAO, CODIGO_ESTADO_CIVIL,
+                DESCRICAO_ESTADO_CIVIL, CODIGO_NACIONALIDADE, DESCRICAO_NACIONALIDADE, SIGLA_UF_NASCIMENTO, CODIGO_MUNICIPIO_NASCIMENTO,
+                NOME_MUNICIPIO_NASCIMENTO, DESPESA_MAX_CAMPANHA, COD_SIT_TOT_TURNO, DESC_SIT_TOT_TURNO,VOTOS,sq_legenda2,idleg, idleg2, rank, rank2, resultado2, prim_supl, flag)
+
+
+
+
+
+
 #######Elections 2008 ###########
 
 
@@ -1851,6 +1993,18 @@ ver_2008 <- ver_2008 %>%
   arrange (idleg2, desc(VOTOS)) %>%
   group_by(idleg2) %>% 
   mutate(flag = ifelse( (rank(c(idleg2), ties.method = "last")==1 & resultado2=="Eleito"),1,0))
+
+ver_2008<-ver_2008%>%
+  dplyr::select(DATA_GERACAO, HORA_GERACAO, ANO_ELEICAO.x, NUM_TURNO, DESCRICAO_CARGO.x, SIGLA_UF, SIGLA_UE, DESCRICAO_UE, 
+                CODIGO_CARGO, DESCRICAO_CARGO.x, NOME_CANDIDATO.x, SEQUENCIAL_CANDIDATO, NUMERO_CANDIDATO, CPF_CANDIDATO, 
+                NOME_URNA_CANDIDATO.x, COD_SITUACAO_CANDIDATURA, DES_SITUACAO_CANDIDATURA, NUMERO_PARTIDO, SIGLA_PARTIDO.x,
+                NOME_PARTIDO,CODIGO_LEGENDA, SIGLA_LEGENDA, COMPOSICAO_LEGENDA, NOME_COLIGACAO, CODIGO_OCUPACAO, DESCRICAO_OCUPACAO,
+                DATA_NASCIMENTO, NUM_TITULO_ELEITORAL_CANDIDATO, IDADE_DATA_ELEICAO, CODIGO_SEXO, COD_GRAU_INSTRUCAO, CODIGO_ESTADO_CIVIL,
+                DESCRICAO_ESTADO_CIVIL, CODIGO_NACIONALIDADE, DESCRICAO_NACIONALIDADE, SIGLA_UF_NASCIMENTO, CODIGO_MUNICIPIO_NASCIMENTO,
+                NOME_MUNICIPIO_NASCIMENTO, DESPESA_MAX_CAMPANHA, COD_SIT_TOT_TURNO, DESC_SIT_TOT_TURNO,VOTOS,sq_legenda2,idleg, idleg2, rank, rank2, resultado2, prim_supl, flag)
+
+ 
+
 
 
 #######Elections 2012 ###########
@@ -1927,6 +2081,20 @@ ver_2012 <- ver_2012 %>%
   group_by(idleg2) %>% 
   mutate(flag = ifelse( (rank(c(idleg2), ties.method = "last")==1 & resultado2=="Eleito"),1,0))
 
+ver_2012<-ver_2012%>%
+  dplyr::select(DATA_GERACAO, HORA_GERACAO, ANO_ELEICAO.x, NUM_TURNO, DESCRICAO_CARGO.x, SIGLA_UF, SIGLA_UE, DESCRICAO_UE, 
+                CODIGO_CARGO, DESCRICAO_CARGO.x, NOME_CANDIDATO.x, SEQUENCIAL_CANDIDATO, NUMERO_CANDIDATO, CPF_CANDIDATO, 
+                NOME_URNA_CANDIDATO.x, COD_SITUACAO_CANDIDATURA, DES_SITUACAO_CANDIDATURA, NUMERO_PARTIDO, SIGLA_PARTIDO.x,
+                NOME_PARTIDO,CODIGO_LEGENDA, SIGLA_LEGENDA, COMPOSICAO_LEGENDA, NOME_COLIGACAO, CODIGO_OCUPACAO, DESCRICAO_OCUPACAO,
+                DATA_NASCIMENTO, NUM_TITULO_ELEITORAL_CANDIDATO, IDADE_DATA_ELEICAO, CODIGO_SEXO, COD_GRAU_INSTRUCAO, CODIGO_ESTADO_CIVIL,
+                DESCRICAO_ESTADO_CIVIL, CODIGO_NACIONALIDADE, DESCRICAO_NACIONALIDADE, SIGLA_UF_NASCIMENTO, CODIGO_MUNICIPIO_NASCIMENTO,
+                NOME_MUNICIPIO_NASCIMENTO, DESPESA_MAX_CAMPANHA, COD_SIT_TOT_TURNO, DESC_SIT_TOT_TURNO,VOTOS,sq_legenda2,idleg, idleg2, rank, rank2, resultado2, prim_supl, flag)
+
+
+
+
+
+
 #######Elections 2016 ###########
 
 
@@ -2002,9 +2170,42 @@ ver_2016 <- ver_2016 %>%
   mutate(flag = ifelse( (rank(c(idleg2), ties.method = "last")==1 & resultado2=="Eleito"),1,0))
 
 
-#write.csv(ver_2016, "ver_2016.csv")
+ver_2016<-ver_2016%>%
+  dplyr::select(DATA_GERACAO, HORA_GERACAO, ANO_ELEICAO.x, NUM_TURNO, DESCRICAO_CARGO.x, SIGLA_UF, SIGLA_UE, DESCRICAO_UE, 
+                CODIGO_CARGO, DESCRICAO_CARGO.x, NOME_CANDIDATO.x, SEQUENCIAL_CANDIDATO, NUMERO_CANDIDATO, CPF_CANDIDATO, 
+                NOME_URNA_CANDIDATO.x, COD_SITUACAO_CANDIDATURA, DES_SITUACAO_CANDIDATURA, NUMERO_PARTIDO, SIGLA_PARTIDO.x,
+                NOME_PARTIDO,CODIGO_LEGENDA, SIGLA_LEGENDA, COMPOSICAO_LEGENDA, NOME_COLIGACAO, CODIGO_OCUPACAO, DESCRICAO_OCUPACAO,
+                DATA_NASCIMENTO, NUM_TITULO_ELEITORAL_CANDIDATO, IDADE_DATA_ELEICAO, CODIGO_SEXO, COD_GRAU_INSTRUCAO, CODIGO_ESTADO_CIVIL,
+                DESCRICAO_ESTADO_CIVIL, CODIGO_NACIONALIDADE, DESCRICAO_NACIONALIDADE, SIGLA_UF_NASCIMENTO, CODIGO_MUNICIPIO_NASCIMENTO,
+                NOME_MUNICIPIO_NASCIMENTO, DESPESA_MAX_CAMPANHA, COD_SIT_TOT_TURNO, DESC_SIT_TOT_TURNO,VOTOS,sq_legenda2,idleg, idleg2, rank, rank2, resultado2, prim_supl, flag)
+
+
+
+
 
 ######################################## 
+
+#fed_dep_2002 <- fed_dep_2002 [ , !duplicated(colnames(fed_dep_2002))]
+#fed_dep_2006 <- fed_dep_2006 [ , !duplicated(colnames(fed_dep_2006))]
+#fed_dep_2010 <- fed_dep_2010 [ , !duplicated(colnames(fed_dep_2010))]
+#fed_dep_2014 <- fed_dep_2014 [ , !duplicated(colnames(fed_dep_2014))]
+
+
+#distrital_dep_2002 <- distrital_dep_2002 [ , !duplicated(colnames(distrital_dep_2002))]
+#distrital_dep_2006 <- distrital_dep_2006 [ , !duplicated(colnames(distrital_dep_2006))]
+#distrital_dep_2010 <- distrital_dep_2010 [ , !duplicated(colnames(distrital_dep_2010))]
+#distrital_dep_2014 <- distrital_dep_2014 [ , !duplicated(colnames(distrital_dep_2014))]
+
+#state_dep_2002 <- state_dep_2002 [ , !duplicated(colnames(state_dep_2002))]
+#state_dep_2006 <- state_dep_2006 [ , !duplicated(colnames(state_dep_2006))]
+#state_dep_2010 <- state_dep_2010 [ , !duplicated(colnames(state_dep_2010))]
+#state_dep_2014 <- state_dep_2014 [ , !duplicated(colnames(state_dep_2014))]
+
+#ver_2004 <- ver_2004 [ , !duplicated(colnames(ver_2004))]
+#ver_2008 <- ver_2008 [ , !duplicated(colnames(ver_2008))]
+#ver_2012 <- ver_2012 [ , !duplicated(colnames(ver_2012))]
+#ver_2016 <- ver_2016 [ , !duplicated(colnames(ver_2016))]
+
 
 distrital_dep_2002_2014 <- list(distrital_dep_2002, distrital_dep_2006, distrital_dep_2010, distrital_dep_2014)
 save(distrital_dep_2002_2014, file = "//fs-eesp-01/EESP/Usuarios/arthur.fisch//Dropbox/LOCAL_ELECTIONS/repositorio_data/original_unzipped/distrital_dep_2002_2014.RData")
@@ -2059,6 +2260,132 @@ ver_2008 <- ver_2004_2016[[2]]
 ver_2012 <- ver_2004_2016[[3]]
 ver_2016 <- ver_2004_2016[[4]]
 
+
+##### Smell checks
+
+# eleitos
+
+electe_fed_dep_02 <- fed_dep_2002 %>%
+  filter(resultado2=="Eleito")
+electe_fed_dep_06 <- fed_dep_2006 %>%
+  filter(resultado2=="Eleito")
+electe_fed_dep_10 <- fed_dep_2010 %>%
+  filter(resultado2=="Eleito")
+electe_fed_dep_14 <- fed_dep_2014 %>%
+  filter(resultado2=="Eleito")
+
+electe_state_dep_02 <- state_dep_2002 %>%
+  filter(resultado2=="Eleito")
+electe_state_dep_06 <- state_dep_2006 %>%
+  filter(resultado2=="Eleito")
+electe_state_dep_10 <- state_dep_2010 %>%
+  filter(resultado2=="Eleito")
+electe_state_dep_14 <- state_dep_2014 %>%
+  filter(resultado2=="Eleito")
+
+electe_distrital_dep_02 <- distrital_dep_2002 %>%
+  filter(resultado2=="Eleito")
+electe_distrital_dep_06 <- distrital_dep_2006 %>%
+  filter(resultado2=="Eleito")
+electe_distrital_dep_10 <- distrital_dep_2010 %>%
+  filter(resultado2=="Eleito")
+electe_distrital_dep_14 <- distrital_dep_2014 %>%
+  filter(resultado2=="Eleito")
+
+electe_ver_04 <- ver_2004 %>%
+  filter(resultado2=="Eleito")
+electe_ver_08 <- ver_2008 %>%
+  filter(resultado2=="Eleito")
+electe_ver_12 <- ver_2012 %>%
+  filter(resultado2=="Eleito")
+electe_ver_16 <- ver_2016 %>%
+  filter(resultado2=="Eleito")
+
+#### votacao menor que zero
+
+vot_fed_dep_02 <- fed_dep_2002 %>%
+  filter(VOTOS<0)
+vot_fed_dep_06 <- fed_dep_2006 %>%
+  filter(VOTOS<0)
+vot_fed_dep_10 <- fed_dep_2010 %>%
+  filter(VOTOS<0)
+vot_fed_dep_14 <- fed_dep_2014 %>%
+  filter(VOTOS<0)
+
+vot_state_dep_02 <- state_dep_2002 %>%
+  filter(VOTOS<0)
+vot_state_dep_06 <- state_dep_2006 %>%
+  filter(VOTOS<0)
+vot_state_dep_10 <- state_dep_2010 %>%
+  filter(VOTOS<0)
+vot_state_dep_14 <- state_dep_2014 %>%
+  filter(VOTOS<0)
+
+vot_distrital_dep_02 <- distrital_dep_2002 %>%
+  filter(VOTOS<0)
+vot_distrital_dep_06 <- distrital_dep_2006 %>%
+  filter(VOTOS<0)
+vot_distrital_dep_10 <- distrital_dep_2010 %>%
+  filter(VOTOS<0)
+vot_distrital_dep_14 <- distrital_dep_2014 %>%
+  filter(VOTOS<0)
+
+vot_ver_04 <- ver_2004 %>%
+  filter(VOTOS<0)
+vot_ver_08 <- ver_2008 %>%
+  filter(VOTOS<0)
+vot_ver_12 <- ver_2012 %>%
+  filter(VOTOS<0)
+vot_ver_16 <- ver_2016 %>%
+  filter(VOTOS<0)
+
+################################################
+################################################
+################################################
+#############  FUNCOES #########################
+################################################
+################################################
+
+rm(list=ls())
+
+load("//fs-eesp-01/EESP/Usuarios/arthur.fisch//Dropbox/LOCAL_ELECTIONS/repositorio_data/original_unzipped/distrital_dep_2002_2014.RData")
+load("//fs-eesp-01/EESP/Usuarios/arthur.fisch//Dropbox/LOCAL_ELECTIONS/repositorio_data/original_unzipped/state_dep_2002_2014.RData")
+load("//fs-eesp-01/EESP/Usuarios/arthur.fisch//Dropbox/LOCAL_ELECTIONS/repositorio_data/original_unzipped/fed_dep_2002_2014.RData")
+load("//fs-eesp-01/EESP/Usuarios/arthur.fisch//Dropbox/LOCAL_ELECTIONS/repositorio_data/original_unzipped/ver_2004_2016.RData")
+
+#######################################
+
+#fed dep
+
+fed_dep_2002 <- fed_dep_2002_2014[[1]]
+fed_dep_2006 <- fed_dep_2002_2014[[2]]
+fed_dep_2010 <- fed_dep_2002_2014[[3]]
+fed_dep_2014 <- fed_dep_2002_2014[[4]]
+
+
+#state dep
+
+state_dep_2002 <- state_dep_2002_2014[[1]]
+state_dep_2006 <- state_dep_2002_2014[[2]]
+state_dep_2010 <- state_dep_2002_2014[[3]]
+state_dep_2014 <- state_dep_2002_2014[[4]]
+
+#distrital dep
+
+distrital_dep_2002 <- distrital_dep_2002_2014[[1]]
+distrital_dep_2006 <- distrital_dep_2002_2014[[2]]
+distrital_dep_2010 <- distrital_dep_2002_2014[[3]]
+distrital_dep_2014 <- distrital_dep_2002_2014[[4]]
+
+# vereadores
+
+ver_2004 <- ver_2004_2016[[1]]
+ver_2008 <- ver_2004_2016[[2]]
+ver_2012 <- ver_2004_2016[[3]]
+ver_2016 <- ver_2004_2016[[4]]
+
+
+
 ##### function to calculate threshold
 
 # Porcentagem dos ultimos eleitos
@@ -2077,10 +2404,10 @@ threshold_simples <- function(data,y){
   ## só colunas que importam
   
   votos_ult_ele <- data_ult_ele%>%
-    select(idleg, VOTOS)
+    dplyr::select(idleg, VOTOS)
   
   votos_pri_supl <- data_pri_supl%>%
-    select(idleg, VOTOS)
+    dplyr::select(idleg, VOTOS)
   
   ## merging
   
@@ -2093,7 +2420,7 @@ threshold_simples <- function(data,y){
   ### eliminating unnecessary columns
   
   votos_thresh<- votos_thresh%>%
-    select(idleg, threshold)
+    dplyr::select(idleg, threshold)
   
   ### bringing back the threshold
   
@@ -2143,10 +2470,10 @@ threshold_media <- function(data,y){
   ## só colunas que importam
   
   votos_ult_ele <- data_ult_ele%>%
-    select(idleg, VOTOS)
+    dplyr:: select(idleg, VOTOS)
   
   votos_pri_supl <- data_pri_supl%>%
-    select(idleg, VOTOS)
+    dplyr:: select(idleg, VOTOS)
   
   ## merging
   
@@ -2159,7 +2486,7 @@ threshold_media <- function(data,y){
   ### eliminating unnecessary columns
   
   votos_thresh<- votos_thresh%>%
-    select(idleg, threshold)
+    dplyr:: select(idleg, threshold)
   
   ### bringing back the threshold
   
@@ -2197,19 +2524,19 @@ threshold_soma <- function(data,y){
   #ultimo eleito
   
   data_ult_ele <- data %>%
-    filter(flag==1)
+    dplyr:: filter(flag==1)
   
   #primeiro suplente
   data_pri_supl <-data%>%
-    filter(prim_supl==1)
+    dplyr::filter(prim_supl==1)
   
   ## só colunas que importam
   
   votos_ult_ele <- data_ult_ele%>%
-    select(idleg, VOTOS)
+    dplyr:: select(idleg, VOTOS)
   
   votos_pri_supl <- data_pri_supl%>%
-    select(idleg, VOTOS)
+    dplyr:: select(idleg, VOTOS)
   
   ## merging
   
@@ -2222,7 +2549,7 @@ threshold_soma <- function(data,y){
   ### eliminating unnecessary columns
   
   votos_thresh<- votos_thresh%>%
-    select(idleg, threshold)
+    dplyr:: select(idleg, threshold)
   
   ### bringing back the threshold
   
@@ -2247,6 +2574,301 @@ threshold_soma <- function(data,y){
   return(data_final2) 
 }
 
-x <- threshold_media(data=distrital_dep_2014, y=0.15)
-x2 <- threshold_simples(data=distrital_dep_2014, y=0.15)
-x3 <- threshold_soma(data=distrital_dep_2014, y=0.15)
+################
+# funcao boa and hidalgo - airwaves 2011
+
+threshold_bh <- function(data,y){
+  
+  #ultimo eleito
+  
+  data_ult_ele <- data %>%
+    dplyr:: filter(flag==1)
+  
+  #primeiro suplente
+  data_pri_supl <-data%>%
+    dplyr::filter(prim_supl==1)
+  
+  ## só colunas que importam
+  
+  votos_ult_ele <- data_ult_ele%>%
+    dplyr:: select(idleg, VOTOS)
+  
+  votos_pri_supl <- data_pri_supl%>%
+    dplyr:: select(idleg, VOTOS)
+  
+  ## merging
+  
+  votos_thresh <- merge(x=votos_ult_ele, y=votos_pri_supl, by="idleg")
+  
+  ## calculating threshold
+  
+  ### eliminating unnecessary columns
+  
+  votos_thresh<- votos_thresh%>%
+    dplyr:: select(idleg, VOTOS.x, VOTOS.y)
+  
+  ### bringing back the threshold
+  
+  data_final <- merge(x=data, y=votos_thresh, by="idleg")
+  
+  ### selecing elected and not elected 
+  
+  data_final_nele<-data_final%>%
+    filter( !(resultado2=="Eleito") )
+  
+  data_final_ele<-data_final%>%
+    filter( (resultado2=="Eleito")  )
+  
+  
+  ### calculating votes margin
+  
+  data_final_ele$distthresh <- (data_final_ele$VOTOS - data_final_ele$VOTOS.y)
+  data_final_nele$distthresh<- (data_final_nele$VOTOS.x - data_final_nele$VOTOS)
+  
+  ### filtering
+  
+  data_final_ele <- data_final_ele %>%
+    filter(distthresh<y)
+  
+  data_final_nele <- data_final_nele %>%
+    filter(distthresh<y)
+  
+  ### consolidating
+  
+  data_final2<-rbind(data_final_ele,data_final_nele)
+  
+  data_final2<-data_final2%>%
+    arrange(desc(idleg, VOTOS))
+  
+  ### resultados cortados
+  return(data_final2) 
+}
+
+
+#x <- threshold_media(data=distrital_dep_2014, y=0.15)
+#x2 <- threshold_simples(data=distrital_dep_2014, y=0.15)
+#x3 <- threshold_soma(data=distrital_dep_2014, y=0.15)
+#x4<- threshold_bh(data=distrital_dep_2014, y=1000)
+
+
+### funcao de share nominal estado
+
+threshold_sharenom_uf <- function(data,y){
+  
+  ### calculo dos shares por ue
+  
+  data_votnom_ue <- data%>%
+    group_by( SIGLA_UE)%>%
+    summarise(VOTOS_UE = sum(VOTOS, na.rm=TRUE))
+    
+    
+  ### merging dados da ue
+    
+    data_final <- merge(data, data_votnom_ue, by=c("SIGLA_UE"))
+    
+  ### Calculo do share nominal na ue
+    
+    data_final$share <- (data_final$VOTOS/data_final$VOTOS_UE)
+    
+    ### Calculo da distancia do share nominal
+    
+    #ultimo eleito
+    
+    data_ult_ele <- data_final %>%
+      dplyr:: filter(flag==1)
+    
+    #primeiro suplente
+    data_pri_supl <-data_final%>%
+      dplyr::filter(prim_supl==1)
+    
+    ## só colunas que importam
+    
+    share_ult_ele <- data_ult_ele%>%
+      dplyr:: select(idleg, share)
+    
+    share_pri_supl <- data_pri_supl%>%
+      dplyr:: select(idleg, share)
+    
+    ## merging
+    
+    share_thresh <- merge(x=share_ult_ele, y=share_pri_supl, by="idleg")
+    
+    ## calculating threshold
+    
+    ### eliminating unnecessary columns
+    
+    share_thresh<- share_thresh%>%
+      dplyr:: select(idleg, share.x, share.y)
+    
+    ### bringing back the threshold
+    
+    data_final2 <- merge(x=data_final, y=share_thresh, by="idleg", all.x=TRUE)
+    
+    ### selecing elected and not elected 
+    
+    data_final_nele<-data_final2%>%
+      filter( !(resultado2=="Eleito") )
+    
+    data_final_ele<-data_final2%>%
+      filter( (resultado2=="Eleito")  )
+    
+    
+    ### calculating votes margin
+    
+    data_final_ele$distthresh <- (data_final_ele$share - data_final_ele$share.y)
+    data_final_nele$distthresh<- (data_final_nele$share.x - data_final_nele$share)
+    
+    ### filtering
+    
+    data_final_ele <- data_final_ele %>%
+      filter(distthresh<y)
+    
+    data_final_nele <- data_final_nele %>%
+      filter(distthresh<y)
+    
+    ### consolidating
+    
+    data_final2<-rbind(data_final_ele,data_final_nele)
+    
+    data_final2<-data_final2%>%
+      arrange(desc(idleg, VOTOS))
+    
+  
+  ### resultados cortados
+  return(data_final2) 
+}
+
+x4<- threshold_sharenom_uf(data=distrital_dep_2014, y=0.01)
+
+
+### funcao de share nominal estado
+
+threshold_sharenom_colig <- function(data,y){
+  
+  ### calculo dos shares por ue
+  
+  data_votnom_colig <- data%>%
+    group_by( idleg)%>%
+    summarise(VOTOS_COLIG = sum(VOTOS, na.rm=TRUE))
+  
+  
+  ### merging dados da ue
+  
+  data_final <- merge(data, data_votnom_colig, by=c("idleg"))
+  
+  ### Calculo do share nominal na ue
+  
+  data_final$share <- (data_final$VOTOS/data_final$VOTOS_COLIG)
+  
+  ### Calculo da distancia do share nominal
+  
+  #ultimo eleito
+  
+  data_ult_ele <- data_final %>%
+    dplyr:: filter(flag==1)
+  
+  #primeiro suplente
+  data_pri_supl <-data_final%>%
+    dplyr::filter(prim_supl==1)
+  
+  ## só colunas que importam
+  
+  share_ult_ele <- data_ult_ele%>%
+    dplyr:: select(idleg, share)
+  
+  share_pri_supl <- data_pri_supl%>%
+    dplyr:: select(idleg, share)
+  
+  ## merging
+  
+  share_thresh <- merge(x=share_ult_ele, y=share_pri_supl, by="idleg")
+  
+  ## calculating threshold
+  
+  ### eliminating unnecessary columns
+  
+  share_thresh<- share_thresh%>%
+    dplyr:: select(idleg, share.x, share.y)
+  
+  ### bringing back the threshold
+  
+  data_final2 <- merge(x=data_final, y=share_thresh, by="idleg", all.x=TRUE)
+  
+  ### selecing elected and not elected 
+  
+  data_final_nele<-data_final2%>%
+    filter( !(resultado2=="Eleito") )
+  
+  data_final_ele<-data_final2%>%
+    filter( (resultado2=="Eleito")  )
+  
+  
+  ### calculating votes margin
+  
+  data_final_ele$distthresh <- (data_final_ele$share - data_final_ele$share.y)
+  data_final_nele$distthresh<- (data_final_nele$share.x - data_final_nele$share)
+  
+  ### filtering
+  
+  data_final_ele <- data_final_ele %>%
+    filter(distthresh<y)
+  
+  data_final_nele <- data_final_nele %>%
+    filter(distthresh<y)
+  
+  ### consolidating
+  
+  data_final2<-rbind(data_final_ele,data_final_nele)
+  
+  data_final2<-data_final2%>%
+    arrange(desc(idleg, VOTOS))
+  
+  
+  ### resultados cortados
+  return(data_final2) 
+}
+
+x4<- threshold_sharenom_colig(data=distrital_dep_2014, y=0.10)
+
+
+### funcao de rank na lista partidaria
+
+threshold_rank <- function(data,y){
+  
+  ### calculando distancia relativa
+  
+  data_ult_ele <- data %>%
+    dplyr:: filter(flag==1)
+  
+  ## só colunas que importam
+  
+  pos_ult_ele <- data_ult_ele%>%
+    dplyr:: select(idleg, rank)
+  
+  ### merging de volta
+  data_final <- merge(data, pos_ult_ele, by=c("idleg"), all.x=TRUE)
+  
+  ### vendo distancia
+  data_final$dist_ultele<-data_final$rank.x - data_final$rank.y
+  
+  data_final$absdist_ultele<-abs(data_final$dist_ultele)
+  
+  ### filtering
+  
+  data_final <- data_final %>%
+    filter(absdist_ultele<y)
+  
+  
+  ### consolidating
+  
+  
+  data_final<-data_final%>%
+    arrange(desc(idleg, VOTOS))
+  
+  
+  
+  ### resultados cortados
+  return(data_final) 
+}
+
+x4<- threshold_rank(data=distrital_dep_2014, y=4)
