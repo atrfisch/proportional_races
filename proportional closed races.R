@@ -1100,8 +1100,6 @@ save(cand_1998_2014v2, file = "//fs-eesp-01/EESP/Usuarios/arthur.fisch//Dropbox/
 
 ################# GENERAL ELECTIONS ###################
 
-rm(list=ls())
-
 
 load("//fs-eesp-01/EESP/Usuarios/arthur.fisch/Dropbox/LOCAL_ELECTIONS/repositorio_data/original_unzipped/vot_1998_2014.RData")
 load("//fs-eesp-01/EESP/Usuarios/arthur.fisch/Dropbox/LOCAL_ELECTIONS/repositorio_data/original_unzipped/cand_1998_2014v2.RData")
@@ -1185,6 +1183,8 @@ fed_dep_2002<-fed_dep_2002%>%
          DESCRICAO_ESTADO_CIVIL, CODIGO_NACIONALIDADE, DESCRICAO_NACIONALIDADE, SIGLA_UF_NASCIMENTO, CODIGO_MUNICIPIO_NASCIMENTO,
          NOME_MUNICIPIO_NASCIMENTO, DESPESA_MAX_CAMPANHA, COD_SIT_TOT_TURNO, DESC_SIT_TOT_TURNO,VOTOS,sq_legenda2,idleg, idleg2, rank, rank2, resultado2, prim_supl, flag)
 
+fed_dep_2002<-fed_dep_2002%>%
+  filter(!(is.na(VOTOS)))
 
 #### STATE DEPUTY ####
 
@@ -1230,7 +1230,8 @@ state_dep_2002<-state_dep_2002%>%
                 DESCRICAO_ESTADO_CIVIL, CODIGO_NACIONALIDADE, DESCRICAO_NACIONALIDADE, SIGLA_UF_NASCIMENTO, CODIGO_MUNICIPIO_NASCIMENTO,
                 NOME_MUNICIPIO_NASCIMENTO, DESPESA_MAX_CAMPANHA, COD_SIT_TOT_TURNO, DESC_SIT_TOT_TURNO,VOTOS,sq_legenda2,idleg, idleg2, rank, rank2, resultado2, prim_supl, flag)
 
-
+state_dep_2002<-state_dep_2002%>%
+  filter(!(is.na(VOTOS)))
  
 
 #### DISTRITAL DEPUTY ####
@@ -1278,7 +1279,8 @@ distrital_dep_2002<-distrital_dep_2002%>%
                 DESCRICAO_ESTADO_CIVIL, CODIGO_NACIONALIDADE, DESCRICAO_NACIONALIDADE, SIGLA_UF_NASCIMENTO, CODIGO_MUNICIPIO_NASCIMENTO,
                 NOME_MUNICIPIO_NASCIMENTO, DESPESA_MAX_CAMPANHA, COD_SIT_TOT_TURNO, DESC_SIT_TOT_TURNO,VOTOS,sq_legenda2,idleg, idleg2, rank, rank2, resultado2, prim_supl, flag)
 
-
+distrital_dep_2002<-distrital_dep_2002%>%
+  filter(!(is.na(VOTOS)))
 
 
 #######Elections 2006 ###########
@@ -1361,7 +1363,8 @@ fed_dep_2006<-fed_dep_2006%>%
                 DESCRICAO_ESTADO_CIVIL, CODIGO_NACIONALIDADE, DESCRICAO_NACIONALIDADE, SIGLA_UF_NASCIMENTO, CODIGO_MUNICIPIO_NASCIMENTO,
                 NOME_MUNICIPIO_NASCIMENTO, DESPESA_MAX_CAMPANHA, COD_SIT_TOT_TURNO, DESC_SIT_TOT_TURNO,VOTOS,sq_legenda2,idleg, idleg2, rank, rank2, resultado2, prim_supl, flag)
 
-
+fed_dep_2006<-fed_dep_2006%>%
+  filter(!(is.na(VOTOS)))
 
 
 #### STATE DEPUTY ####
@@ -1409,7 +1412,8 @@ state_dep_2006<-state_dep_2006%>%
                 NOME_MUNICIPIO_NASCIMENTO, DESPESA_MAX_CAMPANHA, COD_SIT_TOT_TURNO, DESC_SIT_TOT_TURNO,VOTOS,sq_legenda2,idleg, idleg2, rank, rank2, resultado2, prim_supl, flag)
 
 
-
+state_dep_2006<-state_dep_2006%>%
+  filter(!(is.na(VOTOS)))
 
 
 
@@ -1460,7 +1464,8 @@ distrital_dep_2006<-distrital_dep_2006%>%
 
 
 
-
+distrital_dep_2006<-distrital_dep_2006%>%
+  filter(!(is.na(VOTOS)))
 
 #######Elections 2010 ###########
 
@@ -1545,7 +1550,8 @@ fed_dep_2010<-fed_dep_2010%>%
 
 
 
-
+fed_dep_2010<-fed_dep_2010%>%
+  filter(!(is.na(VOTOS)))
 
 #### STATE DEPUTY ####
 
@@ -1591,7 +1597,8 @@ state_dep_2010<-state_dep_2010%>%
                 DESCRICAO_ESTADO_CIVIL, CODIGO_NACIONALIDADE, DESCRICAO_NACIONALIDADE, SIGLA_UF_NASCIMENTO, CODIGO_MUNICIPIO_NASCIMENTO,
                 NOME_MUNICIPIO_NASCIMENTO, DESPESA_MAX_CAMPANHA, COD_SIT_TOT_TURNO, DESC_SIT_TOT_TURNO,VOTOS,sq_legenda2,idleg, idleg2, rank, rank2, resultado2, prim_supl, flag)
 
-
+state_dep_2010<-state_dep_2010%>%
+  filter(!(is.na(VOTOS)))
 
 
 #### DISTRITAL DEPUTY ####
@@ -1640,7 +1647,8 @@ distrital_dep_2010<-distrital_dep_2010%>%
                 NOME_MUNICIPIO_NASCIMENTO, DESPESA_MAX_CAMPANHA, COD_SIT_TOT_TURNO, DESC_SIT_TOT_TURNO,VOTOS,sq_legenda2,idleg, idleg2, rank, rank2, resultado2, prim_supl, flag)
 
 
- 
+distrital_dep_2010<-distrital_dep_2010%>%
+  filter(!(is.na(VOTOS)))
 
 
 #######Elections 2014 ###########
@@ -1726,7 +1734,8 @@ fed_dep_2014<-fed_dep_2014%>%
                 DESCRICAO_ESTADO_CIVIL, CODIGO_NACIONALIDADE, DESCRICAO_NACIONALIDADE, SIGLA_UF_NASCIMENTO, CODIGO_MUNICIPIO_NASCIMENTO,
                 NOME_MUNICIPIO_NASCIMENTO, DESPESA_MAX_CAMPANHA, COD_SIT_TOT_TURNO, DESC_SIT_TOT_TURNO,VOTOS,sq_legenda2,idleg, idleg2, rank, rank2, resultado2, prim_supl, flag)
 
-
+fed_dep_2014<-fed_dep_2014%>%
+  filter(!(is.na(VOTOS)))
 
 
 #### STATE DEPUTY ####
@@ -1774,7 +1783,8 @@ state_dep_2014<-state_dep_2014%>%
                 NOME_MUNICIPIO_NASCIMENTO, DESPESA_MAX_CAMPANHA, COD_SIT_TOT_TURNO, DESC_SIT_TOT_TURNO,VOTOS,sq_legenda2,idleg, idleg2, rank, rank2, resultado2, prim_supl, flag)
 
 
-
+state_dep_2014<-state_dep_2014%>%
+  filter(!(is.na(VOTOS)))
 
 #### DISTRITAL DEPUTY ####
 
@@ -1823,6 +1833,8 @@ distrital_dep_2014<-distrital_dep_2014%>%
                 NOME_MUNICIPIO_NASCIMENTO, DESPESA_MAX_CAMPANHA, COD_SIT_TOT_TURNO, DESC_SIT_TOT_TURNO,VOTOS,sq_legenda2,idleg, idleg2, rank, rank2, resultado2, prim_supl, flag)
 
 
+distrital_dep_2014<-distrital_dep_2014%>%
+  filter(!(is.na(VOTOS)))
  
 
 ################# CITY COUNSIL ELECTIONS ###################
@@ -1915,8 +1927,8 @@ ver_2004<-ver_2004%>%
                 DESCRICAO_ESTADO_CIVIL, CODIGO_NACIONALIDADE, DESCRICAO_NACIONALIDADE, SIGLA_UF_NASCIMENTO, CODIGO_MUNICIPIO_NASCIMENTO,
                 NOME_MUNICIPIO_NASCIMENTO, DESPESA_MAX_CAMPANHA, COD_SIT_TOT_TURNO, DESC_SIT_TOT_TURNO,VOTOS,sq_legenda2,idleg, idleg2, rank, rank2, resultado2, prim_supl, flag)
 
-
-
+ver_2004<-ver_2004%>%
+  filter(!(is.na(VOTOS)))
 
 
 
@@ -2004,7 +2016,8 @@ ver_2008<-ver_2008%>%
                 NOME_MUNICIPIO_NASCIMENTO, DESPESA_MAX_CAMPANHA, COD_SIT_TOT_TURNO, DESC_SIT_TOT_TURNO,VOTOS,sq_legenda2,idleg, idleg2, rank, rank2, resultado2, prim_supl, flag)
 
  
-
+ver_2008<-ver_2008%>%
+  filter(!(is.na(VOTOS)))
 
 
 #######Elections 2012 ###########
@@ -2091,7 +2104,8 @@ ver_2012<-ver_2012%>%
                 NOME_MUNICIPIO_NASCIMENTO, DESPESA_MAX_CAMPANHA, COD_SIT_TOT_TURNO, DESC_SIT_TOT_TURNO,VOTOS,sq_legenda2,idleg, idleg2, rank, rank2, resultado2, prim_supl, flag)
 
 
-
+ver_2012<-ver_2012%>%
+  filter(!(is.na(VOTOS)))
 
 
 
@@ -2180,31 +2194,13 @@ ver_2016<-ver_2016%>%
                 NOME_MUNICIPIO_NASCIMENTO, DESPESA_MAX_CAMPANHA, COD_SIT_TOT_TURNO, DESC_SIT_TOT_TURNO,VOTOS,sq_legenda2,idleg, idleg2, rank, rank2, resultado2, prim_supl, flag)
 
 
-
+ver_2016<-ver_2016%>%
+  filter(!(is.na(VOTOS)))
 
 
 ######################################## 
 
 #fed_dep_2002 <- fed_dep_2002 [ , !duplicated(colnames(fed_dep_2002))]
-#fed_dep_2006 <- fed_dep_2006 [ , !duplicated(colnames(fed_dep_2006))]
-#fed_dep_2010 <- fed_dep_2010 [ , !duplicated(colnames(fed_dep_2010))]
-#fed_dep_2014 <- fed_dep_2014 [ , !duplicated(colnames(fed_dep_2014))]
-
-
-#distrital_dep_2002 <- distrital_dep_2002 [ , !duplicated(colnames(distrital_dep_2002))]
-#distrital_dep_2006 <- distrital_dep_2006 [ , !duplicated(colnames(distrital_dep_2006))]
-#distrital_dep_2010 <- distrital_dep_2010 [ , !duplicated(colnames(distrital_dep_2010))]
-#distrital_dep_2014 <- distrital_dep_2014 [ , !duplicated(colnames(distrital_dep_2014))]
-
-#state_dep_2002 <- state_dep_2002 [ , !duplicated(colnames(state_dep_2002))]
-#state_dep_2006 <- state_dep_2006 [ , !duplicated(colnames(state_dep_2006))]
-#state_dep_2010 <- state_dep_2010 [ , !duplicated(colnames(state_dep_2010))]
-#state_dep_2014 <- state_dep_2014 [ , !duplicated(colnames(state_dep_2014))]
-
-#ver_2004 <- ver_2004 [ , !duplicated(colnames(ver_2004))]
-#ver_2008 <- ver_2008 [ , !duplicated(colnames(ver_2008))]
-#ver_2012 <- ver_2012 [ , !duplicated(colnames(ver_2012))]
-#ver_2016 <- ver_2016 [ , !duplicated(colnames(ver_2016))]
 
 
 distrital_dep_2002_2014 <- list(distrital_dep_2002, distrital_dep_2006, distrital_dep_2010, distrital_dep_2014)
@@ -2219,6 +2215,419 @@ save(fed_dep_2002_2014, file = "//fs-eesp-01/EESP/Usuarios/arthur.fisch//Dropbox
 ver_2004_2016 <- list(ver_2004, ver_2008, ver_2012, ver_2016)
 save(ver_2004_2016, file = "//fs-eesp-01/EESP/Usuarios/arthur.fisch//Dropbox/LOCAL_ELECTIONS/repositorio_data/original_unzipped/ver_2004_2016.RData")
 
+########################################
+########################################
+
+url_votpar98 <- "http://agencia.tse.jus.br/estatistica/sead/odsele/votacao_partido_munzona/votacao_partido_munzona_1998.zip"
+file_d <- paste0(dir_d, "original_data/votacao_partido/votacao_partido_munzona_1998.zip")
+file_un <- paste0(dir_d, "original_unzipped/votacao_partido/votacao_partido_munzona_1998")
+votpar_1998 <- get_tse(url_votpar98, file_d, file_un)
+
+url_votpar00 <- "http://agencia.tse.jus.br/estatistica/sead/odsele/votacao_partido_munzona/votacao_partido_munzona_2000.zip"
+file_d <- paste0(dir_d, "original_data/votacao_partido/votacao_partido_munzona_2000.zip")
+file_un <- paste0(dir_d, "original_unzipped/votacao_partido/votacao_partido_munzona_2000")
+votpar_2000 <- get_tse(url_votpar00, file_d, file_un)
+
+url_votpar02 <- "http://agencia.tse.jus.br/estatistica/sead/odsele/votacao_partido_munzona/votacao_partido_munzona_2002.zip"
+file_d <- paste0(dir_d, "original_data/votacao_partido/votacao_partido_munzona_2002.zip")
+file_un <- paste0(dir_d, "original_unzipped/votacao_partido/votacao_partido_munzona_2002")
+votpar_2002 <- get_tse(url_votpar02, file_d, file_un)
+
+url_votpar04 <- "http://agencia.tse.jus.br/estatistica/sead/odsele/votacao_partido_munzona/votacao_partido_munzona_2004.zip"
+file_d <- paste0(dir_d, "original_data/votacao_partido/votacao_partido_munzona_2004.zip")
+file_un <- paste0(dir_d, "original_unzipped/votacao_partido/votacao_partido_munzona_2004")
+votpar_2004 <- get_tse(url_votpar04, file_d, file_un)
+
+url_votpar06 <- "http://agencia.tse.jus.br/estatistica/sead/odsele/votacao_partido_munzona/votacao_partido_munzona_2006.zip"
+file_d <- paste0(dir_d, "original_data/votacao_partido/votacao_partido_munzona_2006.zip")
+file_un <- paste0(dir_d, "original_unzipped/votacao_partido/votacao_partido_munzona_2006")
+votpar_2006 <- get_tse(url_votpar06, file_d, file_un)
+
+url_votpar08 <- "http://agencia.tse.jus.br/estatistica/sead/odsele/votacao_partido_munzona/votacao_partido_munzona_2008.zip"
+file_d <- paste0(dir_d, "original_data/votacao_partido/votacao_partido_munzona_2008.zip")
+file_un <- paste0(dir_d, "original_unzipped/votacao_partido/votacao_partido_munzona_2008")
+votpar_2008 <- get_tse(url_votpar08, file_d, file_un)
+
+url_votpar10 <- "http://agencia.tse.jus.br/estatistica/sead/odsele/votacao_partido_munzona/votacao_partido_munzona_2010.zip"
+file_d <- paste0(dir_d, "original_data/votacao_partido/votacao_partido_munzona_2010.zip")
+file_un <- paste0(dir_d, "original_unzipped/votacao_partido/votacao_partido_munzona_2010")
+votpar_2010 <- get_tse(url_votpar10, file_d, file_un)
+
+url_votpar12 <- "http://agencia.tse.jus.br/estatistica/sead/odsele/votacao_partido_munzona/votacao_partido_munzona_2012.zip"
+file_d <- paste0(dir_d, "original_data/votacao_partido/votacao_partido_munzona_2012.zip")
+file_un <- paste0(dir_d, "original_unzipped/votacao_partido/votacao_partido_munzona_2012")
+votpar_2012 <- get_tse(url_votpar12, file_d, file_un)
+
+url_votpar14 <- "http://agencia.tse.jus.br/estatistica/sead/odsele/votacao_partido_munzona/votacao_partido_munzona_2014.zip"
+file_d <- paste0(dir_d, "original_data/votacao_partido/votacao_partido_munzona_2014.zip")
+file_un <- paste0(dir_d, "original_unzipped/votacao_partido/votacao_partido_munzona_2014")
+votpar_2014 <- get_tse(url_votpar14, file_d, file_un)
+
+url_votpar16 <- "http://agencia.tse.jus.br/estatistica/sead/odsele/votacao_partido_munzona/votacao_partido_munzona_2016.zip"
+file_d <- paste0(dir_d, "original_data/votacao_partido/votacao_partido_munzona_2016.zip")
+file_un <- paste0(dir_d, "original_unzipped/votacao_partido/votacao_partido_munzona_2016")
+votpar_2016 <- get_tse(url_votpar16, file_d, file_un)
+
+########################
+ufs_n <- c("AC", "AL", "AP", "AM", "BA", "BR",   
+           "CE", "DF", "ES", "GO", "MA", "MT", "MS",
+           "MG", "PA", "PB", "PR", "PE", "PI", "RJ",
+           "RN", "RS", "RO","RR","SC", "SP", "SE", "TO", "ZZ")
+
+ufs <- c("AC", "AL", "AP", "AM", "BA", "BR",   
+         "CE", "DF", "ES", "GO", "MA", "MT", "MS",
+         "MG", "PA", "PB", "PR", "PE", "PI", "RJ",
+         "RN", "RS", "RO","RR","SC", "SP", "SE", "TO", "ZZ")
+
+#partidos labels
+
+labels_pre2014 <- c("DATA_GERACAO", "HORA_GERACAO", "ANO_ELEICAO", "NUM_TURNO", "DESCRICAO_ELEICAO",
+                    "SIGLA_UF", "SIGLA_UE", "CODIGO_MUNICIPIO", "NOME_MUNICIPIO", "NUMERO_ZONA",
+                    "CODIGO_CARGO", "DESCRICAO_CARGO", "TIPO_LEGENDA", "NOME_COLIGACAO", "COMPOSICAO_LEGENDA",
+                    "SIGLA_PARTIDO", "NUMERO_PARTIDO", "NOME_PARTIDO", "QTDE_VOTOS_NOMINAIS","QTDE_VOTOS_LEGENDA",
+                    "SEQUENCIAL_COLIGACAO")
+
+labels_2014 <- c("DATA_GERACAO", "HORA_GERACAO", "ANO_ELEICAO", "NUM_TURNO", "DESCRICAO_ELEICAO",
+                 "SIGLA_UF", "SIGLA_UE", "CODIGO_MUNICIPIO", "NOME_MUNICIPIO", "NUMERO_ZONA",
+                 "CODIGO_CARGO", "DESCRICAO_CARGO", "TIPO_LEGENDA", "NOME_COLIGACAO", "COMPOSICAO_LEGENDA",
+                 "SIGLA_PARTIDO", "NUMERO_PARTIDO", "NOME_PARTIDO", "QTDE_VOTOS_NOMINAIS","QTDE_VOTOS_LEGENDA","TRANSITO",
+                 "SEQUENCIAL_COLIGACAO")
+
+#Voting 1998
+files <- as.list(paste0("//fs-eesp-01/EESP/Usuarios/arthur.fisch//Dropbox/LOCAL_ELECTIONS/repositorio_data/original_unzipped/votacao_partido/votacao_partido_munzona_1998/votacao_partido_munzona_1998_",
+                        ufs_n[!ufs_n %in% c("BR")], ".txt"))
+votpar_1998 <- lapply(files, read.table, sep = ";", 
+                      header = F, stringsAsFactors = F, fill = T, fileEncoding = "windows-1252") 
+votpar_1998 <- do.call("rbind", votpar_1998)
+names(votpar_1998) <- labels_pre2014
+votpar_1998 <- as_tibble(votpar_1998)
+
+#Voting 2002
+files <- as.list(paste0("//fs-eesp-01/EESP/Usuarios/arthur.fisch//Dropbox/LOCAL_ELECTIONS/repositorio_data/original_unzipped/votacao_partido/votacao_partido_munzona_2002/votacao_partido_munzona_2002_",
+                        ufs_n[!ufs_n %in% c("BR")], ".txt"))
+votpar_2002 <- lapply(files, read.table, sep = ";", 
+                      header = F, stringsAsFactors = F, fill = T, fileEncoding = "windows-1252") 
+votpar_2002 <- do.call("rbind", votpar_2002)
+names(votpar_2002) <- labels_pre2014
+votpar_2002 <- as_tibble(votpar_2002)
+
+#Voting data 2006
+files <- as.list(paste0("//fs-eesp-01/EESP/Usuarios/arthur.fisch//Dropbox/LOCAL_ELECTIONS/repositorio_data/original_unzipped/votacao_partido/votacao_partido_munzona_2006/votacao_partido_munzona_2006_",
+                        ufs, ".txt"))
+votpar_2006 <- lapply(files, read.table, sep = ";", 
+                      header = F, stringsAsFactors = F, fill = T, fileEncoding = "windows-1252") 
+votpar_2006 <- do.call("rbind", votpar_2006)
+names(votpar_2006) <- labels_pre2014
+votpar_2006 <- as_tibble(votpar_2006)
+
+#Voting data 2010
+files <- as.list(paste0("//fs-eesp-01/EESP/Usuarios/arthur.fisch//Dropbox/LOCAL_ELECTIONS/repositorio_data/original_unzipped/votacao_partido/votacao_partido_munzona_2010/votacao_partido_munzona_2010_",
+                        ufs, ".txt"))
+votpar_2010 <- lapply(files, read.table, sep = ";", 
+                      header = F, stringsAsFactors=F, fill = T, fileEncoding = "windows-1252") 
+votpar_2010 <- do.call("rbind", votpar_2010)
+names(votpar_2010) <- labels_pre2014
+votpar_2010 <- as_tibble(votpar_2010)
+
+#voting data 2014
+files <- as.list(paste0("//fs-eesp-01/EESP/Usuarios/arthur.fisch//Dropbox/LOCAL_ELECTIONS/repositorio_data/original_unzipped/votacao_partido/votacao_partido_munzona_2014/votacao_partido_munzona_2014_",
+                        ufs_n[!ufs_n %in% c("ZZ")], ".txt"))
+votpar_2014 <- lapply(files, read.table, sep = ";", 
+                      header = F, stringsAsFactors = F, fill = T, fileEncoding = "windows-1252") 
+votpar_2014 <- do.call("rbind", votpar_2014)
+names(votpar_2014) <- labels_2014
+votpar_2014 <- as_tibble(votpar_2014)
+
+votpar_1998_2014 <- list(votpar_1998, votpar_2002, votpar_2006, votpar_2010, votpar_2014)
+save(votpar_1998_2014, file = "//fs-eesp-01/EESP/Usuarios/arthur.fisch//Dropbox/LOCAL_ELECTIONS/repositorio_data/original_unzipped/votpar_1998_2014.RData")
+
+
+################ local elections
+
+#Voting 2000
+files <- as.list(paste0("//fs-eesp-01/EESP/Usuarios/arthur.fisch//Dropbox/LOCAL_ELECTIONS/repositorio_data/original_unzipped/votacao_partido/votacao_partido_munzona_2000/votacao_partido_munzona_2000_",
+                        ufs_n[!ufs_n %in% c("BR", "ZZ", "DF")], ".txt"))
+votpar_2000 <- lapply(files, read.table, sep = ";", 
+                      header = F, stringsAsFactors = F, fill = T, fileEncoding = "windows-1252") 
+votpar_2000 <- do.call("rbind", votpar_2000)
+names(votpar_2000) <- labels_pre2014
+votpar_2000 <- as_tibble(votpar_2000)
+
+#Voting data 2004
+files <- as.list(paste0("//fs-eesp-01/EESP/Usuarios/arthur.fisch//Dropbox/LOCAL_ELECTIONS/repositorio_data/original_unzipped/votacao_partido/votacao_partido_munzona_2004/votacao_partido_munzona_2004_",
+                        ufs_n[!ufs_n %in% c("BR", "ZZ", "DF")], ".txt"))
+votpar_2004 <- lapply(files, read.table, sep = ";", 
+                      header = F, stringsAsFactors = F, fill = T, fileEncoding = "windows-1252") 
+votpar_2004 <- do.call("rbind", votpar_2004)
+names(votpar_2004) <- labels_pre2014
+votpar_2004 <- as_tibble(votpar_2004)
+
+#Voting data 2008
+files <- as.list(paste0("//fs-eesp-01/EESP/Usuarios/arthur.fisch//Dropbox/LOCAL_ELECTIONS/repositorio_data/original_unzipped/votacao_partido/votacao_partido_munzona_2008/votacao_partido_munzona_2008_",
+                        ufs_n[!ufs_n %in% c("BR", "ZZ", "DF")], ".txt"))
+votpar_2008 <- lapply(files, read.table, sep = ";", 
+                      header = F, stringsAsFactors=F, fill = T, fileEncoding = "windows-1252") 
+votpar_2008 <- do.call("rbind", votpar_2008)
+names(votpar_2008) <- labels_pre2014
+votpar_2008 <- as_tibble(votpar_2008)
+
+#voting data 2012
+files <- as.list(paste0("//fs-eesp-01/EESP/Usuarios/arthur.fisch//Dropbox/LOCAL_ELECTIONS/repositorio_data/original_unzipped/votacao_partido/votacao_partido_munzona_2012/votacao_partido_munzona_2012_",
+                        ufs_n[!ufs_n %in% c("BR", "ZZ", "DF")], ".txt"))
+votpar_2012 <- lapply(files, read.table, sep = ";", 
+                      header = F, stringsAsFactors = F, fill = T, fileEncoding = "windows-1252") 
+votpar_2012 <- do.call("rbind", votpar_2012)
+names(votpar_2012) <- labels_pre2014
+votpar_2012 <- as_tibble(votpar_2012)
+
+
+#voting data 2016
+files <- as.list(paste0("//fs-eesp-01/EESP/Usuarios/arthur.fisch//Dropbox/LOCAL_ELECTIONS/repositorio_data/original_unzipped/votacao_partido/votacao_partido_munzona_2016/votacao_partido_munzona_2016_",
+                        ufs_n[!ufs_n %in% c("BR", "ZZ", "DF")], ".txt"))
+votpar_2016 <- lapply(files, read.table, sep=";", 
+                      header=F, stringsAsFactors=F, fill = T, fileEncoding = "latin1") 
+votpar_2016 <- do.call("rbind", votpar_2016)
+names(votpar_2016) <- labels_2014
+votpar_2016 <- as_tibble(votpar_2016)
+
+votpar_2000_2016 <- list(votpar_2000, votpar_2004, votpar_2008, votpar_2012, votpar_2016)
+save(votpar_2000_2016, file = "//fs-eesp-01/EESP/Usuarios/arthur.fisch//Dropbox/LOCAL_ELECTIONS/repositorio_data/original_unzipped/votpar_2000_2016.RData")
+
+#################
+
+# consolidanting  votes per party
+
+votpar_ue_2002 <- votpar_2002  %>%
+  group_by(NUMERO_PARTIDO, SIGLA_UF, CODIGO_CARGO) %>%
+  summarise(VOTOS= sum(QTDE_VOTOS_LEGENDA))
+
+votpar_ue_2004 <- votpar_2004  %>%
+  group_by(NUMERO_PARTIDO, SIGLA_UE, CODIGO_CARGO) %>%
+  summarise(VOTOS= sum(QTDE_VOTOS_LEGENDA)) 
+
+votpar_ue_2006 <- votpar_2006  %>%
+  group_by(NUMERO_PARTIDO, SIGLA_UF, CODIGO_CARGO) %>%
+  summarise(VOTOS= sum(QTDE_VOTOS_LEGENDA)) 
+
+votpar_ue_2008 <- votpar_2008  %>%
+  group_by(NUMERO_PARTIDO, SIGLA_UE, CODIGO_CARGO) %>%
+  summarise(VOTOS= sum(QTDE_VOTOS_LEGENDA)) 
+
+votpar_ue_2010 <- votpar_2010  %>%
+  group_by(NUMERO_PARTIDO, SIGLA_UF, CODIGO_CARGO) %>%
+  summarise(VOTOS= sum(QTDE_VOTOS_LEGENDA)) 
+
+votpar_ue_2012 <- votpar_2012  %>%
+  group_by(NUMERO_PARTIDO, SIGLA_UE, CODIGO_CARGO) %>%
+  summarise(VOTOS= sum(QTDE_VOTOS_LEGENDA)) 
+
+votpar_ue_2014 <- votpar_2014  %>%
+  group_by(NUMERO_PARTIDO, SIGLA_UF, CODIGO_CARGO) %>%
+  summarise(VOTOS= sum(QTDE_VOTOS_LEGENDA)) 
+
+votpar_ue_2016 <- votpar_2016  %>%
+  group_by(NUMERO_PARTIDO, SIGLA_UE, CODIGO_CARGO) %>%
+  summarise(VOTOS= sum(QTDE_VOTOS_LEGENDA)) 
+
+### auxiliar partidos
+
+#federal dep
+aux_fed_dep_part_2002 <- fed_dep_2002 %>%
+  group_by(NUMERO_PARTIDO, SIGLA_UF, idleg)%>%
+  summarise(total=n())
+aux_fed_dep_part_2006 <- fed_dep_2006 %>%
+  group_by(NUMERO_PARTIDO, SIGLA_UF, idleg)%>%
+  summarise(total=n())
+aux_fed_dep_part_2010 <- fed_dep_2010 %>%
+  group_by(NUMERO_PARTIDO, SIGLA_UF, idleg)%>%
+  summarise(total=n())
+aux_fed_dep_part_2014 <- fed_dep_2014 %>%
+  group_by(NUMERO_PARTIDO, SIGLA_UF, idleg)%>%
+  summarise(total=n())
+
+#state dep
+aux_state_dep_part_2002 <- state_dep_2002 %>%
+  group_by(NUMERO_PARTIDO, SIGLA_UF, idleg)%>%
+  summarise(total=n())
+aux_state_dep_part_2006 <- state_dep_2006 %>%
+  group_by(NUMERO_PARTIDO, SIGLA_UF, idleg)%>%
+  summarise(total=n())
+aux_state_dep_part_2010 <- state_dep_2010 %>%
+  group_by(NUMERO_PARTIDO, SIGLA_UF, idleg)%>%
+  summarise(total=n())
+aux_state_dep_part_2014 <- state_dep_2014 %>%
+  group_by(NUMERO_PARTIDO, SIGLA_UF, idleg)%>%
+  summarise(total=n())
+
+#distrital
+aux_distrital_dep_part_2002 <- distrital_dep_2002 %>%
+  group_by(NUMERO_PARTIDO, SIGLA_UF, idleg)%>%
+  summarise(total=n())
+aux_distrital_dep_part_2006 <- distrital_dep_2006 %>%
+  group_by(NUMERO_PARTIDO, SIGLA_UF, idleg)%>%
+  summarise(total=n())
+aux_distrital_dep_part_2010 <- distrital_dep_2010 %>%
+  group_by(NUMERO_PARTIDO, SIGLA_UF, idleg)%>%
+  summarise(total=n())
+aux_distrital_dep_part_2014 <- distrital_dep_2014 %>%
+  group_by(NUMERO_PARTIDO, SIGLA_UF, idleg)%>%
+  summarise(total=n())
+
+#vereador
+aux_ver_part_2004 <- ver_2004 %>%
+  group_by(NUMERO_PARTIDO, SIGLA_UE, idleg)%>%
+  summarise(total=n())
+aux_ver_part_2008 <- ver_2008 %>%
+  group_by(NUMERO_PARTIDO, SIGLA_UE, idleg)%>%
+  summarise(total=n())
+aux_ver_part_2012 <- ver_2012 %>%
+  group_by(NUMERO_PARTIDO, SIGLA_UE, idleg)%>%
+  summarise(total=n())
+aux_ver_part_2016 <- ver_2016 %>%
+  group_by(NUMERO_PARTIDO, SIGLA_UE, idleg)%>%
+  summarise(total=n())
+
+#########################################
+
+fed_dep_votpar_ue_2002 <- merge(votpar_ue_2002, aux_fed_dep_part_2002, by=c("NUMERO_PARTIDO","SIGLA_UF"))
+fed_dep_votpar_ue_2002 <- fed_dep_votpar_ue_2002 %>%
+  filter(CODIGO_CARGO==6)
+
+fed_dep_votpar_ue_2006 <- merge(votpar_ue_2006, aux_fed_dep_part_2006, by=c("NUMERO_PARTIDO","SIGLA_UF"))
+fed_dep_votpar_ue_2006 <- fed_dep_votpar_ue_2006 %>%
+  filter(CODIGO_CARGO==6)
+
+fed_dep_votpar_ue_2010 <- merge(votpar_ue_2010, aux_fed_dep_part_2010, by=c("NUMERO_PARTIDO","SIGLA_UF"))
+fed_dep_votpar_ue_2010 <- fed_dep_votpar_ue_2010 %>%
+  filter(CODIGO_CARGO==6)
+
+fed_dep_votpar_ue_2014 <- merge(votpar_ue_2014, aux_fed_dep_part_2014, by=c("NUMERO_PARTIDO","SIGLA_UF"))
+fed_dep_votpar_ue_2014 <- fed_dep_votpar_ue_2014 %>%
+  filter(CODIGO_CARGO==6)
+###
+
+
+state_dep_votpar_ue_2002 <- merge(votpar_ue_2002, aux_state_dep_part_2002, by=c("NUMERO_PARTIDO","SIGLA_UF"))
+state_dep_votpar_ue_2002 <- state_dep_votpar_ue_2002 %>%
+  filter(CODIGO_CARGO==7)
+
+state_dep_votpar_ue_2006 <- merge(votpar_ue_2006, aux_state_dep_part_2006, by=c("NUMERO_PARTIDO","SIGLA_UF"))
+state_dep_votpar_ue_2006 <- state_dep_votpar_ue_2006 %>%
+  filter(CODIGO_CARGO==7)
+
+state_dep_votpar_ue_2010 <- merge(votpar_ue_2010, aux_state_dep_part_2010, by=c("NUMERO_PARTIDO","SIGLA_UF"))
+state_dep_votpar_ue_2010 <- state_dep_votpar_ue_2010 %>%
+  filter(CODIGO_CARGO==7)
+
+state_dep_votpar_ue_2014 <- merge(votpar_ue_2014, aux_state_dep_part_2014, by=c("NUMERO_PARTIDO","SIGLA_UF"))
+state_dep_votpar_ue_2014 <- state_dep_votpar_ue_2014 %>%
+  filter(CODIGO_CARGO==7)
+
+#
+distrital_dep_votpar_ue_2002 <- merge(votpar_ue_2002, aux_distrital_dep_part_2002, by=c("NUMERO_PARTIDO","SIGLA_UF"))
+distrital_dep_votpar_ue_2002 <- distrital_dep_votpar_ue_2002 %>%
+  filter(CODIGO_CARGO==8)
+
+distrital_dep_votpar_ue_2006 <- merge(votpar_ue_2006, aux_distrital_dep_part_2006, by=c("NUMERO_PARTIDO","SIGLA_UF"))
+distrital_dep_votpar_ue_2006 <- distrital_dep_votpar_ue_2006 %>%
+  filter(CODIGO_CARGO==8)
+
+distrital_dep_votpar_ue_2010 <- merge(votpar_ue_2010, aux_distrital_dep_part_2010, by=c("NUMERO_PARTIDO","SIGLA_UF"))
+distrital_dep_votpar_ue_2010 <- distrital_dep_votpar_ue_2010 %>%
+  filter(CODIGO_CARGO==8)
+
+distrital_dep_votpar_ue_2014 <- merge(votpar_ue_2014, aux_distrital_dep_part_2014, by=c("NUMERO_PARTIDO","SIGLA_UF"))
+distrital_dep_votpar_ue_2014 <- distrital_dep_votpar_ue_2014 %>%
+  filter(CODIGO_CARGO==8)
+
+####
+
+ver_votpar_ue_2004 <- merge(votpar_ue_2004, aux_ver_part_2004, by=c("NUMERO_PARTIDO","SIGLA_UE"))
+ver_votpar_ue_2004 <- ver_votpar_ue_2004 %>%
+  filter(CODIGO_CARGO==13)
+
+ver_votpar_ue_2008 <- merge(votpar_ue_2008, aux_ver_part_2008, by=c("NUMERO_PARTIDO","SIGLA_UE"))
+ver_votpar_ue_2008 <- ver_votpar_ue_2008 %>%
+  filter(CODIGO_CARGO==13)
+
+ver_votpar_ue_2012 <- merge(votpar_ue_2012, aux_ver_part_2012, by=c("NUMERO_PARTIDO","SIGLA_UE"))
+ver_votpar_ue_2012 <- ver_votpar_ue_2012 %>%
+  filter(CODIGO_CARGO==13)
+
+ver_votpar_ue_2016 <- merge(votpar_ue_2016, aux_ver_part_2016, by=c("NUMERO_PARTIDO","SIGLA_UE"))
+ver_votpar_ue_2016 <- ver_votpar_ue_2016 %>%
+  filter(CODIGO_CARGO==13)
+
+####
+
+fed_dep_part_2002 <-bind_rows(fed_dep_2002, fed_dep_votpar_ue_2002)
+fed_dep_part_2002$total<-NULL
+
+fed_dep_part_2006 <-bind_rows(fed_dep_2006, fed_dep_votpar_ue_2006)
+fed_dep_part_2006$total<-NULL
+
+fed_dep_part_2010 <-bind_rows(fed_dep_2010, fed_dep_votpar_ue_2010)
+fed_dep_part_2010$total<-NULL
+
+fed_dep_part_2014 <-bind_rows(fed_dep_2014, fed_dep_votpar_ue_2014)
+fed_dep_part_2014$total<-NULL
+
+#
+state_dep_part_2002 <-bind_rows(state_dep_2002, state_dep_votpar_ue_2002)
+state_dep_part_2002$total<-NULL
+
+state_dep_part_2006 <-bind_rows(state_dep_2006, state_dep_votpar_ue_2006)
+state_dep_part_2006$total<-NULL
+
+state_dep_part_2010 <-bind_rows(state_dep_2010, state_dep_votpar_ue_2010)
+state_dep_part_2010$total<-NULL
+
+state_dep_part_2014 <-bind_rows(state_dep_2014, state_dep_votpar_ue_2014)
+state_dep_part_2014$total<-NULL
+
+#
+distrital_dep_part_2002 <-bind_rows(distrital_dep_2002, distrital_dep_votpar_ue_2002)
+distrital_dep_part_2002$total<-NULL
+
+distrital_dep_part_2006 <-bind_rows(distrital_dep_2006, distrital_dep_votpar_ue_2006)
+distrital_dep_part_2006$total<-NULL
+
+distrital_dep_part_2010 <-bind_rows(distrital_dep_2010, distrital_dep_votpar_ue_2010)
+distrital_dep_part_2010$total<-NULL
+
+distrital_dep_part_2014 <-bind_rows(distrital_dep_2014, distrital_dep_votpar_ue_2014)
+distrital_dep_part_2014$total<-NULL
+
+#
+ver_part_2004 <-bind_rows(ver_2004, ver_votpar_ue_2004)
+ver_part_2004$total<-NULL
+
+ver_part_2008 <-bind_rows(ver_2008, ver_votpar_ue_2008)
+ver_part_2008$total<-NULL
+
+ver_part_2012 <-bind_rows(ver_2012, ver_votpar_ue_2012)
+ver_part_2012$total<-NULL
+
+ver_part_2016 <-bind_rows(ver_2016, ver_votpar_ue_2016)
+ver_part_2016$total<-NULL
+
+######################################## 
+
+#fed_dep_2002 <- fed_dep_2002 [ , !duplicated(colnames(fed_dep_2002))]
+
+
+distrital_dep_part_2002_2014 <- list(distrital_dep_part_2002, distrital_dep_part_2006, distrital_dep_part_2010, distrital_dep_part_2014)
+save(distrital_dep_part_2002_2014, file = "//fs-eesp-01/EESP/Usuarios/arthur.fisch//Dropbox/LOCAL_ELECTIONS/repositorio_data/original_unzipped/distrital_dep_part_2002_2014.RData")
+
+state_dep_part_2002_2014 <- list(state_dep_part_2002, state_dep_part_2006, state_dep_part_2010, state_dep_part_2014)
+save(state_dep_part_2002_2014, file = "//fs-eesp-01/EESP/Usuarios/arthur.fisch//Dropbox/LOCAL_ELECTIONS/repositorio_data/original_unzipped/state_dep_part_2002_2014.RData")
+
+fed_dep_part_2002_2014 <- list(fed_dep_part_2002, fed_dep_part_2006, fed_dep_part_2010, fed_dep_part_2014)
+save(fed_dep_part_2002_2014, file = "//fs-eesp-01/EESP/Usuarios/arthur.fisch//Dropbox/LOCAL_ELECTIONS/repositorio_data/original_unzipped/fed_dep_part_2002_2014.RData")
+
+ver_part_2004_2016 <- list(ver_part_2004, ver_part_2008, ver_part_2012, ver_part_2016)
+save(ver_part_2004_2016, file = "//fs-eesp-01/EESP/Usuarios/arthur.fisch//Dropbox/LOCAL_ELECTIONS/repositorio_data/original_unzipped/ver_part_2004_2016.RData")
+
 
 ########################################
 
@@ -2228,6 +2637,14 @@ load("//fs-eesp-01/EESP/Usuarios/arthur.fisch//Dropbox/LOCAL_ELECTIONS/repositor
 load("//fs-eesp-01/EESP/Usuarios/arthur.fisch//Dropbox/LOCAL_ELECTIONS/repositorio_data/original_unzipped/state_dep_2002_2014.RData")
 load("//fs-eesp-01/EESP/Usuarios/arthur.fisch//Dropbox/LOCAL_ELECTIONS/repositorio_data/original_unzipped/fed_dep_2002_2014.RData")
 load("//fs-eesp-01/EESP/Usuarios/arthur.fisch//Dropbox/LOCAL_ELECTIONS/repositorio_data/original_unzipped/ver_2004_2016.RData")
+
+
+load("//fs-eesp-01/EESP/Usuarios/arthur.fisch//Dropbox/LOCAL_ELECTIONS/repositorio_data/original_unzipped/distrital_dep_part_2002_2014.RData")
+load("//fs-eesp-01/EESP/Usuarios/arthur.fisch//Dropbox/LOCAL_ELECTIONS/repositorio_data/original_unzipped/state_dep_part_2002_2014.RData")
+load("//fs-eesp-01/EESP/Usuarios/arthur.fisch//Dropbox/LOCAL_ELECTIONS/repositorio_data/original_unzipped/fed_dep_part_2002_2014.RData")
+load("//fs-eesp-01/EESP/Usuarios/arthur.fisch//Dropbox/LOCAL_ELECTIONS/repositorio_data/original_unzipped/ver_part_2004_2016.RData")
+
+
 
 #######################################
 
@@ -2252,6 +2669,26 @@ distrital_dep_2002 <- distrital_dep_2002_2014[[1]]
 distrital_dep_2006 <- distrital_dep_2002_2014[[2]]
 distrital_dep_2010 <- distrital_dep_2002_2014[[3]]
 distrital_dep_2014 <- distrital_dep_2002_2014[[4]]
+
+fed_dep_part_2002 <- fed_dep_part_2002_2014[[1]]
+fed_dep_part_2006 <- fed_dep_part_2002_2014[[2]]
+fed_dep_part_2010 <- fed_dep_part_2002_2014[[3]]
+fed_dep_part_2014 <- fed_dep_part_2002_2014[[4]]
+
+
+#state dep_part
+
+state_dep_part_2002 <- state_dep_part_2002_2014[[1]]
+state_dep_part_2006 <- state_dep_part_2002_2014[[2]]
+state_dep_part_2010 <- state_dep_part_2002_2014[[3]]
+state_dep_part_2014 <- state_dep_part_2002_2014[[4]]
+
+#distrital dep_part
+
+distrital_dep_part_2002 <- distrital_dep_part_2002_2014[[1]]
+distrital_dep_part_2006 <- distrital_dep_part_2002_2014[[2]]
+distrital_dep_part_2010 <- distrital_dep_part_2002_2014[[3]]
+distrital_dep_part_2014 <- distrital_dep_part_2002_2014[[4]]
 
 # vereadores
 
@@ -2867,8 +3304,12 @@ threshold_rank <- function(data,y){
   
   
   
-  ### resultados cortados
+  ### resultados cortados                           
   return(data_final) 
 }
 
 x4<- threshold_rank(data=distrital_dep_2014, y=4)
+
+x5<- threshold_sharenom_colig(data=distrital_dep_part_2014, y=0.10)
+
+x6<- threshold_sharenom_colig(data=distrital_dep_2014, y=0.10)
