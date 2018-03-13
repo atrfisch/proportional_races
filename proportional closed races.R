@@ -1,5 +1,26 @@
 ###################################################################
-############# Downloading, Organizing and Cleaning Electoral Data
+################# Proportional Closed Races #######################
+###################################################################
+
+# This script clean, combine and rank data of Brazilian candidates in proportional elections. 
+# The project aims to analyze the proportional closed races and to generate datasets that 
+# could be used for RDD
+
+
+######## Summary ########
+
+# 1. Downloading, organizing and cleaning data about votes and candidates
+# 2. Cleaning errors in candidates datasets
+# 3. Generating Datasets with votes and candidates
+# 4. Downloading, organizing and cleaning data about partisan votes
+# 5. Preliminary tests
+# 6. Functions to generate RDD Datasets
+
+
+
+###################################################################
+###################################################################
+###### 1.Downloading, Organizing and Cleaning Electoral Data ######
 #0. Download TSE repositorio data
 #1. Combine 
 #2. Clean and get it ready for use
@@ -7,7 +28,6 @@
 ###################################################################
 
 #Preambule
-#R Version 3.3.2
 rm(list=ls())
 
 options(scipen=999) # supressing scientific notation
@@ -427,8 +447,15 @@ vot_1998_2014 <- list(vot_1998, vot_2002, vot_2006, vot_2010, vot_2014)
 save(vot_1998_2014, file = "//fs-eesp-01/EESP/Usuarios/arthur.fisch//Dropbox/LOCAL_ELECTIONS/repositorio_data/original_unzipped/vot_1998_2014.RData")
 
 
-################# Cleaning Candidates
+###################################################################
+###################################################################
+######       2.Cleaning errors in candidates datasets       ######
+#0. Loading data
+#1. Identifying and cleaning errors
+###################################################################
+###################################################################
 
+#### 0. Loading data
 load("//fs-eesp-01/EESP/Usuarios/arthur.fisch/Dropbox/LOCAL_ELECTIONS/repositorio_data/original_unzipped/cand_2000_2016.RData")
 load("//fs-eesp-01/EESP/Usuarios/arthur.fisch/Dropbox/LOCAL_ELECTIONS/repositorio_data/original_unzipped/cand_1998_2014.RData")
 
@@ -443,6 +470,8 @@ cand_2012 <- cand_2000_2016[[4]]
 cand_2014 <- cand_1998_2014[[5]]
 cand_2016 <- cand_2000_2016[[5]]
 
+
+#### 1. Identifying and cleaning errors
 #1998
 cand_1998 <- mutate(cand_1998, id=rownames(cand_1998))
 problems <- cand_1998 %>% group_by(NUM_TURNO, NUMERO_CANDIDATO, CODIGO_CARGO, SIGLA_UE) %>%
@@ -1092,15 +1121,17 @@ save(cand_1998_2014v2, file = "//fs-eesp-01/EESP/Usuarios/arthur.fisch//Dropbox/
 
 
 
-##########################################
-########## MERGING #######################
-##########################################
-##########################################
-##########################################
+###################################################################
+###################################################################
+######   1.Generating Datasets with votes and candidates     ######
+#1. General Elections 
+#2. City Council Elections
+###################################################################
+###################################################################
 
 ################# GENERAL ELECTIONS ###################
 
-
+#loading data
 load("//fs-eesp-01/EESP/Usuarios/arthur.fisch/Dropbox/LOCAL_ELECTIONS/repositorio_data/original_unzipped/vot_1998_2014.RData")
 load("//fs-eesp-01/EESP/Usuarios/arthur.fisch/Dropbox/LOCAL_ELECTIONS/repositorio_data/original_unzipped/cand_1998_2014v2.RData")
 
@@ -1121,7 +1152,7 @@ cand_voto_02 <- vot_2002 %>%
   summarise(VOTOS = sum(TOTAL_VOTOS))
 
 
-#Merging
+#Merging votes with candidates
 cand_2002v2 <- cand_2002 %>% left_join(cand_voto_02, by=c("SEQUENCIAL_CANDIDATO", "SIGLA_UF", "CODIGO_CARGO", "NUM_TURNO"))
 
 #Debugging #which do not merge?
@@ -1147,17 +1178,21 @@ fed_dep_2002<- cand_2002v2 %>%
   filter(CODIGO_CARGO==6)
 
 
-#ordering electoral coalitions
+##ordering electoral coalitions
 
+#creating new sequential
 fed_dep_2002 <- mutate(fed_dep_2002, sq_legenda2 = ifelse(SEQUENCIAL_LEGENDA==-3, as.character(SIGLA_PARTIDO.x), ifelse(SEQUENCIAL_LEGENDA==-1, as.character(SIGLA_PARTIDO.x),as.numeric(SEQUENCIAL_LEGENDA))))
 
+#creating id for electoral coalition
 fed_dep_2002$idleg <-paste0(fed_dep_2002$SIGLA_UF,fed_dep_2002$CODIGO_CARGO, fed_dep_2002$sq_legenda2)
 
+#ranking candidates
 fed_dep_2002 <- fed_dep_2002 %>%
   arrange (idleg, desc(VOTOS)) %>%
   group_by(idleg) %>% 
   mutate(rank = rank(idleg, ties.method = "first"))
 
+#identifying elected candidates
 fed_dep_2002 <-mutate(fed_dep_2002, resultado2 = ifelse(DESC_SIT_TOT_TURNO=="ELEITO","Eleito",ifelse(DESC_SIT_TOT_TURNO=="ELEITO POR MÉDIA","Eleito", ifelse(DESC_SIT_TOT_TURNO=="SUPLENTE","Suplente","Não eleito"))))
 
 fed_dep_2002$idleg2 <-paste0(fed_dep_2002$idleg, fed_dep_2002$resultado2)
@@ -1167,13 +1202,16 @@ fed_dep_2002 <- fed_dep_2002 %>%
   group_by(idleg2) %>% 
   mutate(rank2 = rank(c(idleg2), ties.method = "first"))
 
+#identifying first suplente
 fed_dep_2002 <-mutate(fed_dep_2002, prim_supl = ifelse((rank2==1 & resultado2=="Suplente"),1,0))
 
+#identifying last elected
 fed_dep_2002 <- fed_dep_2002 %>%
   arrange (idleg2, desc(VOTOS)) %>%
   group_by(idleg2) %>% 
   mutate(flag = ifelse( (rank(c(idleg2), ties.method = "last")==1 & resultado2=="Eleito"),1,0))
 
+#selecting valid columns
 fed_dep_2002<-fed_dep_2002%>%
   dplyr::select(DATA_GERACAO, HORA_GERACAO, ANO_ELEICAO.x, NUM_TURNO, DESCRICAO_CARGO.x, SIGLA_UF, SIGLA_UE, DESCRICAO_UE, 
          CODIGO_CARGO, DESCRICAO_CARGO.x, NOME_CANDIDATO.x, SEQUENCIAL_CANDIDATO, NUMERO_CANDIDATO, CPF_CANDIDATO, 
@@ -1194,17 +1232,21 @@ state_dep_2002<- cand_2002v2 %>%
   filter(CODIGO_CARGO==7)
 
 
-#ordering electoral coalitions
+##ordering electoral coalitions
 
+#creating new sequential
 state_dep_2002 <- mutate(state_dep_2002, sq_legenda2 = ifelse(SEQUENCIAL_LEGENDA==-3, as.character(SIGLA_PARTIDO.x), ifelse(SEQUENCIAL_LEGENDA==-1, as.character(SIGLA_PARTIDO.x),as.numeric(SEQUENCIAL_LEGENDA))))
 
+#creating id for electoral coalition
 state_dep_2002$idleg <-paste0(state_dep_2002$SIGLA_UF,state_dep_2002$CODIGO_CARGO, state_dep_2002$sq_legenda2)
 
+#ranking candidates
 state_dep_2002 <- state_dep_2002 %>%
   arrange (idleg, desc(VOTOS)) %>%
   group_by(idleg) %>% 
   mutate(rank = rank(idleg, ties.method = "first"))
 
+#identifying elected candidates
 state_dep_2002 <-mutate(state_dep_2002, resultado2 = ifelse(DESC_SIT_TOT_TURNO=="ELEITO","Eleito",ifelse(DESC_SIT_TOT_TURNO=="ELEITO POR MÉDIA","Eleito", ifelse(DESC_SIT_TOT_TURNO=="SUPLENTE","Suplente","Não eleito"))))
 
 state_dep_2002$idleg2 <-paste0(state_dep_2002$idleg, state_dep_2002$resultado2)
@@ -1214,8 +1256,10 @@ state_dep_2002 <- state_dep_2002 %>%
   group_by(idleg2) %>% 
   mutate(rank2 = rank(c(idleg2), ties.method = "first"))
 
+#identifying first suplente
 state_dep_2002 <-mutate(state_dep_2002, prim_supl = ifelse((rank2==1 & resultado2=="Suplente"),1,0))
 
+#identifying last elected
 state_dep_2002 <- state_dep_2002 %>%
   arrange (idleg2, desc(VOTOS)) %>%
   group_by(idleg2) %>% 
@@ -1686,9 +1730,6 @@ problems <- cand_2014v2 %>% group_by(NUM_TURNO, NUMERO_CANDIDATO, CODIGO_CARGO, 
 casos <- cand_2014v2 %>% right_join(problems, by = c("NUM_TURNO", 
                                                      "NUMERO_CANDIDATO", "CODIGO_CARGO", "SIGLA_UE"))
 
-######
-###### necessidade de filtrar pelos candidatos repeditos
-######
 
 #### FEDERAL DEPUTY ####
 
@@ -1878,9 +1919,6 @@ problems <- cand_2004v2 %>% group_by(NUM_TURNO, NUMERO_CANDIDATO, CODIGO_CARGO, 
 casos <- cand_2004v2 %>% right_join(problems, by = c("NUM_TURNO", 
                                                      "NUMERO_CANDIDATO", "CODIGO_CARGO", "SIGLA_UE"))
 
-######
-###### necessidade de filtrar pelos candidatos repeditos
-######
 
 #### VEREADOR ####
 
@@ -2055,9 +2093,6 @@ problems <- cand_2012v2 %>% group_by(NUM_TURNO, NUMERO_CANDIDATO, CODIGO_CARGO, 
 casos <- cand_2012v2 %>% right_join(problems, by = c("NUM_TURNO", 
                                                      "NUMERO_CANDIDATO", "CODIGO_CARGO", "SIGLA_UE"))
 
-######
-###### necessidade de filtrar pelos candidatos repeditos
-######
 
 #### VEREADOR ####
 
@@ -2144,9 +2179,7 @@ problems <- cand_2016v2 %>% group_by(NUM_TURNO, NUMERO_CANDIDATO, CODIGO_CARGO, 
 casos <- cand_2016v2 %>% right_join(problems, by = c("NUM_TURNO", 
                                                      "NUMERO_CANDIDATO", "CODIGO_CARGO", "SIGLA_UE"))
 
-######
-###### necessidade de filtrar pelos candidatos repeditos
-######
+
 
 #### VEREADOR ####
 
@@ -2200,7 +2233,7 @@ ver_2016<-ver_2016%>%
 
 ######################################## 
 
-#fed_dep_2002 <- fed_dep_2002 [ , !duplicated(colnames(fed_dep_2002))]
+#saving data from all elections
 
 
 distrital_dep_2002_2014 <- list(distrital_dep_2002, distrital_dep_2006, distrital_dep_2010, distrital_dep_2014)
@@ -2215,9 +2248,16 @@ save(fed_dep_2002_2014, file = "//fs-eesp-01/EESP/Usuarios/arthur.fisch//Dropbox
 ver_2004_2016 <- list(ver_2004, ver_2008, ver_2012, ver_2016)
 save(ver_2004_2016, file = "//fs-eesp-01/EESP/Usuarios/arthur.fisch//Dropbox/LOCAL_ELECTIONS/repositorio_data/original_unzipped/ver_2004_2016.RData")
 
-########################################
-########################################
+################################################################################
+################################################################################
+######  4. Downloading, organizing and cleaning data about partisan votes ######
+#1. Downloading 
+#2. Consolidating
+#3. Organizing
+###################################################################
+###################################################################
 
+#1. Downloading data from partisan voting
 url_votpar98 <- "http://agencia.tse.jus.br/estatistica/sead/odsele/votacao_partido_munzona/votacao_partido_munzona_1998.zip"
 file_d <- paste0(dir_d, "original_data/votacao_partido/votacao_partido_munzona_1998.zip")
 file_un <- paste0(dir_d, "original_unzipped/votacao_partido/votacao_partido_munzona_1998")
@@ -2269,6 +2309,8 @@ file_un <- paste0(dir_d, "original_unzipped/votacao_partido/votacao_partido_munz
 votpar_2016 <- get_tse(url_votpar16, file_d, file_un)
 
 ########################
+#2. Consolidating data from partisan voting
+
 ufs_n <- c("AC", "AL", "AP", "AM", "BA", "BR",   
            "CE", "DF", "ES", "GO", "MA", "MT", "MS",
            "MG", "PA", "PB", "PR", "PE", "PI", "RJ",
@@ -2395,6 +2437,8 @@ save(votpar_2000_2016, file = "//fs-eesp-01/EESP/Usuarios/arthur.fisch//Dropbox/
 
 #################
 
+#3. Organizing partisan Voting
+
 # consolidanting  votes per party
 
 votpar_ue_2002 <- votpar_2002  %>%
@@ -2429,7 +2473,7 @@ votpar_ue_2016 <- votpar_2016  %>%
   group_by(NUMERO_PARTIDO, SIGLA_UE, CODIGO_CARGO) %>%
   summarise(VOTOS= sum(QTDE_VOTOS_LEGENDA)) 
 
-### auxiliar partidos
+### auxilia data set from parties in order to get the right idleg
 
 #federal dep
 aux_fed_dep_part_2002 <- fed_dep_2002 %>%
@@ -2488,7 +2532,9 @@ aux_ver_part_2016 <- ver_2016 %>%
   summarise(total=n())
 
 #########################################
+# merging information of partisan votes and idleg by type of office
 
+#federal deputy
 fed_dep_votpar_ue_2002 <- merge(votpar_ue_2002, aux_fed_dep_part_2002, by=c("NUMERO_PARTIDO","SIGLA_UF"))
 fed_dep_votpar_ue_2002 <- fed_dep_votpar_ue_2002 %>%
   filter(CODIGO_CARGO==6)
@@ -2504,8 +2550,10 @@ fed_dep_votpar_ue_2010 <- fed_dep_votpar_ue_2010 %>%
 fed_dep_votpar_ue_2014 <- merge(votpar_ue_2014, aux_fed_dep_part_2014, by=c("NUMERO_PARTIDO","SIGLA_UF"))
 fed_dep_votpar_ue_2014 <- fed_dep_votpar_ue_2014 %>%
   filter(CODIGO_CARGO==6)
-###
 
+# merging information of partisan votes and idleg by type of office
+
+#state deputy
 
 state_dep_votpar_ue_2002 <- merge(votpar_ue_2002, aux_state_dep_part_2002, by=c("NUMERO_PARTIDO","SIGLA_UF"))
 state_dep_votpar_ue_2002 <- state_dep_votpar_ue_2002 %>%
@@ -2523,7 +2571,11 @@ state_dep_votpar_ue_2014 <- merge(votpar_ue_2014, aux_state_dep_part_2014, by=c(
 state_dep_votpar_ue_2014 <- state_dep_votpar_ue_2014 %>%
   filter(CODIGO_CARGO==7)
 
-#
+
+# merging information of partisan votes and idleg by type of office
+
+#distrital deputy
+
 distrital_dep_votpar_ue_2002 <- merge(votpar_ue_2002, aux_distrital_dep_part_2002, by=c("NUMERO_PARTIDO","SIGLA_UF"))
 distrital_dep_votpar_ue_2002 <- distrital_dep_votpar_ue_2002 %>%
   filter(CODIGO_CARGO==8)
@@ -2540,7 +2592,9 @@ distrital_dep_votpar_ue_2014 <- merge(votpar_ue_2014, aux_distrital_dep_part_201
 distrital_dep_votpar_ue_2014 <- distrital_dep_votpar_ue_2014 %>%
   filter(CODIGO_CARGO==8)
 
-####
+# merging information of partisan votes and idleg by type of office
+
+# vereador
 
 ver_votpar_ue_2004 <- merge(votpar_ue_2004, aux_ver_part_2004, by=c("NUMERO_PARTIDO","SIGLA_UE"))
 ver_votpar_ue_2004 <- ver_votpar_ue_2004 %>%
@@ -2558,8 +2612,8 @@ ver_votpar_ue_2016 <- merge(votpar_ue_2016, aux_ver_part_2016, by=c("NUMERO_PART
 ver_votpar_ue_2016 <- ver_votpar_ue_2016 %>%
   filter(CODIGO_CARGO==13)
 
-####
-
+# binding rows in order to make a dataset with partisan votes
+# federal deputy
 fed_dep_part_2002 <-bind_rows(fed_dep_2002, fed_dep_votpar_ue_2002)
 fed_dep_part_2002$total<-NULL
 
@@ -2572,7 +2626,9 @@ fed_dep_part_2010$total<-NULL
 fed_dep_part_2014 <-bind_rows(fed_dep_2014, fed_dep_votpar_ue_2014)
 fed_dep_part_2014$total<-NULL
 
-#
+
+# binding rows in order to make a dataset with partisan votes
+# state deputy
 state_dep_part_2002 <-bind_rows(state_dep_2002, state_dep_votpar_ue_2002)
 state_dep_part_2002$total<-NULL
 
@@ -2585,7 +2641,9 @@ state_dep_part_2010$total<-NULL
 state_dep_part_2014 <-bind_rows(state_dep_2014, state_dep_votpar_ue_2014)
 state_dep_part_2014$total<-NULL
 
-#
+
+# binding rows in order to make a dataset with partisan votes
+# distrital deputy
 distrital_dep_part_2002 <-bind_rows(distrital_dep_2002, distrital_dep_votpar_ue_2002)
 distrital_dep_part_2002$total<-NULL
 
@@ -2598,7 +2656,9 @@ distrital_dep_part_2010$total<-NULL
 distrital_dep_part_2014 <-bind_rows(distrital_dep_2014, distrital_dep_votpar_ue_2014)
 distrital_dep_part_2014$total<-NULL
 
-#
+
+# binding rows in order to make a dataset with partisan votes
+# vereador
 ver_part_2004 <-bind_rows(ver_2004, ver_votpar_ue_2004)
 ver_part_2004$total<-NULL
 
@@ -2613,8 +2673,7 @@ ver_part_2016$total<-NULL
 
 ######################################## 
 
-#fed_dep_2002 <- fed_dep_2002 [ , !duplicated(colnames(fed_dep_2002))]
-
+# Saving datasets with partisan votes
 
 distrital_dep_part_2002_2014 <- list(distrital_dep_part_2002, distrital_dep_part_2006, distrital_dep_part_2010, distrital_dep_part_2014)
 save(distrital_dep_part_2002_2014, file = "//fs-eesp-01/EESP/Usuarios/arthur.fisch//Dropbox/LOCAL_ELECTIONS/repositorio_data/original_unzipped/distrital_dep_part_2002_2014.RData")
@@ -2629,8 +2688,18 @@ ver_part_2004_2016 <- list(ver_part_2004, ver_part_2008, ver_part_2012, ver_part
 save(ver_part_2004_2016, file = "//fs-eesp-01/EESP/Usuarios/arthur.fisch//Dropbox/LOCAL_ELECTIONS/repositorio_data/original_unzipped/ver_part_2004_2016.RData")
 
 
-########################################
 
+###################################################################
+###################################################################
+###########  5. Preliminary tests                       ###########
+#1. Loading data
+#2. Number of elected candidates test
+#3. Negative votes test
+###################################################################
+###################################################################
+
+
+#1. Loading Data
 rm(list=ls())
 
 load("//fs-eesp-01/EESP/Usuarios/arthur.fisch//Dropbox/LOCAL_ELECTIONS/repositorio_data/original_unzipped/distrital_dep_2002_2014.RData")
@@ -2647,7 +2716,6 @@ load("//fs-eesp-01/EESP/Usuarios/arthur.fisch//Dropbox/LOCAL_ELECTIONS/repositor
 
 
 #######################################
-
 #fed dep
 
 fed_dep_2002 <- fed_dep_2002_2014[[1]]
@@ -2697,10 +2765,10 @@ ver_2008 <- ver_2004_2016[[2]]
 ver_2012 <- ver_2004_2016[[3]]
 ver_2016 <- ver_2004_2016[[4]]
 
-
+#2. Number of elected candidates test
 ##### Smell checks
 
-# eleitos
+# elected
 
 electe_fed_dep_02 <- fed_dep_2002 %>%
   filter(resultado2=="Eleito")
@@ -2738,7 +2806,8 @@ electe_ver_12 <- ver_2012 %>%
 electe_ver_16 <- ver_2016 %>%
   filter(resultado2=="Eleito")
 
-#### votacao menor que zero
+#3. Negative votes test
+#### negative votes
 
 vot_fed_dep_02 <- fed_dep_2002 %>%
   filter(VOTOS<0)
@@ -2776,13 +2845,22 @@ vot_ver_12 <- ver_2012 %>%
 vot_ver_16 <- ver_2016 %>%
   filter(VOTOS<0)
 
-################################################
-################################################
-################################################
-#############  FUNCOES #########################
-################################################
-################################################
+###################################################################
+###################################################################
+########  6. Functions to generate RDD Datasets            ########
+#0. Loading Data
+#1. Function Percentage of Last Elected Candidates 
+#2. Function Distance of average of votes from last elected and first suplente
+#3. Function Sum (IN DEVELOPMENT)
+#4. Function Boas and Hidalgo - airwaves 2011
+#5. Function State Share
+#6. Function Coalition Share
+#7. Function Rank 
+###################################################################
+###################################################################
 
+
+#0. Loading Data
 rm(list=ls())
 
 load("//fs-eesp-01/EESP/Usuarios/arthur.fisch//Dropbox/LOCAL_ELECTIONS/repositorio_data/original_unzipped/distrital_dep_2002_2014.RData")
@@ -2822,23 +2900,21 @@ ver_2012 <- ver_2004_2016[[3]]
 ver_2016 <- ver_2004_2016[[4]]
 
 
-
-##### function to calculate threshold
-
-# Porcentagem dos ultimos eleitos
+#1. Function Percentage of Last Elected Candidates 
+# This function calculates which candidates have at least Y% of votes from the last elected candidate
 
 threshold_simples <- function(data,y){
   
-  #ultimo eleito
+  #last elected
   
   data_ult_ele <- data %>%
     filter(flag==1)
   
-  #primeiro suplente
+  #first suplente
   data_pri_supl <-data%>%
     filter(prim_supl==1)
   
-  ## só colunas que importam
+  #selecting only important columns
   
   votos_ult_ele <- data_ult_ele%>%
     dplyr::select(idleg, VOTOS)
@@ -2876,35 +2952,33 @@ threshold_simples <- function(data,y){
   data_final2<-data_final2%>%
     arrange(desc(idleg, VOTOS))
   
-  ### resultados cortados
+  ### final result
   return(data_final2) 
 }
 
 
 ### simple tests
-x <- threshold_simples(data=distrital_dep_2014, y=1)
-
-#teste<-distrital_dep_2014%>%
-#  filter(!(resultado2=="Não eleito"))
+#x <- threshold_simples(data=distrital_dep_2014, y=1)
 
 
-#teste2<-distrital_dep_2014%>%
-#  filter((resultado2=="Eleito") & !(flag==1))
-
-############ 
+############
+#2. Function Distance of average of votes from last elected and first suplente
+# This function calculates which candidates are in the bandwidth 2y 
+# The threshold is calculated as the average of the votes from last elected and first suplente
+# The distance from the threshold is the running variable
 
 threshold_media <- function(data,y){
   
-  #ultimo eleito
+  #last elected
   
   data_ult_ele <- data %>%
     filter(flag==1)
   
-  #primeiro suplente
+  #first suplente
   data_pri_supl <-data%>%
     filter(prim_supl==1)
   
-  ## só colunas que importam
+  #keeping only relevant columns
   
   votos_ult_ele <- data_ult_ele%>%
     dplyr:: select(idleg, VOTOS)
@@ -2944,7 +3018,7 @@ threshold_media <- function(data,y){
   data_final2<-data_final2%>%
     arrange(desc(idleg, VOTOS))
   
-  ### resultados cortados
+  # final results
   return(data_final2) 
 }
 
@@ -2954,7 +3028,10 @@ x2 <- threshold_simples(data=distrital_dep_2014, y=0.15)
 
 
 ################
-# funcao soma
+#3. Function Sum (IN DEVELOPMENT)
+# This function calculates which candidates are in the bandwidth 2y 
+# The threshold is calculated as the sum of the votes from last elected and first suplente
+# This funcion is not completed, in development
 
 threshold_soma <- function(data,y){
   
@@ -3012,20 +3089,23 @@ threshold_soma <- function(data,y){
 }
 
 ################
-# funcao boa and hidalgo - airwaves 2011
+#4. Function Boas and Hidalgo - airwaves 2011
+# This function generate datasets using the absolute votes as running variables
+# The y is set as an amount of votes
+# The function will select candidates with a vote difference from last elected at maximun y
 
 threshold_bh <- function(data,y){
   
-  #ultimo eleito
+  #last elected
   
   data_ult_ele <- data %>%
     dplyr:: filter(flag==1)
   
-  #primeiro suplente
+  #first suplente
   data_pri_supl <-data%>%
     dplyr::filter(prim_supl==1)
   
-  ## só colunas que importam
+  #only important columns
   
   votos_ult_ele <- data_ult_ele%>%
     dplyr:: select(idleg, VOTOS)
@@ -3077,7 +3157,7 @@ threshold_bh <- function(data,y){
   data_final2<-data_final2%>%
     arrange(desc(idleg, VOTOS))
   
-  ### resultados cortados
+  # final results
   return(data_final2) 
 }
 
@@ -3088,7 +3168,11 @@ threshold_bh <- function(data,y){
 #x4<- threshold_bh(data=distrital_dep_2014, y=1000)
 
 
-### funcao de share nominal estado
+#5. Function State Share
+# This function calculates the candidate vote share in their electoral district
+# The share in the state is the running varible
+# The distance from the shares between the candidate and the last elected and 
+# first suplente will be used to cut the dataset
 
 threshold_sharenom_uf <- function(data,y){
   
@@ -3177,8 +3261,11 @@ threshold_sharenom_uf <- function(data,y){
 
 x4<- threshold_sharenom_uf(data=distrital_dep_2014, y=0.01)
 
-
-### funcao de share nominal estado
+#5. Function Coaliton Share
+# This function calculates the candidate vote share in their electoral Coalition
+# The share in the coalition is the running varible
+# The distance from the shares between the candidate and the last elected and 
+# first suplente will be used to cut the dataset
 
 threshold_sharenom_colig <- function(data,y){
   
@@ -3199,12 +3286,12 @@ threshold_sharenom_colig <- function(data,y){
   
   ### Calculo da distancia do share nominal
   
-  #ultimo eleito
+  #last elected
   
   data_ult_ele <- data_final %>%
     dplyr:: filter(flag==1)
   
-  #primeiro suplente
+  #first suplente
   data_pri_supl <-data_final%>%
     dplyr::filter(prim_supl==1)
   
@@ -3261,14 +3348,15 @@ threshold_sharenom_colig <- function(data,y){
     arrange(desc(idleg, VOTOS))
   
   
-  ### resultados cortados
+  ### final results
   return(data_final2) 
 }
 
 x4<- threshold_sharenom_colig(data=distrital_dep_2014, y=0.10)
 
 
-### funcao de rank na lista partidaria
+#7. Function Rank 
+# This function generates the dataset using the candidate's rank as running variable
 
 threshold_rank <- function(data,y){
   
@@ -3308,8 +3396,8 @@ threshold_rank <- function(data,y){
   return(data_final) 
 }
 
+
+# TESTS
 x4<- threshold_rank(data=distrital_dep_2014, y=4)
-
 x5<- threshold_sharenom_colig(data=distrital_dep_part_2014, y=0.10)
-
 x6<- threshold_sharenom_colig(data=distrital_dep_2014, y=0.10)
