@@ -40,7 +40,7 @@ library(readxl)
 
 #Change your working directory here
 setwd("~")
-if(grepl("nataliabueno",getwd())==TRUE){#Allow for different paths in our computers
+if(grepl("bueno",getwd())==TRUE){#Allow for different paths in our computers
   dir <- "~/Dropbox/LOCAL_ELECTIONS/"
 }else{
   dir <- "//fs-eesp-01/EESP/Usuarios/arthur.fisch/Dropbox/LOCAL_ELECTIONS/"
@@ -55,7 +55,7 @@ source("~/Dropbox/TSE_prop_races/proportional_races/margin_functions.R")
 ###################################################################
 
 setwd("~")
-if(grepl("nataliabueno",getwd())==TRUE){#Allow for different paths in our computers
+if(grepl("bueno",getwd())==TRUE){#Allow for different paths in our computers
   dir_d <- "~/Dropbox/LOCAL_ELECTIONS/repositorio_data/"
 }else{
   dir_d <- "//fs-eesp-01/EESP/Usuarios/arthur.fisch/Dropbox/LOCAL_ELECTIONS/repositorio_data/"
@@ -213,7 +213,7 @@ names(cand_2000) <- labels_pre2012c
 cand_2000 <- as_tibble(cand_2000)
 
 #candidates 2004
-files <- as.list(paste0(paste0(dir_d, "original_unzipped/consulta_cand/consulta_cand_2004/consulta_cand_2004_",
+files <- as.list(paste0(dir_d, "original_unzipped/consulta_cand/consulta_cand_2004/consulta_cand_2004_",
                         ufs_n[!ufs_n %in% c("BR", "ZZ", "DF")], ".txt"))
 cand_2004 <- lapply(files, read.table, sep = ";", header=F, 
                     stringsAsFactors = F, fill = T, fileEncoding = "windows-1252") 
@@ -275,7 +275,7 @@ names(cand_2016) <- labels_2016c
 cand_2016 <- as_tibble(cand_2016)
 
 cand_2000_2016 <- list(cand_2000, cand_2004, cand_2008, cand_2012, cand_2016)
-save(cand_2000_2016, file = paste0(dir, "original_unzipped/cand_2000_2016.RData")
+save(cand_2000_2016, file = paste0(dir, "original_unzipped/cand_2000_2016.RData"))
 
 #Voting data 2000
 labels_pre2012 <- c("DATA_GERACAO", "HORA_GERACAO", "ANO_ELEICAO", "NUM_TURNO", "DESCRICAO_ELEICAO",
@@ -1006,7 +1006,8 @@ casos <- casos %>% filter(COD_SITUACAO_CANDIDATURA == 2 |
                             COD_SITUACAO_CANDIDATURA == 16 | 
                             COD_SITUACAO_CANDIDATURA == 17)
 
-problems_caso <- casos %>% group_by(NUM_TURNO, NUMERO_CANDIDATO, CODIGO_CARGO, SIGLA_UE, 
+problems_caso <- casos %>% group_by(NUM_TURNO, NUMERO_CANDIDATO, 
+                                    CODIGO_CARGO, SIGLA_UE, 
                                     DESCRICAO_ELEICAO) %>%
                            summarise(total = n()) %>% filter(total > 1)
 
@@ -1126,14 +1127,13 @@ write.csv2(cand_2016v2, file = paste0(dir, "cepesp_data/cand_2016v2.csv"), row.n
 temp <- cand_2016 %>% filter(key %in% exclude)
 stopifnot((nrow(cand_2016) - nrow(cand_2016v2)) == nrow(temp))
 
-
-#consolidating
+#Consolidating
 
 cand_2000_2016v2 <- list(cand_2000, cand_2004v2, cand_2008v2, cand_2012v2, cand_2016v2)
-save(cand_2000_2016v2, file = paste0(dir_d, "original_unzipped/cand_2000_2016v2.RData")
+save(cand_2000_2016v2, file = paste0(dir_d, "original_unzipped/cand_2000_2016v2.RData"))
                                      
 cand_1998_2014v2 <- list(cand_1998v3, cand_2002v2, cand_2006v2, cand_2010v2, cand_2014v2)
-save(cand_1998_2014v2, file = paste0(dir_d, "original_unzipped/cand_1998_2014v2.RData")
+save(cand_1998_2014v2, file = paste0(dir_d, "original_unzipped/cand_1998_2014v2.RData"))
 
 ###################################################################
 ###################################################################
@@ -1146,13 +1146,10 @@ save(cand_1998_2014v2, file = paste0(dir_d, "original_unzipped/cand_1998_2014v2.
 ################# GENERAL ELECTIONS ###################
 
 #loading data
-load("//fs-eesp-01/EESP/Usuarios/arthur.fisch/Dropbox/LOCAL_ELECTIONS/repositorio_data/original_unzipped/vot_1998_2014.RData")
-load("//fs-eesp-01/EESP/Usuarios/arthur.fisch/Dropbox/LOCAL_ELECTIONS/repositorio_data/original_unzipped/cand_1998_2014v2.RData")
+load(paste0(dir_d, "original_unzipped/vot_1998_2014.RData"))
+load(paste0(dir_d, "original_unzipped/cand_1998_2014v2.RData"))
 
 #######Elections 2002 ###########
-
-
-library(dplyr)
 
 vot_2002 <- vot_1998_2014[[2]]
 cand_2002 <- cand_1998_2014v2[[2]]
@@ -1162,12 +1159,15 @@ vot_2002<- vot_2002 %>% rename(SEQUENCIAL_CANDIDATO = SQ_CANDIDATO)
 
 #consolidating votes per candidate
 cand_voto_02 <- vot_2002 %>%
-  group_by(ANO_ELEICAO, NUM_TURNO, DESCRICAO_CARGO,CODIGO_CARGO, SEQUENCIAL_CANDIDATO,DESCRICAO_ELEICAO, SIGLA_UF,NUMERO_CAND,NOME_CANDIDATO,NOME_URNA_CANDIDATO, SEQUENCIAL_LEGENDA, SIGLA_PARTIDO)%>%
-  summarise(VOTOS = sum(TOTAL_VOTOS))
+           group_by(ANO_ELEICAO, NUM_TURNO, DESCRICAO_CARGO,CODIGO_CARGO, SEQUENCIAL_CANDIDATO,
+           DESCRICAO_ELEICAO, SIGLA_UF,NUMERO_CAND,NOME_CANDIDATO,NOME_URNA_CANDIDATO, 
+           SEQUENCIAL_LEGENDA, SIGLA_PARTIDO)%>%
+           summarise(VOTOS = sum(TOTAL_VOTOS))
 
 
 #Merging votes with candidates
-cand_2002v2 <- cand_2002 %>% left_join(cand_voto_02, by=c("SEQUENCIAL_CANDIDATO", "SIGLA_UF", "CODIGO_CARGO", "NUM_TURNO"))
+cand_2002v2 <- cand_2002 %>% left_join(cand_voto_02, by=c("SEQUENCIAL_CANDIDATO", "SIGLA_UF", 
+                                                          "CODIGO_CARGO", "NUM_TURNO"))
 
 #Debugging #which do not merge?
 bugs <- anti_join(cand_2002, cand_voto_02, by=c( "SEQUENCIAL_CANDIDATO", "SIGLA_UF", "CODIGO_CARGO", "NUM_TURNO"))
@@ -1179,7 +1179,7 @@ table(bugs$DES_SITUACAO_CANDIDATURA, bugs$DESCRICAO_CARGO)
 #Verifying duplicity in candidates
 
 problems <- cand_2002v2 %>% group_by(NUM_TURNO, NUMERO_CANDIDATO, CODIGO_CARGO, SIGLA_UE) %>%
-  summarise(total = n()) %>% filter(total > 1)
+                            summarise(total = n()) %>% filter(total > 1)
 
 casos <- cand_2002v2 %>% right_join(problems, by = c("NUM_TURNO", 
                                                    "NUMERO_CANDIDATO", "CODIGO_CARGO", "SIGLA_UE"))
@@ -1195,7 +1195,9 @@ fed_dep_2002<- cand_2002v2 %>%
 ##ordering electoral coalitions
 
 #creating new sequential
-fed_dep_2002 <- mutate(fed_dep_2002, sq_legenda2 = ifelse(SEQUENCIAL_LEGENDA==-3, as.character(SIGLA_PARTIDO.x), ifelse(SEQUENCIAL_LEGENDA==-1, as.character(SIGLA_PARTIDO.x),as.numeric(SEQUENCIAL_LEGENDA))))
+fed_dep_2002 <- mutate(fed_dep_2002, sq_legenda2 = ifelse(SEQUENCIAL_LEGENDA==-3, 
+                        as.character(SIGLA_PARTIDO.x), ifelse(SEQUENCIAL_LEGENDA==-1, 
+                        as.character(SIGLA_PARTIDO.x),as.numeric(SEQUENCIAL_LEGENDA))))
 
 #creating id for electoral coalition
 fed_dep_2002$idleg <-paste0(fed_dep_2002$SIGLA_UF,fed_dep_2002$CODIGO_CARGO, fed_dep_2002$sq_legenda2)
@@ -1207,7 +1209,9 @@ fed_dep_2002 <- fed_dep_2002 %>%
   mutate(rank = rank(idleg, ties.method = "first"))
 
 #identifying elected candidates
-fed_dep_2002 <-mutate(fed_dep_2002, resultado2 = ifelse(DESC_SIT_TOT_TURNO=="ELEITO","Eleito",ifelse(DESC_SIT_TOT_TURNO=="ELEITO POR M?DIA","Eleito", ifelse(DESC_SIT_TOT_TURNO=="SUPLENTE","Suplente","N?o eleito"))))
+fed_dep_2002 <- mutate(fed_dep_2002, resultado2 = ifelse(DESC_SIT_TOT_TURNO=="ELEITO","Eleito",
+                      ifelse(DESC_SIT_TOT_TURNO == "ELEITO POR MÉDIA","Eleito", 
+                             ifelse(DESC_SIT_TOT_TURNO == "SUPLENTE","Suplente","Não eleito"))))
 
 fed_dep_2002$idleg2 <-paste0(fed_dep_2002$idleg, fed_dep_2002$resultado2)
 
@@ -1223,10 +1227,10 @@ fed_dep_2002 <-mutate(fed_dep_2002, prim_supl = ifelse((rank2==1 & resultado2=="
 fed_dep_2002 <- fed_dep_2002 %>%
   arrange (idleg2, desc(VOTOS)) %>%
   group_by(idleg2) %>% 
-  mutate(flag = ifelse( (rank(c(idleg2), ties.method = "last")==1 & resultado2=="Eleito"),1,0))
+  mutate(flag = ifelse((rank(c(idleg2), ties.method = "last")==1 & resultado2=="Eleito"),1,0))
 
 #selecting valid columns
-fed_dep_2002<-fed_dep_2002%>%
+fed_dep_2002 <- fed_dep_2002%>%
   dplyr::select(DATA_GERACAO, HORA_GERACAO, ANO_ELEICAO.x, NUM_TURNO, DESCRICAO_CARGO.x, SIGLA_UF, SIGLA_UE, DESCRICAO_UE, 
          CODIGO_CARGO, DESCRICAO_CARGO.x, NOME_CANDIDATO.x, SEQUENCIAL_CANDIDATO, NUMERO_CANDIDATO, CPF_CANDIDATO, 
          NOME_URNA_CANDIDATO.x, COD_SITUACAO_CANDIDATURA, DES_SITUACAO_CANDIDATURA, NUMERO_PARTIDO, SIGLA_PARTIDO.x,
@@ -1235,8 +1239,8 @@ fed_dep_2002<-fed_dep_2002%>%
          DESCRICAO_ESTADO_CIVIL, CODIGO_NACIONALIDADE, DESCRICAO_NACIONALIDADE, SIGLA_UF_NASCIMENTO, CODIGO_MUNICIPIO_NASCIMENTO,
          NOME_MUNICIPIO_NASCIMENTO, DESPESA_MAX_CAMPANHA, COD_SIT_TOT_TURNO, DESC_SIT_TOT_TURNO,VOTOS,sq_legenda2,idleg, idleg2, rank, rank2, resultado2, prim_supl, flag)
 
-fed_dep_2002<-fed_dep_2002%>%
-  filter(!(is.na(VOTOS)))
+fed_dep_2002 <- fed_dep_2002%>%
+                filter(!(is.na(VOTOS)))
 
 #### STATE DEPUTY ####
 
@@ -1261,7 +1265,10 @@ state_dep_2002 <- state_dep_2002 %>%
   mutate(rank = rank(idleg, ties.method = "first"))
 
 #identifying elected candidates
-state_dep_2002 <-mutate(state_dep_2002, resultado2 = ifelse(DESC_SIT_TOT_TURNO=="ELEITO","Eleito",ifelse(DESC_SIT_TOT_TURNO=="ELEITO POR M?DIA","Eleito", ifelse(DESC_SIT_TOT_TURNO=="SUPLENTE","Suplente","N?o eleito"))))
+state_dep_2002 <-mutate(state_dep_2002, resultado2 = ifelse(DESC_SIT_TOT_TURNO=="ELEITO","Eleito",
+                                                     ifelse(DESC_SIT_TOT_TURNO=="ELEITO POR MÉDIA",
+                                                     "Eleito", ifelse(DESC_SIT_TOT_TURNO=="SUPLENTE",
+                                                                      "Suplente","Não eleito"))))
 
 state_dep_2002$idleg2 <-paste0(state_dep_2002$idleg, state_dep_2002$resultado2)
 
@@ -1311,7 +1318,9 @@ distrital_dep_2002 <- distrital_dep_2002 %>%
   group_by(idleg) %>% 
   mutate(rank = rank(idleg, ties.method = "first"))
 
-distrital_dep_2002 <-mutate(distrital_dep_2002, resultado2 = ifelse(DESC_SIT_TOT_TURNO=="ELEITO","Eleito",ifelse(DESC_SIT_TOT_TURNO=="ELEITO POR M?DIA","Eleito", ifelse(DESC_SIT_TOT_TURNO=="SUPLENTE","Suplente","N?o eleito"))))
+distrital_dep_2002 <-mutate(distrital_dep_2002, resultado2 = ifelse(DESC_SIT_TOT_TURNO=="ELEITO","Eleito",
+                                                 ifelse(DESC_SIT_TOT_TURNO=="ELEITO POR MÉDIA","Eleito", 
+                                                 ifelse(DESC_SIT_TOT_TURNO=="SUPLENTE","Suplente","Não eleito"))))
 
 distrital_dep_2002$idleg2 <-paste0(distrital_dep_2002$idleg, distrital_dep_2002$resultado2)
 
@@ -1342,9 +1351,6 @@ distrital_dep_2002<-distrital_dep_2002%>%
 
 
 #######Elections 2006 ###########
-
-
-library(dplyr)
 
 vot_2006 <- vot_1998_2014[[3]]
 cand_2006 <- cand_1998_2014v2[[3]]
@@ -1396,7 +1402,9 @@ fed_dep_2006 <- fed_dep_2006 %>%
   group_by(idleg) %>% 
   mutate(rank = rank(idleg, ties.method = "first"))
 
-fed_dep_2006 <-mutate(fed_dep_2006, resultado2 = ifelse(DESC_SIT_TOT_TURNO=="ELEITO","Eleito",ifelse(DESC_SIT_TOT_TURNO=="M?DIA","Eleito",ifelse(DESC_SIT_TOT_TURNO=="SUPLENTE","Suplente","N?o eleito"))))
+fed_dep_2006 <-mutate(fed_dep_2006, resultado2 = ifelse(DESC_SIT_TOT_TURNO=="ELEITO","Eleito",
+                                                        ifelse(DESC_SIT_TOT_TURNO=="MÉDIA","Eleito",
+                                                               ifelse(DESC_SIT_TOT_TURNO=="SUPLENTE","Suplente","Não eleito"))))
 
 fed_dep_2006$idleg2 <-paste0(fed_dep_2006$idleg, fed_dep_2006$resultado2)
 
@@ -1444,7 +1452,10 @@ state_dep_2006 <- state_dep_2006 %>%
   group_by(idleg) %>% 
   mutate(rank = rank(idleg, ties.method = "first"))
 
-state_dep_2006 <-mutate(state_dep_2006, resultado2 = ifelse(DESC_SIT_TOT_TURNO=="ELEITO","Eleito",ifelse(DESC_SIT_TOT_TURNO=="M?DIA","Eleito",ifelse(DESC_SIT_TOT_TURNO=="SUPLENTE","Suplente","N?o eleito"))))
+state_dep_2006 <-mutate(state_dep_2006, resultado2 = ifelse(DESC_SIT_TOT_TURNO=="ELEITO",
+                                                            "Eleito",ifelse(DESC_SIT_TOT_TURNO=="MÉDIA",
+                                                            "Eleito",ifelse(DESC_SIT_TOT_TURNO=="SUPLENTE","Suplente",
+                                                                            "Não eleito"))))
 
 state_dep_2006$idleg2 <-paste0(state_dep_2006$idleg, state_dep_2006$resultado2)
 
@@ -1494,7 +1505,10 @@ distrital_dep_2006 <- distrital_dep_2006 %>%
   group_by(idleg) %>% 
   mutate(rank = rank(idleg, ties.method = "first"))
 
-distrital_dep_2006 <-mutate(distrital_dep_2006, resultado2 = ifelse(DESC_SIT_TOT_TURNO=="ELEITO","Eleito",ifelse(DESC_SIT_TOT_TURNO=="M?DIA","Eleito",ifelse(DESC_SIT_TOT_TURNO=="SUPLENTE","Suplente","N?o eleito"))))
+distrital_dep_2006 <-mutate(distrital_dep_2006, resultado2 = ifelse(DESC_SIT_TOT_TURNO=="ELEITO",
+                                                                    "Eleito",ifelse(DESC_SIT_TOT_TURNO=="MÉDIA",
+                                                                     "Eleito",ifelse(DESC_SIT_TOT_TURNO=="SUPLENTE",
+                                                                                     "Suplente","Não eleito"))))
 
 
 distrital_dep_2006$idleg2 <-paste0(distrital_dep_2006$idleg, distrital_dep_2006$resultado2)
@@ -1526,9 +1540,6 @@ distrital_dep_2006<-distrital_dep_2006%>%
   filter(!(is.na(VOTOS)))
 
 #######Elections 2010 ###########
-
-
-library(dplyr)
 
 vot_2010 <- vot_1998_2014[[4]]
 cand_2010 <- cand_1998_2014v2[[4]]
@@ -1581,7 +1592,9 @@ fed_dep_2010 <- fed_dep_2010 %>%
   group_by(idleg) %>% 
   mutate(rank = rank(idleg, ties.method = "first"))
 
-fed_dep_2010 <-mutate(fed_dep_2010, resultado2 = ifelse(DESC_SIT_TOT_TURNO=="ELEITO","Eleito",ifelse(DESC_SIT_TOT_TURNO=="M?DIA","Eleito",ifelse(DESC_SIT_TOT_TURNO=="SUPLENTE","Suplente","N?o eleito"))))
+fed_dep_2010 <-mutate(fed_dep_2010, resultado2 = ifelse(DESC_SIT_TOT_TURNO=="ELEITO","Eleito",
+                                                        ifelse(DESC_SIT_TOT_TURNO=="MÉDIA","Eleito",
+                                                        ifelse(DESC_SIT_TOT_TURNO=="SUPLENTE","Suplente","Não eleito"))))
 
 fed_dep_2010$idleg2 <-paste0(fed_dep_2010$idleg, fed_dep_2010$resultado2)
 
@@ -1630,7 +1643,8 @@ state_dep_2010 <- state_dep_2010 %>%
   group_by(idleg) %>% 
   mutate(rank = rank(idleg, ties.method = "first"))
 
-state_dep_2010 <-mutate(state_dep_2010, resultado2 = ifelse(DESC_SIT_TOT_TURNO=="ELEITO","Eleito",ifelse(DESC_SIT_TOT_TURNO=="M?DIA","Eleito",ifelse(DESC_SIT_TOT_TURNO=="SUPLENTE","Suplente","N?o eleito"))))
+state_dep_2010 <-mutate(state_dep_2010, resultado2 = ifelse(DESC_SIT_TOT_TURNO=="ELEITO","Eleito",ifelse(DESC_SIT_TOT_TURNO=="MÉDIA",
+                                                     "Eleito",ifelse(DESC_SIT_TOT_TURNO=="SUPLENTE","Suplente","Não eleito"))))
 
 state_dep_2010$idleg2 <-paste0(state_dep_2010$idleg, state_dep_2010$resultado2)
 
@@ -1678,7 +1692,8 @@ distrital_dep_2010 <- distrital_dep_2010 %>%
   group_by(idleg) %>% 
   mutate(rank = rank(idleg, ties.method = "first"))
 
-distrital_dep_2010 <-mutate(distrital_dep_2010, resultado2 = ifelse(DESC_SIT_TOT_TURNO=="ELEITO","Eleito",ifelse(DESC_SIT_TOT_TURNO=="M?DIA","Eleito",ifelse(DESC_SIT_TOT_TURNO=="SUPLENTE","Suplente","N?o eleito"))))
+distrital_dep_2010 <- mutate(distrital_dep_2010, resultado2 = ifelse(DESC_SIT_TOT_TURNO=="ELEITO","Eleito",
+                            ifelse(DESC_SIT_TOT_TURNO=="MÉDIA","Eleito",ifelse(DESC_SIT_TOT_TURNO=="SUPLENTE","Suplente","Não eleito"))))
 
 
 distrital_dep_2010$idleg2 <-paste0(distrital_dep_2010$idleg, distrital_dep_2010$resultado2)
@@ -1710,9 +1725,6 @@ distrital_dep_2010<-distrital_dep_2010%>%
 
 
 #######Elections 2014 ###########
-
-
-library(dplyr)
 
 vot_2014 <- vot_1998_2014[[5]]
 cand_2014 <- cand_1998_2014v2[[5]]
@@ -1764,7 +1776,7 @@ fed_dep_2014 <- fed_dep_2014 %>%
   group_by(idleg) %>% 
   mutate(rank = rank(idleg, ties.method = "first"))
 
-fed_dep_2014 <-mutate(fed_dep_2014, resultado2 = ifelse(DESC_SIT_TOT_TURNO=="ELEITO POR QP","Eleito",ifelse(DESC_SIT_TOT_TURNO=="ELEITO POR M?DIA","Eleito",ifelse(DESC_SIT_TOT_TURNO=="SUPLENTE","Suplente","N?o eleito"))))
+fed_dep_2014 <-mutate(fed_dep_2014, resultado2 = ifelse(DESC_SIT_TOT_TURNO=="ELEITO POR QP","Eleito",ifelse(DESC_SIT_TOT_TURNO=="ELEITO POR MÉDIA","Eleito",ifelse(DESC_SIT_TOT_TURNO=="SUPLENTE","Suplente","Não eleito"))))
 
 fed_dep_2014$idleg2 <-paste0(fed_dep_2014$idleg, fed_dep_2014$resultado2)
 
@@ -1812,7 +1824,9 @@ state_dep_2014 <- state_dep_2014 %>%
   group_by(idleg) %>% 
   mutate(rank = rank(idleg, ties.method = "first"))
 
-state_dep_2014 <-mutate(state_dep_2014, resultado2 = ifelse(DESC_SIT_TOT_TURNO=="ELEITO POR QP","Eleito",ifelse(DESC_SIT_TOT_TURNO=="ELEITO POR M?DIA","Eleito",ifelse(DESC_SIT_TOT_TURNO=="SUPLENTE","Suplente","N?o eleito"))))
+state_dep_2014 <-mutate(state_dep_2014, resultado2 = ifelse(DESC_SIT_TOT_TURNO=="ELEITO POR QP","Eleito",
+                                                            ifelse(DESC_SIT_TOT_TURNO=="ELEITO POR MÉDIA","Eleito",
+                                                            ifelse(DESC_SIT_TOT_TURNO=="SUPLENTE","Suplente","Não eleito"))))
 
 state_dep_2014$idleg2 <-paste0(state_dep_2014$idleg, state_dep_2014$resultado2)
 
@@ -1860,7 +1874,9 @@ distrital_dep_2014 <- distrital_dep_2014 %>%
   group_by(idleg) %>% 
   mutate(rank = rank(idleg, ties.method = "first"))
 
-distrital_dep_2014 <-mutate(distrital_dep_2014, resultado2 = ifelse(DESC_SIT_TOT_TURNO=="ELEITO POR QP","Eleito",ifelse(DESC_SIT_TOT_TURNO=="ELEITO POR M?DIA","Eleito",ifelse(DESC_SIT_TOT_TURNO=="SUPLENTE","Suplente","N?o eleito"))))
+distrital_dep_2014 <-mutate(distrital_dep_2014, resultado2 = ifelse(DESC_SIT_TOT_TURNO=="ELEITO POR QP","Eleito",
+                                                             ifelse(DESC_SIT_TOT_TURNO=="ELEITO POR MÉDIA","Eleito",
+                                                             ifelse(DESC_SIT_TOT_TURNO=="SUPLENTE","Suplente","Não eleito"))))
 
 
 distrital_dep_2014$idleg2 <-paste0(distrital_dep_2014$idleg, distrital_dep_2014$resultado2)
@@ -1888,25 +1904,21 @@ distrital_dep_2014<-distrital_dep_2014%>%
                 NOME_MUNICIPIO_NASCIMENTO, DESPESA_MAX_CAMPANHA, COD_SIT_TOT_TURNO, DESC_SIT_TOT_TURNO,VOTOS,sq_legenda2,idleg, idleg2, rank, rank2, resultado2, prim_supl, flag)
 
 
-distrital_dep_2014<-distrital_dep_2014%>%
-  filter(!(is.na(VOTOS)))
+distrital_dep_2014 <- distrital_dep_2014%>%
+                      filter(!(is.na(VOTOS)))
  
 
-################# CITY COUNSIL ELECTIONS ###################
+################# CITY COUNCIL ELECTIONS ###################
 
-
-load("//fs-eesp-01/EESP/Usuarios/arthur.fisch/Dropbox/LOCAL_ELECTIONS/repositorio_data/original_unzipped/vot_2000_2016.RData")
-load("//fs-eesp-01/EESP/Usuarios/arthur.fisch/Dropbox/LOCAL_ELECTIONS/repositorio_data/original_unzipped/cand_2000_2016v2.RData")
+load(paste0(dir_d, "original_unzipped/vot_2000_2016.RData"))
+load(paste0(dir_d, "original_unzipped/cand_2000_2016v2.RData"))
 
 #######Elections 2004 ###########
-
-
-library(dplyr)
 
 vot_2004 <- vot_2000_2016[[2]]
 cand_2004 <- cand_2000_2016v2[[2]]
 
-vot_2004<- vot_2004 %>% rename(SEQUENCIAL_CANDIDATO = SQ_CANDIDATO)
+vot_2004 <- vot_2004 %>% rename(SEQUENCIAL_CANDIDATO = SQ_CANDIDATO)
 
 
 #consolidating votes per candidate
@@ -1953,7 +1965,7 @@ ver_2004 <- ver_2004 %>%
   group_by(idleg) %>% 
   mutate(rank = rank(idleg, ties.method = "first"))
 
-ver_2004 <-mutate(ver_2004, resultado2 = ifelse(DESC_SIT_TOT_TURNO=="ELEITO","Eleito",ifelse(DESC_SIT_TOT_TURNO=="M?DIA","Eleito", ifelse(DESC_SIT_TOT_TURNO=="SUPLENTE","Suplente","N?o eleito"))))
+ver_2004 <-mutate(ver_2004, resultado2 = ifelse(DESC_SIT_TOT_TURNO=="ELEITO","Eleito",ifelse(DESC_SIT_TOT_TURNO=="MÉDIA","Eleito", ifelse(DESC_SIT_TOT_TURNO=="SUPLENTE","Suplente","Não eleito"))))
 
 ver_2004$idleg2 <-paste0(ver_2004$idleg, ver_2004$resultado2)
 
@@ -1985,9 +1997,6 @@ ver_2004<-ver_2004%>%
 
 
 #######Elections 2008 ###########
-
-
-library(dplyr)
 
 vot_2008 <- vot_2000_2016[[3]]
 cand_2008 <- cand_2000_2016v2[[3]]
@@ -2042,7 +2051,7 @@ ver_2008 <- ver_2008 %>%
   group_by(idleg) %>% 
   mutate(rank = rank(idleg, ties.method = "first"))
 
-ver_2008 <-mutate(ver_2008, resultado2 = ifelse(DESC_SIT_TOT_TURNO=="ELEITO","Eleito",ifelse(DESC_SIT_TOT_TURNO=="M?DIA","Eleito", ifelse(DESC_SIT_TOT_TURNO=="SUPLENTE","Suplente","N?o eleito"))))
+ver_2008 <-mutate(ver_2008, resultado2 = ifelse(DESC_SIT_TOT_TURNO=="ELEITO","Eleito",ifelse(DESC_SIT_TOT_TURNO=="MÉDIA","Eleito", ifelse(DESC_SIT_TOT_TURNO=="SUPLENTE","Suplente","Não eleito"))))
 
 ver_2008$idleg2 <-paste0(ver_2008$idleg, ver_2008$resultado2)
 
@@ -2073,9 +2082,6 @@ ver_2008<-ver_2008%>%
 
 
 #######Elections 2012 ###########
-
-
-library(dplyr)
 
 vot_2012 <- vot_2000_2016[[4]]
 cand_2012 <- cand_2000_2016v2[[4]]
@@ -2127,7 +2133,7 @@ ver_2012 <- ver_2012 %>%
   group_by(idleg) %>% 
   mutate(rank = rank(idleg, ties.method = "first"))
 
-ver_2012 <-mutate(ver_2012, resultado2 = ifelse(DESC_SIT_TOT_TURNO=="ELEITO POR QP","Eleito",ifelse(DESC_SIT_TOT_TURNO=="ELEITO POR M?DIA","Eleito", ifelse(DESC_SIT_TOT_TURNO=="SUPLENTE","Suplente","N?o eleito"))))
+ver_2012 <-mutate(ver_2012, resultado2 = ifelse(DESC_SIT_TOT_TURNO=="ELEITO POR QP","Eleito",ifelse(DESC_SIT_TOT_TURNO=="ELEITO POR MÉDIA","Eleito", ifelse(DESC_SIT_TOT_TURNO=="SUPLENTE","Suplente","Não eleito"))))
 
 ver_2012$idleg2 <-paste0(ver_2012$idleg, ver_2012$resultado2)
 
@@ -2160,9 +2166,6 @@ ver_2012<-ver_2012%>%
 
 #######Elections 2016 ###########
 
-
-library(dplyr)
-
 vot_2016 <- vot_2000_2016[[5]]
 cand_2016 <- cand_2000_2016v2[[5]]
 
@@ -2193,8 +2196,6 @@ problems <- cand_2016v2 %>% group_by(NUM_TURNO, NUMERO_CANDIDATO, CODIGO_CARGO, 
 casos <- cand_2016v2 %>% right_join(problems, by = c("NUM_TURNO", 
                                                      "NUMERO_CANDIDATO", "CODIGO_CARGO", "SIGLA_UE"))
 
-
-
 #### VEREADOR ####
 
 #filter to only Federal representatives
@@ -2214,7 +2215,7 @@ ver_2016 <- ver_2016 %>%
   group_by(idleg) %>% 
   mutate(rank = rank(idleg, ties.method = "first"))
 
-ver_2016 <-mutate(ver_2016, resultado2 = ifelse(DESC_SIT_TOT_TURNO=="ELEITO POR QP","Eleito",ifelse(DESC_SIT_TOT_TURNO=="ELEITO POR M?DIA","Eleito", ifelse(DESC_SIT_TOT_TURNO=="SUPLENTE","Suplente","N?o eleito"))))
+ver_2016 <-mutate(ver_2016, resultado2 = ifelse(DESC_SIT_TOT_TURNO=="ELEITO POR QP","Eleito",ifelse(DESC_SIT_TOT_TURNO=="ELEITO POR MÉDIA","Eleito", ifelse(DESC_SIT_TOT_TURNO=="SUPLENTE","Suplente","Não eleito"))))
 
 ver_2016$idleg2 <-paste0(ver_2016$idleg, ver_2016$resultado2)
 
@@ -2241,35 +2242,36 @@ ver_2016<-ver_2016%>%
                 NOME_MUNICIPIO_NASCIMENTO, DESPESA_MAX_CAMPANHA, COD_SIT_TOT_TURNO, DESC_SIT_TOT_TURNO,VOTOS,sq_legenda2,idleg, idleg2, rank, rank2, resultado2, prim_supl, flag)
 
 
-ver_2016<-ver_2016%>%
-  filter(!(is.na(VOTOS)))
+ver_2016 <- ver_2016%>%
+            filter(!(is.na(VOTOS)))
 
 
 ######################################## 
 
 #saving data from all elections
 
-
 distrital_dep_2002_2014 <- list(distrital_dep_2002, distrital_dep_2006, distrital_dep_2010, distrital_dep_2014)
-save(distrital_dep_2002_2014, file = "//fs-eesp-01/EESP/Usuarios/arthur.fisch//Dropbox/LOCAL_ELECTIONS/repositorio_data/original_unzipped/distrital_dep_2002_2014.RData")
-
+save(distrital_dep_2002_2014, file = paste0(dir_d, "original_unzipped/distrital_dep_2002_2014.RData"))
+  
 state_dep_2002_2014 <- list(state_dep_2002, state_dep_2006, state_dep_2010, state_dep_2014)
-save(state_dep_2002_2014, file = "//fs-eesp-01/EESP/Usuarios/arthur.fisch//Dropbox/LOCAL_ELECTIONS/repositorio_data/original_unzipped/state_dep_2002_2014.RData")
-
+save(state_dep_2002_2014, file = paste0(dir_d, "original_unzipped/state_dep_2002_2014.RData"))
+       
 fed_dep_2002_2014 <- list(fed_dep_2002, fed_dep_2006, fed_dep_2010, fed_dep_2014)
-save(fed_dep_2002_2014, file = "//fs-eesp-01/EESP/Usuarios/arthur.fisch//Dropbox/LOCAL_ELECTIONS/repositorio_data/original_unzipped/fed_dep_2002_2014.RData")
+save(fed_dep_2002_2014, file = paste0(dir_d, "original_unzipped/fed_dep_2002_2014.RData"))
 
 ver_2004_2016 <- list(ver_2004, ver_2008, ver_2012, ver_2016)
-save(ver_2004_2016, file = "//fs-eesp-01/EESP/Usuarios/arthur.fisch//Dropbox/LOCAL_ELECTIONS/repositorio_data/original_unzipped/ver_2004_2016.RData")
+save(ver_2004_2016, file = paste0(dir_d, "original_unzipped/ver_2004_2016.RData"))
 
 ################################################################################
 ################################################################################
-######  4. Downloading, organizing and cleaning data about partisan votes ######
+######  4. Downloading, organizing and cleaning data about party votes ######
 #1. Downloading 
 #2. Consolidating
 #3. Organizing
 ###################################################################
 ###################################################################
+
+###FIX DOWNLOADS HERE
 
 #1. Downloading data from partisan voting
 url_votpar98 <- "http://agencia.tse.jus.br/estatistica/sead/odsele/votacao_partido_munzona/votacao_partido_munzona_1998.zip"
@@ -2712,22 +2714,19 @@ save(ver_part_2004_2016, file = "//fs-eesp-01/EESP/Usuarios/arthur.fisch//Dropbo
 ###################################################################
 ###################################################################
 
-
 #1. Loading Data
 rm(list=ls())
 
-load("//fs-eesp-01/EESP/Usuarios/arthur.fisch//Dropbox/LOCAL_ELECTIONS/repositorio_data/original_unzipped/distrital_dep_2002_2014.RData")
-load("//fs-eesp-01/EESP/Usuarios/arthur.fisch//Dropbox/LOCAL_ELECTIONS/repositorio_data/original_unzipped/state_dep_2002_2014.RData")
-load("//fs-eesp-01/EESP/Usuarios/arthur.fisch//Dropbox/LOCAL_ELECTIONS/repositorio_data/original_unzipped/fed_dep_2002_2014.RData")
-load("//fs-eesp-01/EESP/Usuarios/arthur.fisch//Dropbox/LOCAL_ELECTIONS/repositorio_data/original_unzipped/ver_2004_2016.RData")
+load(paste0(dir_d, "repositorio_data/original_unzipped/distrital_dep_2002_2014.RData"))
+load(paste0(dir_d, "original_unzipped/state_dep_2002_2014.RData"))
+load(paste0(dir_d, "original_unzipped/fed_dep_2002_2014.RData"))
+load(paste0(dir_d, "original_unzipped/ver_2004_2016.RData"))
 
 
-load("//fs-eesp-01/EESP/Usuarios/arthur.fisch//Dropbox/LOCAL_ELECTIONS/repositorio_data/original_unzipped/distrital_dep_part_2002_2014.RData")
-load("//fs-eesp-01/EESP/Usuarios/arthur.fisch//Dropbox/LOCAL_ELECTIONS/repositorio_data/original_unzipped/state_dep_part_2002_2014.RData")
-load("//fs-eesp-01/EESP/Usuarios/arthur.fisch//Dropbox/LOCAL_ELECTIONS/repositorio_data/original_unzipped/fed_dep_part_2002_2014.RData")
-load("//fs-eesp-01/EESP/Usuarios/arthur.fisch//Dropbox/LOCAL_ELECTIONS/repositorio_data/original_unzipped/ver_part_2004_2016.RData")
-
-
+load(paste0(dir_d, "original_unzipped/distrital_dep_part_2002_2014.RData"))
+load(paste0(dir_d, "original_unzipped/state_dep_part_2002_2014.RData"))
+load(paste0(dir_d, "original_unzipped/fed_dep_part_2002_2014.RData"))
+load(paste0(dir_d, "original_unzipped/ver_part_2004_2016.RData"))
 
 #######################################
 #fed dep
@@ -2863,10 +2862,10 @@ vot_ver_16 <- ver_2016 %>%
 #0. Loading Data
 rm(list=ls())
 
-load("//fs-eesp-01/EESP/Usuarios/arthur.fisch//Dropbox/LOCAL_ELECTIONS/repositorio_data/original_unzipped/distrital_dep_2002_2014.RData")
-load("//fs-eesp-01/EESP/Usuarios/arthur.fisch//Dropbox/LOCAL_ELECTIONS/repositorio_data/original_unzipped/state_dep_2002_2014.RData")
-load("//fs-eesp-01/EESP/Usuarios/arthur.fisch//Dropbox/LOCAL_ELECTIONS/repositorio_data/original_unzipped/fed_dep_2002_2014.RData")
-load("//fs-eesp-01/EESP/Usuarios/arthur.fisch//Dropbox/LOCAL_ELECTIONS/repositorio_data/original_unzipped/ver_2004_2016.RData")
+load(paste0(dir_d, "original_unzipped/distrital_dep_2002_2014.RData"))
+load(paste0(dir_d, "original_unzipped/state_dep_2002_2014.RData"))
+load(paste0(dir_d, "original_unzipped/fed_dep_2002_2014.RData"))
+load(paste0(dir_d, "original_unzipped/ver_2004_2016.RData"))
 
 #######################################
 
@@ -2908,4 +2907,4 @@ x6 <- threshold_sharenom_colig(data=distrital_dep_2014, y=0.10)
 x <- threshold_media(data=distrital_dep_2014, y=0.15)
 x2 <- threshold_simples(data=distrital_dep_2014, y=0.15)
 
-x4<- threshold_sharenom_uf(data=distrital_dep_2014, y=0.01)
+x4 <- threshold_sharenom_uf(data=distrital_dep_2014, y=0.01)
