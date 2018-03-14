@@ -12,46 +12,6 @@
 ###################################################################
 ###################################################################
 
-#0. Loading Data
-rm(list=ls())
-
-load("//fs-eesp-01/EESP/Usuarios/arthur.fisch//Dropbox/LOCAL_ELECTIONS/repositorio_data/original_unzipped/distrital_dep_2002_2014.RData")
-load("//fs-eesp-01/EESP/Usuarios/arthur.fisch//Dropbox/LOCAL_ELECTIONS/repositorio_data/original_unzipped/state_dep_2002_2014.RData")
-load("//fs-eesp-01/EESP/Usuarios/arthur.fisch//Dropbox/LOCAL_ELECTIONS/repositorio_data/original_unzipped/fed_dep_2002_2014.RData")
-load("//fs-eesp-01/EESP/Usuarios/arthur.fisch//Dropbox/LOCAL_ELECTIONS/repositorio_data/original_unzipped/ver_2004_2016.RData")
-
-#######################################
-
-#fed dep
-
-fed_dep_2002 <- fed_dep_2002_2014[[1]]
-fed_dep_2006 <- fed_dep_2002_2014[[2]]
-fed_dep_2010 <- fed_dep_2002_2014[[3]]
-fed_dep_2014 <- fed_dep_2002_2014[[4]]
-
-
-#state dep
-
-state_dep_2002 <- state_dep_2002_2014[[1]]
-state_dep_2006 <- state_dep_2002_2014[[2]]
-state_dep_2010 <- state_dep_2002_2014[[3]]
-state_dep_2014 <- state_dep_2002_2014[[4]]
-
-#distrital dep
-
-distrital_dep_2002 <- distrital_dep_2002_2014[[1]]
-distrital_dep_2006 <- distrital_dep_2002_2014[[2]]
-distrital_dep_2010 <- distrital_dep_2002_2014[[3]]
-distrital_dep_2014 <- distrital_dep_2002_2014[[4]]
-
-# vereadores
-
-ver_2004 <- ver_2004_2016[[1]]
-ver_2008 <- ver_2004_2016[[2]]
-ver_2012 <- ver_2004_2016[[3]]
-ver_2016 <- ver_2004_2016[[4]]
-
-
 #1. Function Percentage of Last Elected Candidates 
 # This function calculates which candidates have at least Y% of votes from the last elected candidate
 
@@ -173,11 +133,6 @@ threshold_media <- function(data,y){
   # final results
   return(data_final2) 
 }
-
-#teste
-x <- threshold_media(data=distrital_dep_2014, y=0.15)
-x2 <- threshold_simples(data=distrital_dep_2014, y=0.15)
-
 
 ################
 #3. Function Sum (IN DEVELOPMENT)
@@ -411,7 +366,6 @@ threshold_sharenom_uf <- function(data,y){
   return(data_final2) 
 }
 
-x4<- threshold_sharenom_uf(data=distrital_dep_2014, y=0.01)
 
 #5. Function Coaliton Share
 # This function calculates the candidate vote share in their electoral Coalition
@@ -504,7 +458,7 @@ threshold_sharenom_colig <- function(data,y){
   return(data_final2) 
 }
 
-x4<- threshold_sharenom_colig(data=distrital_dep_2014, y=0.10)
+#x4<- threshold_sharenom_colig(data=distrital_dep_2014, y=0.10)
 
 
 #7. Function Rank 
