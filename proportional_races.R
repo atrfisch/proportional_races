@@ -295,7 +295,7 @@ names(vot_2000) <- labels_pre2012
 vot_2000 <- as_tibble(vot_2000)
 
 #Voting data 2004
-files <- as.list(paste0("//fs-eesp-01/EESP/Usuarios/arthur.fisch//Dropbox/LOCAL_ELECTIONS/repositorio_data/original_unzipped/votacao_munzona/votacao_candidato_munzona_2004/votacao_candidato_munzona_2004_",
+files <- as.list(paste0(dir_d, "original_unzipped/votacao_munzona/votacao_candidato_munzona_2004/votacao_candidato_munzona_2004_",
                         ufs_n[!ufs_n %in% c("BR", "ZZ", "DF")], ".txt"))
 vot_2004 <- lapply(files, read.table, sep = ";", 
                    header = F, stringsAsFactors = F, fill = T, fileEncoding = "windows-1252") 
@@ -304,7 +304,7 @@ names(vot_2004) <- labels_pre2012
 vot_2004 <- as_tibble(vot_2004)
 
 #Voting data 2008
-files <- as.list(paste0("//fs-eesp-01/EESP/Usuarios/arthur.fisch//Dropbox/LOCAL_ELECTIONS/repositorio_data/original_unzipped/votacao_munzona/votacao_candidato_munzona_2008/votacao_candidato_munzona_2008_",
+files <- as.list(paste0(dir_d,"original_unzipped/votacao_munzona/votacao_candidato_munzona_2008/votacao_candidato_munzona_2008_",
                         ufs_n[!ufs_n %in% c("BR", "ZZ", "DF")], ".txt"))
 vot_2008 <- lapply(files, read.table, sep = ";", 
                    header = F, stringsAsFactors=F, fill = T, fileEncoding = "windows-1252") 
@@ -313,7 +313,7 @@ names(vot_2008) <- labels_pre2012
 vot_2008 <- as_tibble(vot_2008)
 
 #voting data 2012
-files <- as.list(paste0("//fs-eesp-01/EESP/Usuarios/arthur.fisch//Dropbox/LOCAL_ELECTIONS/repositorio_data/original_unzipped/votacao_munzona/votacao_candidato_munzona_2012/votacao_candidato_munzona_2012_",
+files <- as.list(paste0(dir_d, "original_unzipped/votacao_munzona/votacao_candidato_munzona_2012/votacao_candidato_munzona_2012_",
                         ufs_n[!ufs_n %in% c("BR", "ZZ", "DF")], ".txt"))
 vot_2012 <- lapply(files, read.table, sep = ";", 
                    header = F, stringsAsFactors = F, fill = T, fileEncoding = "windows-1252") 
@@ -330,7 +330,7 @@ labels_2016 <- c("DATA_GERACAO", "HORA_GERACAO", "ANO_ELEICAO", "NUM_TURNO", "DE
                  "TOTAL_VOTOS", "TRANSITO")
 
 #voting data 2016
-files <- as.list(paste0("//fs-eesp-01/EESP/Usuarios/arthur.fisch//Dropbox/LOCAL_ELECTIONS/repositorio_data/original_unzipped/votacao_munzona/votacao_candidato_munzona_2016/votacao_candidato_munzona_2016_",
+files <- as.list(paste0(dir_d, "original_unzipped/votacao_munzona/votacao_candidato_munzona_2016/votacao_candidato_munzona_2016_",
                         ufs_n[!ufs_n %in% c("BR", "ZZ", "DF")], ".txt"))
 vot_2016 <- lapply(files, read.table, sep=";", 
                    header=F, stringsAsFactors=F, fill = T, fileEncoding = "latin1") 
@@ -339,12 +339,12 @@ names(vot_2016) <- labels_2016
 vot_2016 <- as_tibble(vot_2016)
 
 vot_2000_2016 <- list(vot_2000, vot_2004, vot_2008, vot_2012, vot_2016)
-save(vot_2000_2016, file = "//fs-eesp-01/EESP/Usuarios/arthur.fisch//Dropbox/LOCAL_ELECTIONS/repositorio_data/original_unzipped/vot_2000_2016.RData")
+save(vot_2000_2016, file = paste0(dir_d, "original_unzipped/vot_2000_2016.RData"))
 
 #NATIONAL ELECTIONS
 
 #candidates 1998
-files <- as.list(paste0("//fs-eesp-01/EESP/Usuarios/arthur.fisch//Dropbox/LOCAL_ELECTIONS/repositorio_data/original_unzipped/consulta_cand/consulta_cand_1998/consulta_cand_1998_",
+files <- as.list(paste0(dir_d, "original_unzipped/consulta_cand/consulta_cand_1998/consulta_cand_1998_",
                         ufs_n[!ufs_n %in% c("ZZ")], ".txt"))
 cand_1998 <- lapply(files, read.table, sep = ";", header = F, 
                     stringsAsFactors = F, fill = T, fileEncoding = "windows-1252") 
@@ -353,7 +353,7 @@ names(cand_1998) <- labels_pre2012c
 cand_1998 <- as_tibble(cand_1998)
 
 #candidates 2002
-files <- as.list(paste0("//fs-eesp-01/EESP/Usuarios/arthur.fisch//Dropbox/LOCAL_ELECTIONS/repositorio_data/original_unzipped/consulta_cand/consulta_cand_2002/consulta_cand_2002_",
+files <- as.list(paste0(dir_d,"original_unzipped/consulta_cand/consulta_cand_2002/consulta_cand_2002_",
                         ufs_n[!ufs_n %in% c("ZZ")], ".txt"))
 cand_2002 <- lapply(files, read.table, sep = ";", header = F, 
                     stringsAsFactors = F, fill = T, fileEncoding = "windows-1252") 
@@ -362,7 +362,7 @@ names(cand_2002) <- labels_pre2012c
 cand_2002 <- as_tibble(cand_2002)
 
 #candidates 2006
-files <- as.list(paste0("//fs-eesp-01/EESP/Usuarios/arthur.fisch//Dropbox/LOCAL_ELECTIONS/repositorio_data/original_unzipped/consulta_cand/consulta_cand_2006/consulta_cand_2006_",
+files <- as.list(paste0(dir_d, "original_unzipped/consulta_cand/consulta_cand_2006/consulta_cand_2006_",
                         ufs_n[!ufs_n %in% c("ZZ")], ".txt"))
 cand_2006 <- lapply(files, read.table, sep = ";", header=F, 
                     stringsAsFactors = F, fill = T, fileEncoding = "windows-1252") 
@@ -371,7 +371,7 @@ names(cand_2006) <- labels_pre2012c
 cand_2006 <- as_tibble(cand_2006)
 
 #candidates 2010
-files <- as.list(paste0("//fs-eesp-01/EESP/Usuarios/arthur.fisch//Dropbox/LOCAL_ELECTIONS/repositorio_data/original_unzipped/consulta_cand/consulta_cand_2010/consulta_cand_2010_", 
+files <- as.list(paste0(dir_d,"original_unzipped/consulta_cand/consulta_cand_2010/consulta_cand_2010_", 
                         ufs_n[!ufs_n %in% c("ZZ")], ".txt"))
 cand_2010 <- lapply(files, read.table, sep = ";", header = F, 
                     stringsAsFactors = F, fill = T, fileEncoding = "windows-1252") 
@@ -380,7 +380,7 @@ names(cand_2010) <- labels_pre2012c
 cand_2010 <- as_tibble(cand_2010)
 
 #candidates 2014
-files <- as.list(paste0("//fs-eesp-01/EESP/Usuarios/arthur.fisch//Dropbox/LOCAL_ELECTIONS/repositorio_data/original_unzipped/consulta_cand/consulta_cand_2014/consulta_cand_2014_", 
+files <- as.list(paste0(dir_d, "original_unzipped/consulta_cand/consulta_cand_2014/consulta_cand_2014_", 
                         ufs_n[!ufs_n %in% c("ZZ")], ".txt"))
 cand_2014 <- lapply(files, read.table, sep = ";", header = F, 
                     stringsAsFactors = F, fill = T, fileEncoding = "windows-1252") 
@@ -389,7 +389,7 @@ names(cand_2014) <- labels_2016c
 cand_2014 <- as_tibble(cand_2014)
 
 cand_1998_2014 <- list(cand_1998, cand_2002, cand_2006, cand_2010, cand_2014)
-save(cand_1998_2014, file = "//fs-eesp-01/EESP/Usuarios/arthur.fisch//Dropbox/LOCAL_ELECTIONS/repositorio_data/original_unzipped/cand_1998_2014.RData")
+save(cand_1998_2014, file = paste0(dir_d, "original_unzipped/cand_1998_2014.RData"))
 
 #Voting data 2000
 labels_pre2012 <- c("DATA_GERACAO", "HORA_GERACAO", "ANO_ELEICAO", "NUM_TURNO", "DESCRICAO_ELEICAO",
@@ -401,7 +401,7 @@ labels_pre2012 <- c("DATA_GERACAO", "HORA_GERACAO", "ANO_ELEICAO", "NUM_TURNO", 
                     "TOTAL_VOTOS")
 
 #Voting 1998
-files <- as.list(paste0("//fs-eesp-01/EESP/Usuarios/arthur.fisch//Dropbox/LOCAL_ELECTIONS/repositorio_data/original_unzipped/votacao_munzona/votacao_candidato_munzona_1998/votacao_candidato_munzona_1998_",
+files <- as.list(paste0(dir_d, "original_unzipped/votacao_munzona/votacao_candidato_munzona_1998/votacao_candidato_munzona_1998_",
                         ufs_n[!ufs_n %in% c("ZZ")], ".txt"))
 vot_1998 <- lapply(files, read.table, sep = ";", 
                    header = F, stringsAsFactors = F, fill = T, fileEncoding = "windows-1252") 
@@ -410,7 +410,7 @@ names(vot_1998) <- labels_pre2012
 vot_1998 <- as_tibble(vot_1998)
 
 #Voting 2002
-files <- as.list(paste0("//fs-eesp-01/EESP/Usuarios/arthur.fisch//Dropbox/LOCAL_ELECTIONS/repositorio_data/original_unzipped/votacao_munzona/votacao_candidato_munzona_2002/votacao_candidato_munzona_2002_",
+files <- as.list(paste0(dir_d, "original_unzipped/votacao_munzona/votacao_candidato_munzona_2002/votacao_candidato_munzona_2002_",
                         ufs, ".txt"))
 vot_2002 <- lapply(files, read.table, sep = ";", 
                    header = F, stringsAsFactors = F, fill = T, fileEncoding = "windows-1252") 
@@ -419,7 +419,7 @@ names(vot_2002) <- labels_pre2012
 vot_2002 <- as_tibble(vot_2002)
 
 #Voting data 2006
-files <- as.list(paste0("//fs-eesp-01/EESP/Usuarios/arthur.fisch//Dropbox/LOCAL_ELECTIONS/repositorio_data/original_unzipped/votacao_munzona/votacao_candidato_munzona_2006/votacao_candidato_munzona_2006_",
+files <- as.list(paste0(dir_d,"original_unzipped/votacao_munzona/votacao_candidato_munzona_2006/votacao_candidato_munzona_2006_",
                         ufs, ".txt"))
 vot_2006 <- lapply(files, read.table, sep = ";", 
                    header = F, stringsAsFactors = F, fill = T, fileEncoding = "windows-1252") 
@@ -428,7 +428,7 @@ names(vot_2006) <- labels_pre2012
 vot_2006 <- as_tibble(vot_2006)
 
 #Voting data 2010
-files <- as.list(paste0("//fs-eesp-01/EESP/Usuarios/arthur.fisch//Dropbox/LOCAL_ELECTIONS/repositorio_data/original_unzipped/votacao_munzona/votacao_candidato_munzona_2010/votacao_candidato_munzona_2010_",
+files <- as.list(paste0(dir_d,"original_unzipped/votacao_munzona/votacao_candidato_munzona_2010/votacao_candidato_munzona_2010_",
                         ufs, ".txt"))
 vot_2010 <- lapply(files, read.table, sep = ";", 
                    header = F, stringsAsFactors=F, fill = T, fileEncoding = "windows-1252") 
@@ -437,7 +437,7 @@ names(vot_2010) <- labels_pre2012
 vot_2010 <- as_tibble(vot_2010)
 
 #voting data 2014
-files <- as.list(paste0("//fs-eesp-01/EESP/Usuarios/arthur.fisch//Dropbox/LOCAL_ELECTIONS/repositorio_data/original_unzipped/votacao_munzona/votacao_candidato_munzona_2014/votacao_candidato_munzona_2014_",
+files <- as.list(paste0(dir_d,"original_unzipped/votacao_munzona/votacao_candidato_munzona_2014/votacao_candidato_munzona_2014_",
                         ufs_n[!ufs_n %in% c("ZZ")], ".txt"))
 vot_2014 <- lapply(files, read.table, sep = ";", 
                    header = F, stringsAsFactors = F, fill = T, fileEncoding = "windows-1252") 
@@ -446,7 +446,7 @@ names(vot_2014) <- labels_2016
 vot_2014 <- as_tibble(vot_2014)
 
 vot_1998_2014 <- list(vot_1998, vot_2002, vot_2006, vot_2010, vot_2014)
-save(vot_1998_2014, file = "//fs-eesp-01/EESP/Usuarios/arthur.fisch//Dropbox/LOCAL_ELECTIONS/repositorio_data/original_unzipped/vot_1998_2014.RData")
+save(vot_1998_2014, file = paste0(dir_d, "original_unzipped/vot_1998_2014.RData"))
 
 
 ###################################################################
@@ -458,9 +458,9 @@ save(vot_1998_2014, file = "//fs-eesp-01/EESP/Usuarios/arthur.fisch//Dropbox/LOC
 ###################################################################
 
 #### 0. Loading data
-load("//fs-eesp-01/EESP/Usuarios/arthur.fisch/Dropbox/LOCAL_ELECTIONS/repositorio_data/original_unzipped/cand_2000_2016.RData")
-load("//fs-eesp-01/EESP/Usuarios/arthur.fisch/Dropbox/LOCAL_ELECTIONS/repositorio_data/original_unzipped/cand_1998_2014.RData")
-
+load(paste0(dir_d, "original_unzipped/cand_2000_2016.RData"))
+load(paste0(dir_d, "original_unzipped/cand_1998_2014.RData"))   
+     
 cand_1998 <- cand_1998_2014[[1]]
 cand_2000 <- cand_2000_2016[[1]]
 cand_2002 <- cand_1998_2014[[2]]
@@ -477,10 +477,10 @@ cand_2016 <- cand_2000_2016[[5]]
 #1998
 cand_1998 <- mutate(cand_1998, id=rownames(cand_1998))
 problems <- cand_1998 %>% group_by(NUM_TURNO, NUMERO_CANDIDATO, CODIGO_CARGO, SIGLA_UE) %>%
-  summarise(total = n()) %>% filter(total > 1)
+            summarise(total = n()) %>% filter(total > 1)
 
 casos <- cand_1998 %>% right_join(problems, by = c("NUM_TURNO", 
-                                                   "NUMERO_CANDIDATO", "CODIGO_CARGO", "SIGLA_UE"))
+                       "NUMERO_CANDIDATO", "CODIGO_CARGO", "SIGLA_UE"))
 
 #Control for repeated
 repeated_casos <- casos[duplicated(casos),]
@@ -489,18 +489,19 @@ repeated_casos <- casos[duplicated(casos),]
 casos <- unique(casos)
 
 casos <- casos %>% filter(COD_SITUACAO_CANDIDATURA == 2 | 
-                            COD_SITUACAO_CANDIDATURA == 4)
+                          COD_SITUACAO_CANDIDATURA == 4)
 
 problems_caso <- casos %>% group_by(NUM_TURNO, NUMERO_CANDIDATO, CODIGO_CARGO, SIGLA_UE) %>%
-  summarise(total = n()) %>% filter(total > 1)
+                 summarise(total = n()) %>% filter(total > 1)
 
 wrong_ballot <- casos %>% right_join(problems_caso, by = c("NUM_TURNO", 
-                                                           "NUMERO_CANDIDATO", "CODIGO_CARGO", "SIGLA_UE"))
+                          "NUMERO_CANDIDATO", "CODIGO_CARGO", "SIGLA_UE"))
 
 #Exclude
 wrong_ballot <- wrong_ballot %>% mutate(key = paste0(SIGLA_UE, NUM_TURNO, NOME_URNA_CANDIDATO, 
                                                      NUMERO_CANDIDATO, DESCRICAO_ELEICAO, 
-                                                     NUM_TITULO_ELEITORAL_CANDIDATO, CODIGO_CARGO, id)) 
+                                                     NUM_TITULO_ELEITORAL_CANDIDATO, 
+                                                     CODIGO_CARGO, id)) 
 
 write.csv(wrong_ballot, file = paste0(dir, "cepesp_data/wrong_ballot.csv"))
 
@@ -508,23 +509,24 @@ write.csv(wrong_ballot, file = paste0(dir, "cepesp_data/wrong_ballot.csv"))
 #cand_1998 <- cand_1998_2014[[1]]
 #cand_1998 <- mutate(cand_1998, id=rownames(cand_1998))
 problems <- cand_1998 %>% group_by(NUM_TURNO, NUMERO_CANDIDATO, CODIGO_CARGO, SIGLA_UE) %>%
-  summarise(total = n()) %>% filter(total > 1)
+            summarise(total = n()) %>% filter(total > 1)
 
 casos <- cand_1998 %>% right_join(problems, by = c("NUM_TURNO", 
-                                                   "NUMERO_CANDIDATO", "CODIGO_CARGO", "SIGLA_UE"))
+                       "NUMERO_CANDIDATO", "CODIGO_CARGO", "SIGLA_UE"))
 
 
 #But keeping only unique
 casos <- unique(casos)
 casos_notvalid <- casos %>% filter(!(COD_SITUACAO_CANDIDATURA == 2 | 
-                                       COD_SITUACAO_CANDIDATURA == 4))
+                                     COD_SITUACAO_CANDIDATURA == 4))
 casos_notvalid <- casos_notvalid %>% mutate(key = paste0(SIGLA_UE, NUM_TURNO, NOME_URNA_CANDIDATO, 
                                                          NUMERO_CANDIDATO, DESCRICAO_ELEICAO, 
-                                                         NUM_TITULO_ELEITORAL_CANDIDATO, CODIGO_CARGO, id)) #save
+                                                         NUM_TITULO_ELEITORAL_CANDIDATO, 
+                                                         CODIGO_CARGO, id)) #save
 
 case_key <-  read_excel(paste0(dir, "cepesp_data/wrong_ballot1998_excl_Key.xlsx"))
 
-exclude <- c( case_key$key, casos_notvalid$key)
+exclude <- c(case_key$key, casos_notvalid$key)
 
 cand_1998 <- cand_1998 %>% mutate(key = paste0(SIGLA_UE, NUM_TURNO, NOME_URNA_CANDIDATO, 
                                                NUMERO_CANDIDATO, DESCRICAO_ELEICAO, 
@@ -535,28 +537,31 @@ cand_1998v2 <- cand_1998v2[,-ncol(cand_1998v2)]
 cand_1998v2$id<-NULL
 
 problems2 <- cand_1998v2 %>% group_by(NUM_TURNO, NUMERO_CANDIDATO, CODIGO_CARGO, SIGLA_UE) %>%
-  summarise(total = n()) %>% filter(total > 1)
+             summarise(total = n()) %>% filter(total > 1)
 
 casos2 <- cand_1998v2 %>% right_join(problems2, by = c("NUM_TURNO", 
-                                                       "NUMERO_CANDIDATO", "CODIGO_CARGO", "SIGLA_UE"))
+                          "NUMERO_CANDIDATO", "CODIGO_CARGO", "SIGLA_UE"))
 repeated_casos2 <- casos2[duplicated(casos2),] #save
 
 repeated_casos2 <- repeated_casos2 %>% mutate(key = paste0(SIGLA_UE, NUM_TURNO, NOME_URNA_CANDIDATO, 
                                                            NUMERO_CANDIDATO, DESCRICAO_ELEICAO, 
-                                                           NUM_TITULO_ELEITORAL_CANDIDATO, CODIGO_CARGO))
+                                                           NUM_TITULO_ELEITORAL_CANDIDATO, 
+                                                           CODIGO_CARGO))
 
-exclude2 <- c( repeated_casos2$key)
+exclude2 <- c(repeated_casos2$key)
 
 cand_1998v2 <- cand_1998v2 %>% mutate(key = paste0(SIGLA_UE, NUM_TURNO, NOME_URNA_CANDIDATO, 
                                                    NUMERO_CANDIDATO, DESCRICAO_ELEICAO, 
-                                                   NUM_TITULO_ELEITORAL_CANDIDATO, CODIGO_CARGO))
+                                                   NUM_TITULO_ELEITORAL_CANDIDATO, 
+                                                   CODIGO_CARGO))
 
 cand_1998v3 <- cand_1998v2 %>% filter(!(key %in% exclude2))
 cand_1998v3 <- cand_1998v3[,-ncol(cand_1998v3)]
 
 
 save(cand_1998v3, file = paste0(dir, "cepesp_data/cand_1998v3.Rda"))
-write.csv2(cand_1998v3, file = paste0(dir, "cepesp_data/cand_1998v3.csv"), row.names=FALSE, fileEncoding = "UTF-8")
+write.csv2(cand_1998v3, file = paste0(dir, "cepesp_data/cand_1998v3.csv"), 
+           row.names=FALSE, fileEncoding = "UTF-8")
 
 #Smell test
 temp <- cand_1998 %>% filter(key %in% exclude)
@@ -571,7 +576,8 @@ problems <- cand_2000v1 %>% group_by(NUM_TURNO, NUMERO_CANDIDATO, CODIGO_CARGO, 
   summarise(total = n()) %>% filter(total > 1)
 
 casos <- cand_2000v1 %>% right_join(problems, by = c("NUM_TURNO", 
-                                                     "NUMERO_CANDIDATO", "CODIGO_CARGO", "SIGLA_UE",
+                                                     "NUMERO_CANDIDATO", "CODIGO_CARGO", 
+                                                     "SIGLA_UE",
                                                      "DESCRICAO_ELEICAO"))
 
 #Control for repeated
@@ -585,14 +591,16 @@ casos <- casos %>% filter(COD_SITUACAO_CANDIDATURA == 1 |
                             COD_SITUACAO_CANDIDATURA == 4)
 
 problems_caso <- casos %>% group_by(NUM_TURNO, NUMERO_CANDIDATO, CODIGO_CARGO, SIGLA_UE, DESCRICAO_ELEICAO) %>%
-  summarise(total = n()) %>% filter(total > 1)
+                 summarise(total = n()) %>% filter(total > 1)
 
 wrong_ballot <- casos %>% right_join(problems_caso, by = c("NUM_TURNO", 
-                                                           "NUMERO_CANDIDATO", "CODIGO_CARGO", "SIGLA_UE", 
+                                                           "NUMERO_CANDIDATO", "CODIGO_CARGO",
+                                                           "SIGLA_UE", 
                                                            "DESCRICAO_ELEICAO"))
 
 #Exclude
-wrong_ballot <- wrong_ballot %>% mutate(key = paste0(SIGLA_UE, NUM_TURNO, NOME_URNA_CANDIDATO, 
+wrong_ballot <- wrong_ballot %>% mutate(key = paste0(SIGLA_UE, NUM_TURNO, 
+                                                     NOME_URNA_CANDIDATO, 
                                                      NUMERO_CANDIDATO)) 
 
 write.csv(wrong_ballot, file = paste0(dir, "cepesp_data/wrong_ballot_2000.csv"), row.names=FALSE ,sep=";", fileEncoding = "UTF-8")
@@ -602,7 +610,8 @@ problems <- cand_2002 %>% group_by(NUM_TURNO, NUMERO_CANDIDATO, CODIGO_CARGO, SI
   summarise(total = n()) %>% filter(total > 1)
 
 casos <- cand_2002 %>% right_join(problems, by = c("NUM_TURNO", 
-                                                   "NUMERO_CANDIDATO", "CODIGO_CARGO", "SIGLA_UE"))
+                                                   "NUMERO_CANDIDATO", "CODIGO_CARGO", 
+                                                   "SIGLA_UE"))
 
 #Control for repeated
 repeated_casos <- casos[duplicated(casos),]
@@ -611,18 +620,19 @@ repeated_casos <- casos[duplicated(casos),]
 casos <- unique(casos)
 
 casos <- casos %>% filter(COD_SITUACAO_CANDIDATURA == 2 | 
-                            COD_SITUACAO_CANDIDATURA == 4)
+                          COD_SITUACAO_CANDIDATURA == 4)
 
 problems_caso <- casos %>% group_by(NUM_TURNO, NUMERO_CANDIDATO, CODIGO_CARGO, SIGLA_UE) %>%
-  summarise(total = n()) %>% filter(total > 1)
+                 summarise(total = n()) %>% filter(total > 1)
 
 #WHAT TO EXCLUDE
 cand_2002 <- cand_1998_2014[[2]]
 problems <- cand_2002 %>% group_by(NUM_TURNO, NUMERO_CANDIDATO, CODIGO_CARGO, SIGLA_UE) %>%
-  summarise(total = n()) %>% filter(total > 1)
+            summarise(total = n()) %>% filter(total > 1)
 
 casos <- cand_2002 %>% right_join(problems, by = c("NUM_TURNO", 
-                                                   "NUMERO_CANDIDATO", "CODIGO_CARGO", "SIGLA_UE"))
+                                                   "NUMERO_CANDIDATO", "CODIGO_CARGO", 
+                                                   "SIGLA_UE"))
 
 repeated_casos <- casos[duplicated(casos),] #save
 repeated_casos <- repeated_casos %>% mutate(key = paste0(SIGLA_UE, NUM_TURNO, NOME_URNA_CANDIDATO, 
@@ -632,7 +642,7 @@ repeated_casos <- repeated_casos %>% mutate(key = paste0(SIGLA_UE, NUM_TURNO, NO
 #But keeping only unique
 casos <- unique(casos)
 casos_notvalid <- casos %>% filter(!(COD_SITUACAO_CANDIDATURA == 2 | 
-                                       COD_SITUACAO_CANDIDATURA == 4))
+                                     COD_SITUACAO_CANDIDATURA == 4))
 casos_notvalid <- casos_notvalid %>% mutate(key = paste0(SIGLA_UE, NUM_TURNO, NOME_URNA_CANDIDATO, 
                                                          NUMERO_CANDIDATO, DESCRICAO_ELEICAO, 
                                                          NUM_TITULO_ELEITORAL_CANDIDATO, CODIGO_CARGO, SEQUENCIAL_CANDIDATO)) #save
@@ -655,10 +665,11 @@ stopifnot((nrow(cand_2002) - nrow(cand_2002v2)) == nrow(temp))
 
 #2004
 problems <- cand_2004 %>% group_by(NUM_TURNO, NUMERO_CANDIDATO, CODIGO_CARGO, SIGLA_UE) %>%
-  summarise(total = n()) %>% filter(total > 1)
+            summarise(total = n()) %>% filter(total > 1)
 
 casos <- cand_2004 %>% right_join(problems, by = c("NUM_TURNO", 
-                                                   "NUMERO_CANDIDATO", "CODIGO_CARGO", "SIGLA_UE"))
+                                                   "NUMERO_CANDIDATO", "CODIGO_CARGO", 
+                                                   "SIGLA_UE"))
 
 #Control for repeated
 repeated_casos <- casos[duplicated(casos),]
@@ -667,19 +678,18 @@ repeated_casos <- casos[duplicated(casos),]
 casos <- unique(casos)
 
 casos <- casos %>% filter(COD_SITUACAO_CANDIDATURA == 2 | 
-                            COD_SITUACAO_CANDIDATURA == 4)
+                          COD_SITUACAO_CANDIDATURA == 4)
 
 problems_caso <- casos %>% group_by(NUM_TURNO, NUMERO_CANDIDATO, CODIGO_CARGO, SIGLA_UE) %>%
-  summarise(total = n()) %>% filter(total > 1)
-
+                 summarise(total = n()) %>% filter(total > 1)
 
 #WHAT TO EXCLUDE
 cand_2004 <- cand_2000_2016[[2]]
 problems <- cand_2004 %>% group_by(NUM_TURNO, NUMERO_CANDIDATO, CODIGO_CARGO, SIGLA_UE) %>%
-  summarise(total = n()) %>% filter(total > 1)
+            summarise(total = n()) %>% filter(total > 1)
 
 casos <- cand_2004 %>% right_join(problems, by = c("NUM_TURNO", 
-                                                   "NUMERO_CANDIDATO", "CODIGO_CARGO", "SIGLA_UE"))
+                       "NUMERO_CANDIDATO", "CODIGO_CARGO", "SIGLA_UE"))
 
 repeated_casos <- casos[duplicated(casos),] #save
 repeated_casos <- repeated_casos %>% mutate(key = paste0(SIGLA_UE, NUM_TURNO, NOME_URNA_CANDIDATO, 
@@ -689,7 +699,7 @@ repeated_casos <- repeated_casos %>% mutate(key = paste0(SIGLA_UE, NUM_TURNO, NO
 #But keeping only unique
 casos <- unique(casos)
 casos_notvalid <- casos %>% filter(!(COD_SITUACAO_CANDIDATURA == 2 | 
-                                       COD_SITUACAO_CANDIDATURA == 4))
+                                     COD_SITUACAO_CANDIDATURA == 4))
 casos_notvalid <- casos_notvalid %>% mutate(key = paste0(SIGLA_UE, NUM_TURNO, NOME_URNA_CANDIDATO, 
                                                          NUMERO_CANDIDATO, DESCRICAO_ELEICAO, 
                                                          NUM_TITULO_ELEITORAL_CANDIDATO, CODIGO_CARGO, SEQUENCIAL_CANDIDATO)) #save
@@ -715,7 +725,7 @@ problems <- cand_2006 %>% group_by(NUM_TURNO, NUMERO_CANDIDATO, CODIGO_CARGO, SI
   summarise(total = n()) %>% filter(total > 1)
 
 casos <- cand_2006 %>% right_join(problems, by = c("NUM_TURNO", 
-                                                   "NUMERO_CANDIDATO", "CODIGO_CARGO", "SIGLA_UE"))
+                       "NUMERO_CANDIDATO", "CODIGO_CARGO", "SIGLA_UE"))
 
 #Control for repeated
 repeated_casos <- casos[duplicated(casos),]
@@ -724,10 +734,10 @@ repeated_casos <- casos[duplicated(casos),]
 casos <- unique(casos)
 
 casos <- casos %>% filter(COD_SITUACAO_CANDIDATURA == 2 | 
-                            COD_SITUACAO_CANDIDATURA == 4 | COD_SITUACAO_CANDIDATURA == 16)
+                          COD_SITUACAO_CANDIDATURA == 4 | COD_SITUACAO_CANDIDATURA == 16)
 
 problems_caso <- casos %>% group_by(NUM_TURNO, NUMERO_CANDIDATO, CODIGO_CARGO, SIGLA_UE) %>%
-  summarise(total = n()) %>% filter(total > 1)
+                 summarise(total = n()) %>% filter(total > 1)
 
 #WHAT TO EXCLUDE
 cand_2006 <- cand_1998_2014[[3]]
@@ -735,7 +745,8 @@ problems <- cand_2006 %>% group_by(NUM_TURNO, NUMERO_CANDIDATO, CODIGO_CARGO, SI
   summarise(total = n()) %>% filter(total > 1)
 
 casos <- cand_2006 %>% right_join(problems, by = c("NUM_TURNO", 
-                                                   "NUMERO_CANDIDATO", "CODIGO_CARGO", "SIGLA_UE"))
+                                                   "NUMERO_CANDIDATO", "CODIGO_CARGO", 
+                                                   "SIGLA_UE"))
 
 repeated_casos <- casos[duplicated(casos),] #save
 repeated_casos <- repeated_casos %>% mutate(key = paste0(SIGLA_UE, NUM_TURNO, NOME_URNA_CANDIDATO, 
@@ -769,7 +780,7 @@ stopifnot((nrow(cand_2006) - nrow(cand_2006v2)) == nrow(temp))
 #2008
 problems <- cand_2008 %>% group_by(NUM_TURNO, NUMERO_CANDIDATO, CODIGO_CARGO, SIGLA_UE, 
                                    DESCRICAO_ELEICAO) %>%
-  summarise(total = n()) %>% filter(total > 1)
+                          summarise(total = n()) %>% filter(total > 1)
 
 casos <- cand_2008 %>% right_join(problems, by = c("NUM_TURNO", 
                                                    "NUMERO_CANDIDATO", "CODIGO_CARGO", "SIGLA_UE", 
@@ -789,13 +800,13 @@ casos <- casos %>% filter(COD_SITUACAO_CANDIDATURA == 2 |
 
 problems_caso <- casos %>% group_by(NUM_TURNO, NUMERO_CANDIDATO, CODIGO_CARGO, SIGLA_UE, 
                                     DESCRICAO_ELEICAO) %>%
-  summarise(total = n()) %>% filter(total > 1)
+                           summarise(total = n()) %>% filter(total > 1)
 
 #WHAT TO EXCLUDE
 cand_2008 <- cand_2000_2016[[3]]
 problems <- cand_2008 %>% group_by(NUM_TURNO, NUMERO_CANDIDATO, CODIGO_CARGO, SIGLA_UE, 
                                    DESCRICAO_ELEICAO) %>%
-  summarise(total = n()) %>% filter(total > 1)
+                          summarise(total = n()) %>% filter(total > 1)
 
 casos <- cand_2008 %>% right_join(problems, by = c("NUM_TURNO", 
                                                    "NUMERO_CANDIDATO", "CODIGO_CARGO", "SIGLA_UE", 
@@ -838,7 +849,7 @@ stopifnot((nrow(cand_2008) - nrow(cand_2008v2)) == nrow(temp))
 #2010
 problems <- cand_2010 %>% group_by(NUM_TURNO, NUMERO_CANDIDATO, CODIGO_CARGO, SIGLA_UE, 
                                    DESCRICAO_ELEICAO) %>%
-  summarise(total = n()) %>% filter(total > 1)
+                          summarise(total = n()) %>% filter(total > 1)
 
 casos <- cand_2010 %>% right_join(problems, by = c("NUM_TURNO", 
                                                    "NUMERO_CANDIDATO", "CODIGO_CARGO", "SIGLA_UE", 
@@ -858,7 +869,7 @@ casos <- casos %>% filter(COD_SITUACAO_CANDIDATURA == 2 |
 
 problems_caso <- casos %>% group_by(NUM_TURNO, NUMERO_CANDIDATO, CODIGO_CARGO, SIGLA_UE, 
                                     DESCRICAO_ELEICAO) %>%
-  summarise(total = n()) %>% filter(total > 1)
+                           summarise(total = n()) %>% filter(total > 1)
 
 #WHAT TO EXCLUDE
 cand_2010 <- cand_1998_2014[[4]]
@@ -867,7 +878,8 @@ problems <- cand_2010 %>% group_by(NUM_TURNO, NUMERO_CANDIDATO, CODIGO_CARGO, SI
   summarise(total = n()) %>% filter(total > 1)
 
 casos <- cand_2010 %>% right_join(problems, by = c("NUM_TURNO", 
-                                                   "NUMERO_CANDIDATO", "CODIGO_CARGO", "SIGLA_UE", 
+                                                   "NUMERO_CANDIDATO", "CODIGO_CARGO", 
+                                                   "SIGLA_UE", 
                                                    "DESCRICAO_ELEICAO"))
 
 repeated_casos <- casos[duplicated(casos),] #save
@@ -906,7 +918,7 @@ stopifnot((nrow(cand_2010) - nrow(cand_2010v2)) == nrow(temp))
 #2012
 problems <- cand_2012 %>% group_by(NUM_TURNO, NUMERO_CANDIDATO, CODIGO_CARGO, SIGLA_UE, 
                                    DESCRICAO_ELEICAO) %>%
-  summarise(total = n()) %>% filter(total > 1)
+                          summarise(total = n()) %>% filter(total > 1)
 
 casos <- cand_2012 %>% right_join(problems, by = c("NUM_TURNO", 
                                                    "NUMERO_CANDIDATO", "CODIGO_CARGO", "SIGLA_UE", 
@@ -927,7 +939,7 @@ casos <- casos %>% filter(COD_SITUACAO_CANDIDATURA == 2 |
 
 problems_caso <- casos %>% group_by(NUM_TURNO, NUMERO_CANDIDATO, CODIGO_CARGO, SIGLA_UE, 
                                     DESCRICAO_ELEICAO) %>%
-  summarise(total = n()) %>% filter(total > 1)
+                           summarise(total = n()) %>% filter(total > 1)
 
 #WHAT TO EXCLUDE
 cand_2012 <- cand_2000_2016[[4]]
@@ -976,7 +988,7 @@ stopifnot((nrow(cand_2012) - nrow(cand_2012v2)) == nrow(temp))
 #2014
 problems <- cand_2014 %>% group_by(NUM_TURNO, NUMERO_CANDIDATO, CODIGO_CARGO, SIGLA_UE, 
                                    DESCRICAO_ELEICAO) %>%
-  summarise(total = n()) %>% filter(total > 1)
+                          summarise(total = n()) %>% filter(total > 1)
 
 casos <- cand_2014 %>% right_join(problems, by = c("NUM_TURNO", 
                                                    "NUMERO_CANDIDATO", "CODIGO_CARGO", "SIGLA_UE", 
@@ -995,7 +1007,7 @@ casos <- casos %>% filter(COD_SITUACAO_CANDIDATURA == 2 |
 
 problems_caso <- casos %>% group_by(NUM_TURNO, NUMERO_CANDIDATO, CODIGO_CARGO, SIGLA_UE, 
                                     DESCRICAO_ELEICAO) %>%
-  summarise(total = n()) %>% filter(total > 1)
+                           summarise(total = n()) %>% filter(total > 1)
 
 #WHAT TO EXCLUDE
 cand_2014 <- cand_1998_2014[[5]]
@@ -1042,10 +1054,11 @@ stopifnot((nrow(cand_2014) - nrow(cand_2014v2)) == nrow(temp))
 #2016
 problems <- cand_2016 %>% group_by(NUM_TURNO, NUMERO_CANDIDATO, CODIGO_CARGO, SIGLA_UE, 
                                    DESCRICAO_ELEICAO) %>%
-  summarise(total = n()) %>% filter(total > 1)
+                          summarise(total = n()) %>% filter(total > 1)
 
 casos <- cand_2016 %>% right_join(problems, by = c("NUM_TURNO", 
-                                                   "NUMERO_CANDIDATO", "CODIGO_CARGO", "SIGLA_UE", 
+                                                   "NUMERO_CANDIDATO", "CODIGO_CARGO", 
+                                                   "SIGLA_UE", 
                                                    "DESCRICAO_ELEICAO"))
 
 #Control for repeated
@@ -1064,7 +1077,7 @@ casos <- casos %>% filter(COD_SITUACAO_CANDIDATURA == 2 |
 
 problems_caso <- casos %>% group_by(NUM_TURNO, NUMERO_CANDIDATO, CODIGO_CARGO, SIGLA_UE, 
                                     DESCRICAO_ELEICAO) %>%
-  summarise(total = n()) %>% filter(total > 1)
+                           summarise(total = n()) %>% filter(total > 1)
 
 #WHAT TO EXCLUDE
 cand_2016 <- cand_2000_2016[[5]]
@@ -1073,7 +1086,8 @@ problems <- cand_2016 %>% group_by(NUM_TURNO, NUMERO_CANDIDATO, CODIGO_CARGO, SI
   summarise(total = n()) %>% filter(total > 1)
 
 casos <- cand_2016 %>% right_join(problems, by = c("NUM_TURNO", 
-                                                   "NUMERO_CANDIDATO", "CODIGO_CARGO", "SIGLA_UE", 
+                                                   "NUMERO_CANDIDATO", "CODIGO_CARGO", 
+                                                   "SIGLA_UE", 
                                                    "DESCRICAO_ELEICAO"))
 
 repeated_casos <- casos[duplicated(casos),] #save
@@ -1115,13 +1129,10 @@ stopifnot((nrow(cand_2016) - nrow(cand_2016v2)) == nrow(temp))
 #consolidating
 
 cand_2000_2016v2 <- list(cand_2000, cand_2004v2, cand_2008v2, cand_2012v2, cand_2016v2)
-save(cand_2000_2016v2, file = "//fs-eesp-01/EESP/Usuarios/arthur.fisch//Dropbox/LOCAL_ELECTIONS/repositorio_data/original_unzipped/cand_2000_2016v2.RData")
-
+save(cand_2000_2016v2, file = paste0(dir_d, "original_unzipped/cand_2000_2016v2.RData")
+                                     
 cand_1998_2014v2 <- list(cand_1998v3, cand_2002v2, cand_2006v2, cand_2010v2, cand_2014v2)
-save(cand_1998_2014v2, file = "//fs-eesp-01/EESP/Usuarios/arthur.fisch//Dropbox/LOCAL_ELECTIONS/repositorio_data/original_unzipped/cand_1998_2014v2.RData")
-
-
-
+save(cand_1998_2014v2, file = paste0(dir_d, "original_unzipped/cand_1998_2014v2.RData")
 
 ###################################################################
 ###################################################################
@@ -2847,555 +2858,6 @@ vot_ver_12 <- ver_2012 %>%
 vot_ver_16 <- ver_2016 %>%
   filter(VOTOS<0)
 
-###################################################################
-###################################################################
-########  6. Functions to generate datasets with margin of victory
-#0. Loading Data
-#1. Function Percentage of last elected candidates 
-#2. Function Distance of average of votes from last elected and first suplente
-#3. Function Sum (IN DEVELOPMENT)
-#4. Function Boas and Hidalgo (2011)
-#5. Function State Share
-#6. Function Coalition Share
-#7. Function Rank 
-###################################################################
-###################################################################
-
-#0. Loading Data
-rm(list=ls())
-
-load("//fs-eesp-01/EESP/Usuarios/arthur.fisch//Dropbox/LOCAL_ELECTIONS/repositorio_data/original_unzipped/distrital_dep_2002_2014.RData")
-load("//fs-eesp-01/EESP/Usuarios/arthur.fisch//Dropbox/LOCAL_ELECTIONS/repositorio_data/original_unzipped/state_dep_2002_2014.RData")
-load("//fs-eesp-01/EESP/Usuarios/arthur.fisch//Dropbox/LOCAL_ELECTIONS/repositorio_data/original_unzipped/fed_dep_2002_2014.RData")
-load("//fs-eesp-01/EESP/Usuarios/arthur.fisch//Dropbox/LOCAL_ELECTIONS/repositorio_data/original_unzipped/ver_2004_2016.RData")
-
-#######################################
-
-#fed dep
-
-fed_dep_2002 <- fed_dep_2002_2014[[1]]
-fed_dep_2006 <- fed_dep_2002_2014[[2]]
-fed_dep_2010 <- fed_dep_2002_2014[[3]]
-fed_dep_2014 <- fed_dep_2002_2014[[4]]
-
-
-#state dep
-
-state_dep_2002 <- state_dep_2002_2014[[1]]
-state_dep_2006 <- state_dep_2002_2014[[2]]
-state_dep_2010 <- state_dep_2002_2014[[3]]
-state_dep_2014 <- state_dep_2002_2014[[4]]
-
-#distrital dep
-
-distrital_dep_2002 <- distrital_dep_2002_2014[[1]]
-distrital_dep_2006 <- distrital_dep_2002_2014[[2]]
-distrital_dep_2010 <- distrital_dep_2002_2014[[3]]
-distrital_dep_2014 <- distrital_dep_2002_2014[[4]]
-
-# vereadores
-
-ver_2004 <- ver_2004_2016[[1]]
-ver_2008 <- ver_2004_2016[[2]]
-ver_2012 <- ver_2004_2016[[3]]
-ver_2016 <- ver_2004_2016[[4]]
-
-
-#1. Function Percentage of Last Elected Candidates 
-# This function calculates which candidates have at least Y% of votes from the last elected candidate
-
-threshold_simples <- function(data,y){
-  
-  #last elected
-  
-  data_ult_ele <- data %>%
-    filter(flag==1)
-  
-  #first suplente
-  data_pri_supl <-data%>%
-    filter(prim_supl==1)
-  
-  #selecting only important columns
-  
-  votos_ult_ele <- data_ult_ele%>%
-    dplyr::select(idleg, VOTOS)
-  
-  votos_pri_supl <- data_pri_supl%>%
-    dplyr::select(idleg, VOTOS)
-  
-  ## merging
-  
-  votos_thresh <- merge(x=votos_ult_ele, y=votos_pri_supl, by="idleg")
- 
-  ## calculating threshold
-  
-  votos_thresh$threshold<- votos_thresh$VOTOS.x * (1-y)
-  
-  ### eliminating unnecessary columns
-  
-  votos_thresh<- votos_thresh%>%
-    dplyr::select(idleg, threshold)
-  
-  ### bringing back the threshold
-  
-  data_final <- merge(x=data, y=votos_thresh, by="idleg")
-  
-  ### cutting the observations that are not in the threshold
-  
-  data_final_supl<-data_final%>%
-    filter( !(resultado2=="Eleito") & VOTOS>threshold)
-  
-  data_final_ult<-data_final%>%
-    filter(flag==1)
-  
-  data_final2<-rbind(data_final_ult,data_final_supl)
-  
-  data_final2<-data_final2%>%
-    arrange(desc(idleg, VOTOS))
-  
-  ### final result
-  return(data_final2) 
-}
-
-
-### simple tests
-#x <- threshold_simples(data=distrital_dep_2014, y=1)
-
-
-############
-#2. Function Distance of average of votes from last elected and first suplente
-# This function calculates which candidates are in the bandwidth 2y 
-# The threshold is calculated as the average of the votes from last elected and first suplente
-# The distance from the threshold is the running variable
-
-threshold_media <- function(data,y){
-  
-  #last elected
-  
-  data_ult_ele <- data %>%
-    filter(flag==1)
-  
-  #first suplente
-  data_pri_supl <-data%>%
-    filter(prim_supl==1)
-  
-  #keeping only relevant columns
-  
-  votos_ult_ele <- data_ult_ele%>%
-    dplyr:: select(idleg, VOTOS)
-  
-  votos_pri_supl <- data_pri_supl%>%
-    dplyr:: select(idleg, VOTOS)
-  
-  ## merging
-  
-  votos_thresh <- merge(x=votos_ult_ele, y=votos_pri_supl, by="idleg")
-  
-  ## calculating threshold
-  
-  votos_thresh$threshold<- ((votos_thresh$VOTOS.x+votos_thresh$VOTOS.y)/2)
-  
-  ### eliminating unnecessary columns
-  
-  votos_thresh<- votos_thresh%>%
-    dplyr:: select(idleg, threshold)
-  
-  ### bringing back the threshold
-  
-  data_final <- merge(x=data, y=votos_thresh, by="idleg")
-  
-  data_final$distthresh <-(data_final$VOTOS/data_final$threshold)
-  
-  ### cutting the observations that are not in the threshold
-  
-  data_final_nele<-data_final%>%
-    filter( !(resultado2=="Eleito") & distthresh>(1-y))
-  
-  data_final_ele<-data_final%>%
-    filter( (resultado2=="Eleito") & distthresh<(1+y))
-  
-  data_final2<-rbind(data_final_ele,data_final_nele)
-  
-  data_final2<-data_final2%>%
-    arrange(desc(idleg, VOTOS))
-  
-  # final results
-  return(data_final2) 
-}
-
-#teste
-x <- threshold_media(data=distrital_dep_2014, y=0.15)
-x2 <- threshold_simples(data=distrital_dep_2014, y=0.15)
-
-
-################
-#3. Function Sum (IN DEVELOPMENT)
-# This function calculates which candidates are in the bandwidth 2y 
-# The threshold is calculated as the sum of the votes from last elected and first suplente
-# This funcion is not completed, in development
-
-threshold_soma <- function(data,y){
-  
-  #ultimo eleito
-  
-  data_ult_ele <- data %>%
-    dplyr:: filter(flag==1)
-  
-  #primeiro suplente
-  data_pri_supl <-data%>%
-    dplyr::filter(prim_supl==1)
-  
-  ## s? colunas que importam
-  
-  votos_ult_ele <- data_ult_ele%>%
-    dplyr:: select(idleg, VOTOS)
-  
-  votos_pri_supl <- data_pri_supl%>%
-    dplyr:: select(idleg, VOTOS)
-  
-  ## merging
-  
-  votos_thresh <- merge(x=votos_ult_ele, y=votos_pri_supl, by="idleg")
-  
-  ## calculating threshold
-  
-  votos_thresh$threshold<- ((votos_thresh$VOTOS.x+votos_thresh$VOTOS.y))
-  
-  ### eliminating unnecessary columns
-  
-  votos_thresh<- votos_thresh%>%
-    dplyr:: select(idleg, threshold)
-  
-  ### bringing back the threshold
-  
-  data_final <- merge(x=data, y=votos_thresh, by="idleg")
-  
-  data_final$distthresh <- (data_final$VOTOS/data_final$threshold)
-  
-  ### cutting the observations that are not in the threshold
-  
-  data_final_nele<-data_final%>%
-    filter( !(resultado2=="Eleito") & (distthresh/0.5)>(1-y))
-  
-  data_final_ele<-data_final%>%
-    filter( (resultado2=="Eleito") & (distthresh/0.5)<(1+y))
-  
-  data_final2<-rbind(data_final_ele,data_final_nele)
-  
-  data_final2<-data_final2%>%
-    arrange(desc(idleg, VOTOS))
-  
-  ### resultados cortados
-  return(data_final2) 
-}
-
-################
-#4. Function Boas and Hidalgo - airwaves 2011
-# This function generate datasets using the absolute votes as running variables
-# The y is set as an amount of votes
-# The function will select candidates with a vote difference from last elected at maximun y
-
-threshold_bh <- function(data,y){
-  
-  #last elected
-  
-  data_ult_ele <- data %>%
-    dplyr:: filter(flag==1)
-  
-  #first suplente
-  data_pri_supl <-data%>%
-    dplyr::filter(prim_supl==1)
-  
-  #only important columns
-  
-  votos_ult_ele <- data_ult_ele%>%
-    dplyr:: select(idleg, VOTOS)
-  
-  votos_pri_supl <- data_pri_supl%>%
-    dplyr:: select(idleg, VOTOS)
-  
-  ## merging
-  
-  votos_thresh <- merge(x=votos_ult_ele, y=votos_pri_supl, by="idleg")
-  
-  ## calculating threshold
-  
-  ### eliminating unnecessary columns
-  
-  votos_thresh<- votos_thresh%>%
-    dplyr:: select(idleg, VOTOS.x, VOTOS.y)
-  
-  ### bringing back the threshold
-  
-  data_final <- merge(x=data, y=votos_thresh, by="idleg")
-  
-  ### selecing elected and not elected 
-  
-  data_final_nele<-data_final%>%
-    filter( !(resultado2=="Eleito") )
-  
-  data_final_ele<-data_final%>%
-    filter( (resultado2=="Eleito")  )
-  
-  
-  ### calculating votes margin
-  
-  data_final_ele$distthresh <- (data_final_ele$VOTOS - data_final_ele$VOTOS.y)
-  data_final_nele$distthresh<- (data_final_nele$VOTOS.x - data_final_nele$VOTOS)
-  
-  ### filtering
-  
-  data_final_ele <- data_final_ele %>%
-    filter(distthresh<y)
-  
-  data_final_nele <- data_final_nele %>%
-    filter(distthresh<y)
-  
-  ### consolidating
-  
-  data_final2<-rbind(data_final_ele,data_final_nele)
-  
-  data_final2<-data_final2%>%
-    arrange(desc(idleg, VOTOS))
-  
-  # final results
-  return(data_final2) 
-}
-
-
-#x <- threshold_media(data=distrital_dep_2014, y=0.15)
-#x2 <- threshold_simples(data=distrital_dep_2014, y=0.15)
-#x3 <- threshold_soma(data=distrital_dep_2014, y=0.15)
-#x4<- threshold_bh(data=distrital_dep_2014, y=1000)
-
-
-#5. Function State Share
-# This function calculates the candidate vote share in their electoral district
-# The share in the state is the running varible
-# The distance from the shares between the candidate and the last elected and 
-# first suplente will be used to cut the dataset
-
-threshold_sharenom_uf <- function(data,y){
-  
-  ### calculo dos shares por ue
-  
-  data_votnom_ue <- data%>%
-    group_by( SIGLA_UE)%>%
-    summarise(VOTOS_UE = sum(VOTOS, na.rm=TRUE))
-    
-    
-  ### merging dados da ue
-    
-    data_final <- merge(data, data_votnom_ue, by=c("SIGLA_UE"))
-    
-  ### Calculo do share nominal na ue
-    
-    data_final$share <- (data_final$VOTOS/data_final$VOTOS_UE)
-    
-    ### Calculo da distancia do share nominal
-    
-    #ultimo eleito
-    
-    data_ult_ele <- data_final %>%
-      dplyr:: filter(flag==1)
-    
-    #primeiro suplente
-    data_pri_supl <-data_final%>%
-      dplyr::filter(prim_supl==1)
-    
-    ## s? colunas que importam
-    
-    share_ult_ele <- data_ult_ele%>%
-      dplyr:: select(idleg, share)
-    
-    share_pri_supl <- data_pri_supl%>%
-      dplyr:: select(idleg, share)
-    
-    ## merging
-    
-    share_thresh <- merge(x=share_ult_ele, y=share_pri_supl, by="idleg")
-    
-    ## calculating threshold
-    
-    ### eliminating unnecessary columns
-    
-    share_thresh<- share_thresh%>%
-      dplyr:: select(idleg, share.x, share.y)
-    
-    ### bringing back the threshold
-    
-    data_final2 <- merge(x=data_final, y=share_thresh, by="idleg", all.x=TRUE)
-    
-    ### selecing elected and not elected 
-    
-    data_final_nele<-data_final2%>%
-      filter( !(resultado2=="Eleito") )
-    
-    data_final_ele<-data_final2%>%
-      filter( (resultado2=="Eleito")  )
-    
-    
-    ### calculating votes margin
-    
-    data_final_ele$distthresh <- (data_final_ele$share - data_final_ele$share.y)
-    data_final_nele$distthresh<- (data_final_nele$share.x - data_final_nele$share)
-    
-    ### filtering
-    
-    data_final_ele <- data_final_ele %>%
-      filter(distthresh<y)
-    
-    data_final_nele <- data_final_nele %>%
-      filter(distthresh<y)
-    
-    ### consolidating
-    
-    data_final2<-rbind(data_final_ele,data_final_nele)
-    
-    data_final2<-data_final2%>%
-      arrange(desc(idleg, VOTOS))
-    
-  
-  ### resultados cortados
-  return(data_final2) 
-}
-
-x4<- threshold_sharenom_uf(data=distrital_dep_2014, y=0.01)
-
-#5. Function Coaliton Share
-# This function calculates the candidate vote share in their electoral Coalition
-# The share in the coalition is the running varible
-# The distance from the shares between the candidate and the last elected and 
-# first suplente will be used to cut the dataset
-
-threshold_sharenom_colig <- function(data,y){
-  
-  ### calculo dos shares por ue
-  
-  data_votnom_colig <- data%>%
-    group_by( idleg)%>%
-    summarise(VOTOS_COLIG = sum(VOTOS, na.rm=TRUE))
-  
-  
-  ### merging dados da ue
-  
-  data_final <- merge(data, data_votnom_colig, by=c("idleg"))
-  
-  ### Calculo do share nominal na ue
-  
-  data_final$share <- (data_final$VOTOS/data_final$VOTOS_COLIG)
-  
-  ### Calculo da distancia do share nominal
-  
-  #last elected
-  
-  data_ult_ele <- data_final %>%
-    dplyr:: filter(flag==1)
-  
-  #first suplente
-  data_pri_supl <-data_final%>%
-    dplyr::filter(prim_supl==1)
-  
-  ## s? colunas que importam
-  
-  share_ult_ele <- data_ult_ele%>%
-    dplyr:: select(idleg, share)
-  
-  share_pri_supl <- data_pri_supl%>%
-    dplyr:: select(idleg, share)
-  
-  ## merging
-  
-  share_thresh <- merge(x=share_ult_ele, y=share_pri_supl, by="idleg")
-  
-  ## calculating threshold
-  
-  ### eliminating unnecessary columns
-  
-  share_thresh<- share_thresh%>%
-    dplyr:: select(idleg, share.x, share.y)
-  
-  ### bringing back the threshold
-  
-  data_final2 <- merge(x=data_final, y=share_thresh, by="idleg", all.x=TRUE)
-  
-  ### selecing elected and not elected 
-  
-  data_final_nele<-data_final2%>%
-    filter( !(resultado2=="Eleito") )
-  
-  data_final_ele<-data_final2%>%
-    filter( (resultado2=="Eleito")  )
-  
-  
-  ### calculating votes margin
-  
-  data_final_ele$distthresh <- (data_final_ele$share - data_final_ele$share.y)
-  data_final_nele$distthresh<- (data_final_nele$share.x - data_final_nele$share)
-  
-  ### filtering
-  
-  data_final_ele <- data_final_ele %>%
-    filter(distthresh<y)
-  
-  data_final_nele <- data_final_nele %>%
-    filter(distthresh<y)
-  
-  ### consolidating
-  
-  data_final2<-rbind(data_final_ele,data_final_nele)
-  
-  data_final2<-data_final2%>%
-    arrange(desc(idleg, VOTOS))
-  
-  
-  ### final results
-  return(data_final2) 
-}
-
-x4<- threshold_sharenom_colig(data=distrital_dep_2014, y=0.10)
-
-
-#7. Function Rank 
-# This function generates the dataset using the candidate's rank as running variable
-
-threshold_rank <- function(data,y){
-  
-  ### calculando distancia relativa
-  
-  data_ult_ele <- data %>%
-    dplyr:: filter(flag==1)
-  
-  ## s? colunas que importam
-  
-  pos_ult_ele <- data_ult_ele%>%
-    dplyr:: select(idleg, rank)
-  
-  ### merging de volta
-  data_final <- merge(data, pos_ult_ele, by=c("idleg"), all.x=TRUE)
-  
-  ### vendo distancia
-  data_final$dist_ultele<-data_final$rank.x - data_final$rank.y
-  
-  data_final$absdist_ultele<-abs(data_final$dist_ultele)
-  
-  ### filtering
-  
-  data_final <- data_final %>%
-    filter(absdist_ultele<y)
-  
-  
-  ### consolidating
-  
-  
-  data_final<-data_final%>%
-    arrange(desc(idleg, VOTOS))
-  
-  
-  
-  ### resultados cortados                           
-  return(data_final) 
-}
 
 
 # TESTS
