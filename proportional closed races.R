@@ -3,8 +3,8 @@
 ###################################################################
 
 # This script clean, combine and rank data of Brazilian candidates in proportional elections. 
-# The project aims to analyze the proportional closed races and to generate datasets that 
-# could be used for RDD
+# The project aims to analyze the proportional races and to generate datasets that 
+# have vote shares using different metrics
 
 
 ######## Summary ########
@@ -1193,7 +1193,7 @@ fed_dep_2002 <- fed_dep_2002 %>%
   mutate(rank = rank(idleg, ties.method = "first"))
 
 #identifying elected candidates
-fed_dep_2002 <-mutate(fed_dep_2002, resultado2 = ifelse(DESC_SIT_TOT_TURNO=="ELEITO","Eleito",ifelse(DESC_SIT_TOT_TURNO=="ELEITO POR MÉDIA","Eleito", ifelse(DESC_SIT_TOT_TURNO=="SUPLENTE","Suplente","Não eleito"))))
+fed_dep_2002 <-mutate(fed_dep_2002, resultado2 = ifelse(DESC_SIT_TOT_TURNO=="ELEITO","Eleito",ifelse(DESC_SIT_TOT_TURNO=="ELEITO POR M?DIA","Eleito", ifelse(DESC_SIT_TOT_TURNO=="SUPLENTE","Suplente","N?o eleito"))))
 
 fed_dep_2002$idleg2 <-paste0(fed_dep_2002$idleg, fed_dep_2002$resultado2)
 
@@ -1247,7 +1247,7 @@ state_dep_2002 <- state_dep_2002 %>%
   mutate(rank = rank(idleg, ties.method = "first"))
 
 #identifying elected candidates
-state_dep_2002 <-mutate(state_dep_2002, resultado2 = ifelse(DESC_SIT_TOT_TURNO=="ELEITO","Eleito",ifelse(DESC_SIT_TOT_TURNO=="ELEITO POR MÉDIA","Eleito", ifelse(DESC_SIT_TOT_TURNO=="SUPLENTE","Suplente","Não eleito"))))
+state_dep_2002 <-mutate(state_dep_2002, resultado2 = ifelse(DESC_SIT_TOT_TURNO=="ELEITO","Eleito",ifelse(DESC_SIT_TOT_TURNO=="ELEITO POR M?DIA","Eleito", ifelse(DESC_SIT_TOT_TURNO=="SUPLENTE","Suplente","N?o eleito"))))
 
 state_dep_2002$idleg2 <-paste0(state_dep_2002$idleg, state_dep_2002$resultado2)
 
@@ -1297,7 +1297,7 @@ distrital_dep_2002 <- distrital_dep_2002 %>%
   group_by(idleg) %>% 
   mutate(rank = rank(idleg, ties.method = "first"))
 
-distrital_dep_2002 <-mutate(distrital_dep_2002, resultado2 = ifelse(DESC_SIT_TOT_TURNO=="ELEITO","Eleito",ifelse(DESC_SIT_TOT_TURNO=="ELEITO POR MÉDIA","Eleito", ifelse(DESC_SIT_TOT_TURNO=="SUPLENTE","Suplente","Não eleito"))))
+distrital_dep_2002 <-mutate(distrital_dep_2002, resultado2 = ifelse(DESC_SIT_TOT_TURNO=="ELEITO","Eleito",ifelse(DESC_SIT_TOT_TURNO=="ELEITO POR M?DIA","Eleito", ifelse(DESC_SIT_TOT_TURNO=="SUPLENTE","Suplente","N?o eleito"))))
 
 distrital_dep_2002$idleg2 <-paste0(distrital_dep_2002$idleg, distrital_dep_2002$resultado2)
 
@@ -1382,7 +1382,7 @@ fed_dep_2006 <- fed_dep_2006 %>%
   group_by(idleg) %>% 
   mutate(rank = rank(idleg, ties.method = "first"))
 
-fed_dep_2006 <-mutate(fed_dep_2006, resultado2 = ifelse(DESC_SIT_TOT_TURNO=="ELEITO","Eleito",ifelse(DESC_SIT_TOT_TURNO=="MÉDIA","Eleito",ifelse(DESC_SIT_TOT_TURNO=="SUPLENTE","Suplente","Não eleito"))))
+fed_dep_2006 <-mutate(fed_dep_2006, resultado2 = ifelse(DESC_SIT_TOT_TURNO=="ELEITO","Eleito",ifelse(DESC_SIT_TOT_TURNO=="M?DIA","Eleito",ifelse(DESC_SIT_TOT_TURNO=="SUPLENTE","Suplente","N?o eleito"))))
 
 fed_dep_2006$idleg2 <-paste0(fed_dep_2006$idleg, fed_dep_2006$resultado2)
 
@@ -1430,7 +1430,7 @@ state_dep_2006 <- state_dep_2006 %>%
   group_by(idleg) %>% 
   mutate(rank = rank(idleg, ties.method = "first"))
 
-state_dep_2006 <-mutate(state_dep_2006, resultado2 = ifelse(DESC_SIT_TOT_TURNO=="ELEITO","Eleito",ifelse(DESC_SIT_TOT_TURNO=="MÉDIA","Eleito",ifelse(DESC_SIT_TOT_TURNO=="SUPLENTE","Suplente","Não eleito"))))
+state_dep_2006 <-mutate(state_dep_2006, resultado2 = ifelse(DESC_SIT_TOT_TURNO=="ELEITO","Eleito",ifelse(DESC_SIT_TOT_TURNO=="M?DIA","Eleito",ifelse(DESC_SIT_TOT_TURNO=="SUPLENTE","Suplente","N?o eleito"))))
 
 state_dep_2006$idleg2 <-paste0(state_dep_2006$idleg, state_dep_2006$resultado2)
 
@@ -1480,7 +1480,7 @@ distrital_dep_2006 <- distrital_dep_2006 %>%
   group_by(idleg) %>% 
   mutate(rank = rank(idleg, ties.method = "first"))
 
-distrital_dep_2006 <-mutate(distrital_dep_2006, resultado2 = ifelse(DESC_SIT_TOT_TURNO=="ELEITO","Eleito",ifelse(DESC_SIT_TOT_TURNO=="MÉDIA","Eleito",ifelse(DESC_SIT_TOT_TURNO=="SUPLENTE","Suplente","Não eleito"))))
+distrital_dep_2006 <-mutate(distrital_dep_2006, resultado2 = ifelse(DESC_SIT_TOT_TURNO=="ELEITO","Eleito",ifelse(DESC_SIT_TOT_TURNO=="M?DIA","Eleito",ifelse(DESC_SIT_TOT_TURNO=="SUPLENTE","Suplente","N?o eleito"))))
 
 
 distrital_dep_2006$idleg2 <-paste0(distrital_dep_2006$idleg, distrital_dep_2006$resultado2)
@@ -1567,7 +1567,7 @@ fed_dep_2010 <- fed_dep_2010 %>%
   group_by(idleg) %>% 
   mutate(rank = rank(idleg, ties.method = "first"))
 
-fed_dep_2010 <-mutate(fed_dep_2010, resultado2 = ifelse(DESC_SIT_TOT_TURNO=="ELEITO","Eleito",ifelse(DESC_SIT_TOT_TURNO=="MÉDIA","Eleito",ifelse(DESC_SIT_TOT_TURNO=="SUPLENTE","Suplente","Não eleito"))))
+fed_dep_2010 <-mutate(fed_dep_2010, resultado2 = ifelse(DESC_SIT_TOT_TURNO=="ELEITO","Eleito",ifelse(DESC_SIT_TOT_TURNO=="M?DIA","Eleito",ifelse(DESC_SIT_TOT_TURNO=="SUPLENTE","Suplente","N?o eleito"))))
 
 fed_dep_2010$idleg2 <-paste0(fed_dep_2010$idleg, fed_dep_2010$resultado2)
 
@@ -1616,7 +1616,7 @@ state_dep_2010 <- state_dep_2010 %>%
   group_by(idleg) %>% 
   mutate(rank = rank(idleg, ties.method = "first"))
 
-state_dep_2010 <-mutate(state_dep_2010, resultado2 = ifelse(DESC_SIT_TOT_TURNO=="ELEITO","Eleito",ifelse(DESC_SIT_TOT_TURNO=="MÉDIA","Eleito",ifelse(DESC_SIT_TOT_TURNO=="SUPLENTE","Suplente","Não eleito"))))
+state_dep_2010 <-mutate(state_dep_2010, resultado2 = ifelse(DESC_SIT_TOT_TURNO=="ELEITO","Eleito",ifelse(DESC_SIT_TOT_TURNO=="M?DIA","Eleito",ifelse(DESC_SIT_TOT_TURNO=="SUPLENTE","Suplente","N?o eleito"))))
 
 state_dep_2010$idleg2 <-paste0(state_dep_2010$idleg, state_dep_2010$resultado2)
 
@@ -1664,7 +1664,7 @@ distrital_dep_2010 <- distrital_dep_2010 %>%
   group_by(idleg) %>% 
   mutate(rank = rank(idleg, ties.method = "first"))
 
-distrital_dep_2010 <-mutate(distrital_dep_2010, resultado2 = ifelse(DESC_SIT_TOT_TURNO=="ELEITO","Eleito",ifelse(DESC_SIT_TOT_TURNO=="MÉDIA","Eleito",ifelse(DESC_SIT_TOT_TURNO=="SUPLENTE","Suplente","Não eleito"))))
+distrital_dep_2010 <-mutate(distrital_dep_2010, resultado2 = ifelse(DESC_SIT_TOT_TURNO=="ELEITO","Eleito",ifelse(DESC_SIT_TOT_TURNO=="M?DIA","Eleito",ifelse(DESC_SIT_TOT_TURNO=="SUPLENTE","Suplente","N?o eleito"))))
 
 
 distrital_dep_2010$idleg2 <-paste0(distrital_dep_2010$idleg, distrital_dep_2010$resultado2)
@@ -1750,7 +1750,7 @@ fed_dep_2014 <- fed_dep_2014 %>%
   group_by(idleg) %>% 
   mutate(rank = rank(idleg, ties.method = "first"))
 
-fed_dep_2014 <-mutate(fed_dep_2014, resultado2 = ifelse(DESC_SIT_TOT_TURNO=="ELEITO POR QP","Eleito",ifelse(DESC_SIT_TOT_TURNO=="ELEITO POR MÉDIA","Eleito",ifelse(DESC_SIT_TOT_TURNO=="SUPLENTE","Suplente","Não eleito"))))
+fed_dep_2014 <-mutate(fed_dep_2014, resultado2 = ifelse(DESC_SIT_TOT_TURNO=="ELEITO POR QP","Eleito",ifelse(DESC_SIT_TOT_TURNO=="ELEITO POR M?DIA","Eleito",ifelse(DESC_SIT_TOT_TURNO=="SUPLENTE","Suplente","N?o eleito"))))
 
 fed_dep_2014$idleg2 <-paste0(fed_dep_2014$idleg, fed_dep_2014$resultado2)
 
@@ -1798,7 +1798,7 @@ state_dep_2014 <- state_dep_2014 %>%
   group_by(idleg) %>% 
   mutate(rank = rank(idleg, ties.method = "first"))
 
-state_dep_2014 <-mutate(state_dep_2014, resultado2 = ifelse(DESC_SIT_TOT_TURNO=="ELEITO POR QP","Eleito",ifelse(DESC_SIT_TOT_TURNO=="ELEITO POR MÉDIA","Eleito",ifelse(DESC_SIT_TOT_TURNO=="SUPLENTE","Suplente","Não eleito"))))
+state_dep_2014 <-mutate(state_dep_2014, resultado2 = ifelse(DESC_SIT_TOT_TURNO=="ELEITO POR QP","Eleito",ifelse(DESC_SIT_TOT_TURNO=="ELEITO POR M?DIA","Eleito",ifelse(DESC_SIT_TOT_TURNO=="SUPLENTE","Suplente","N?o eleito"))))
 
 state_dep_2014$idleg2 <-paste0(state_dep_2014$idleg, state_dep_2014$resultado2)
 
@@ -1846,7 +1846,7 @@ distrital_dep_2014 <- distrital_dep_2014 %>%
   group_by(idleg) %>% 
   mutate(rank = rank(idleg, ties.method = "first"))
 
-distrital_dep_2014 <-mutate(distrital_dep_2014, resultado2 = ifelse(DESC_SIT_TOT_TURNO=="ELEITO POR QP","Eleito",ifelse(DESC_SIT_TOT_TURNO=="ELEITO POR MÉDIA","Eleito",ifelse(DESC_SIT_TOT_TURNO=="SUPLENTE","Suplente","Não eleito"))))
+distrital_dep_2014 <-mutate(distrital_dep_2014, resultado2 = ifelse(DESC_SIT_TOT_TURNO=="ELEITO POR QP","Eleito",ifelse(DESC_SIT_TOT_TURNO=="ELEITO POR M?DIA","Eleito",ifelse(DESC_SIT_TOT_TURNO=="SUPLENTE","Suplente","N?o eleito"))))
 
 
 distrital_dep_2014$idleg2 <-paste0(distrital_dep_2014$idleg, distrital_dep_2014$resultado2)
@@ -1939,7 +1939,7 @@ ver_2004 <- ver_2004 %>%
   group_by(idleg) %>% 
   mutate(rank = rank(idleg, ties.method = "first"))
 
-ver_2004 <-mutate(ver_2004, resultado2 = ifelse(DESC_SIT_TOT_TURNO=="ELEITO","Eleito",ifelse(DESC_SIT_TOT_TURNO=="MÉDIA","Eleito", ifelse(DESC_SIT_TOT_TURNO=="SUPLENTE","Suplente","Não eleito"))))
+ver_2004 <-mutate(ver_2004, resultado2 = ifelse(DESC_SIT_TOT_TURNO=="ELEITO","Eleito",ifelse(DESC_SIT_TOT_TURNO=="M?DIA","Eleito", ifelse(DESC_SIT_TOT_TURNO=="SUPLENTE","Suplente","N?o eleito"))))
 
 ver_2004$idleg2 <-paste0(ver_2004$idleg, ver_2004$resultado2)
 
@@ -2028,7 +2028,7 @@ ver_2008 <- ver_2008 %>%
   group_by(idleg) %>% 
   mutate(rank = rank(idleg, ties.method = "first"))
 
-ver_2008 <-mutate(ver_2008, resultado2 = ifelse(DESC_SIT_TOT_TURNO=="ELEITO","Eleito",ifelse(DESC_SIT_TOT_TURNO=="MÉDIA","Eleito", ifelse(DESC_SIT_TOT_TURNO=="SUPLENTE","Suplente","Não eleito"))))
+ver_2008 <-mutate(ver_2008, resultado2 = ifelse(DESC_SIT_TOT_TURNO=="ELEITO","Eleito",ifelse(DESC_SIT_TOT_TURNO=="M?DIA","Eleito", ifelse(DESC_SIT_TOT_TURNO=="SUPLENTE","Suplente","N?o eleito"))))
 
 ver_2008$idleg2 <-paste0(ver_2008$idleg, ver_2008$resultado2)
 
@@ -2113,7 +2113,7 @@ ver_2012 <- ver_2012 %>%
   group_by(idleg) %>% 
   mutate(rank = rank(idleg, ties.method = "first"))
 
-ver_2012 <-mutate(ver_2012, resultado2 = ifelse(DESC_SIT_TOT_TURNO=="ELEITO POR QP","Eleito",ifelse(DESC_SIT_TOT_TURNO=="ELEITO POR MÉDIA","Eleito", ifelse(DESC_SIT_TOT_TURNO=="SUPLENTE","Suplente","Não eleito"))))
+ver_2012 <-mutate(ver_2012, resultado2 = ifelse(DESC_SIT_TOT_TURNO=="ELEITO POR QP","Eleito",ifelse(DESC_SIT_TOT_TURNO=="ELEITO POR M?DIA","Eleito", ifelse(DESC_SIT_TOT_TURNO=="SUPLENTE","Suplente","N?o eleito"))))
 
 ver_2012$idleg2 <-paste0(ver_2012$idleg, ver_2012$resultado2)
 
@@ -2200,7 +2200,7 @@ ver_2016 <- ver_2016 %>%
   group_by(idleg) %>% 
   mutate(rank = rank(idleg, ties.method = "first"))
 
-ver_2016 <-mutate(ver_2016, resultado2 = ifelse(DESC_SIT_TOT_TURNO=="ELEITO POR QP","Eleito",ifelse(DESC_SIT_TOT_TURNO=="ELEITO POR MÉDIA","Eleito", ifelse(DESC_SIT_TOT_TURNO=="SUPLENTE","Suplente","Não eleito"))))
+ver_2016 <-mutate(ver_2016, resultado2 = ifelse(DESC_SIT_TOT_TURNO=="ELEITO POR QP","Eleito",ifelse(DESC_SIT_TOT_TURNO=="ELEITO POR M?DIA","Eleito", ifelse(DESC_SIT_TOT_TURNO=="SUPLENTE","Suplente","N?o eleito"))))
 
 ver_2016$idleg2 <-paste0(ver_2016$idleg, ver_2016$resultado2)
 
@@ -3044,7 +3044,7 @@ threshold_soma <- function(data,y){
   data_pri_supl <-data%>%
     dplyr::filter(prim_supl==1)
   
-  ## só colunas que importam
+  ## s? colunas que importam
   
   votos_ult_ele <- data_ult_ele%>%
     dplyr:: select(idleg, VOTOS)
@@ -3202,7 +3202,7 @@ threshold_sharenom_uf <- function(data,y){
     data_pri_supl <-data_final%>%
       dplyr::filter(prim_supl==1)
     
-    ## só colunas que importam
+    ## s? colunas que importam
     
     share_ult_ele <- data_ult_ele%>%
       dplyr:: select(idleg, share)
@@ -3295,7 +3295,7 @@ threshold_sharenom_colig <- function(data,y){
   data_pri_supl <-data_final%>%
     dplyr::filter(prim_supl==1)
   
-  ## só colunas que importam
+  ## s? colunas que importam
   
   share_ult_ele <- data_ult_ele%>%
     dplyr:: select(idleg, share)
@@ -3365,7 +3365,7 @@ threshold_rank <- function(data,y){
   data_ult_ele <- data %>%
     dplyr:: filter(flag==1)
   
-  ## só colunas que importam
+  ## s? colunas que importam
   
   pos_ult_ele <- data_ult_ele%>%
     dplyr:: select(idleg, rank)
