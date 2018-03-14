@@ -1284,7 +1284,7 @@ state_dep_2002 <-mutate(state_dep_2002, prim_supl = ifelse((rank2==1 & resultado
 state_dep_2002 <- state_dep_2002 %>%
   arrange (idleg2, desc(VOTOS)) %>%
   group_by(idleg2) %>% 
-  mutate(flag = ifelse( (rank(c(idleg2), ties.method = "last")==1 & resultado2=="Eleito"),1,0))
+  mutate(flag = ifelse((rank(c(idleg2), ties.method = "last")==1 & resultado2=="Eleito"),1,0))
 
 state_dep_2002<-state_dep_2002%>%
   dplyr::select(DATA_GERACAO, HORA_GERACAO, ANO_ELEICAO.x, NUM_TURNO, DESCRICAO_CARGO.x, SIGLA_UF, SIGLA_UE, DESCRICAO_UE, 
@@ -2116,10 +2116,8 @@ casos <- cand_2012v2 %>% right_join(problems, by = c("NUM_TURNO",
 
 #### VEREADOR ####
 
-#filter to only Federal representatives
-
 ver_2012<- cand_2012v2 %>%
-  filter(CODIGO_CARGO==13)
+           filter(CODIGO_CARGO==13)
 
 
 #ordering electoral coalitions
@@ -2717,7 +2715,7 @@ save(ver_part_2004_2016, file = "//fs-eesp-01/EESP/Usuarios/arthur.fisch//Dropbo
 #1. Loading Data
 rm(list=ls())
 
-load(paste0(dir_d, "repositorio_data/original_unzipped/distrital_dep_2002_2014.RData"))
+load(paste0(dir_d, "original_unzipped/distrital_dep_2002_2014.RData"))
 load(paste0(dir_d, "original_unzipped/state_dep_2002_2014.RData"))
 load(paste0(dir_d, "original_unzipped/fed_dep_2002_2014.RData"))
 load(paste0(dir_d, "original_unzipped/ver_2004_2016.RData"))
