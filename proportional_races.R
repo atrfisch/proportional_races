@@ -53,7 +53,12 @@ source(paste0(dir, "codes/helper_functions.R"))
 #0. Downloading 
 ###################################################################
 
-dir_d <- "//fs-eesp-01/EESP/Usuarios/arthur.fisch/Dropbox/LOCAL_ELECTIONS/repositorio_data/"
+setwd("~")
+if(grepl("nataliabueno",getwd())==TRUE){#Allow for different paths in our computers
+  dir_d <- "~/Dropbox/LOCAL_ELECTIONS/repositorio_data/"
+}else{
+  dir_d <- "//fs-eesp-01/EESP/Usuarios/arthur.fisch/Dropbox/LOCAL_ELECTIONS/repositorio_data/"
+}
 
 #Candidate data
 url_cand98 <- "http://agencia.tse.jus.br/estatistica/sead/odsele/consulta_cand/consulta_cand_1998.zip"
@@ -198,7 +203,7 @@ labels_pre2012c <- c("DATA_GERACAO", "HORA_GERACAO", "ANO_ELEICAO", "NUM_TURNO",
                      "DESC_SIT_TOT_TURNO")
 
 #candidates 2000
-files <- as.list(paste0("//fs-eesp-01/EESP/Usuarios/arthur.fisch//Dropbox/LOCAL_ELECTIONS/repositorio_data/original_unzipped/consulta_cand/consulta_cand_2000/consulta_cand_2000_",
+files <- as.list(paste0(dir_d, "original_unzipped/consulta_cand/consulta_cand_2000/consulta_cand_2000_",
                         ufs_n[!ufs_n %in% c("BR", "ZZ", "DF")], ".txt"))
 cand_2000 <- lapply(files, read.table, sep = ";", header = F, 
                     stringsAsFactors = F, fill = T, fileEncoding = "windows-1252") 
@@ -207,7 +212,7 @@ names(cand_2000) <- labels_pre2012c
 cand_2000 <- as_tibble(cand_2000)
 
 #candidates 2004
-files <- as.list(paste0("//fs-eesp-01/EESP/Usuarios/arthur.fisch//Dropbox/LOCAL_ELECTIONS/repositorio_data/original_unzipped/consulta_cand/consulta_cand_2004/consulta_cand_2004_",
+files <- as.list(paste0(paste0(dir_d, "original_unzipped/consulta_cand/consulta_cand_2004/consulta_cand_2004_",
                         ufs_n[!ufs_n %in% c("BR", "ZZ", "DF")], ".txt"))
 cand_2004 <- lapply(files, read.table, sep = ";", header=F, 
                     stringsAsFactors = F, fill = T, fileEncoding = "windows-1252") 
@@ -216,7 +221,7 @@ names(cand_2004) <- labels_pre2012c
 cand_2004 <- as_tibble(cand_2004)
 
 #candidates 2008
-files <- as.list(paste0("//fs-eesp-01/EESP/Usuarios/arthur.fisch//Dropbox/LOCAL_ELECTIONS/repositorio_data/original_unzipped/consulta_cand/consulta_cand_2008/consulta_cand_2008_",
+files <- as.list(paste0(dir_d, "original_unzipped/consulta_cand/consulta_cand_2008/consulta_cand_2008_",
                         ufs_n[!ufs_n %in% c("BR", "ZZ", "DF")], ".txt"))
 cand_2008 <- lapply(files, read.table, sep = ";", header = F, 
                     stringsAsFactors = F, fill = T, fileEncoding = "windows-1252") 
@@ -238,7 +243,7 @@ labels_2012c <- c("DATA_GERACAO", "HORA_GERACAO", "ANO_ELEICAO", "NUM_TURNO", "D
                   "NOME_MUNICIPIO_NASCIMENTO", "DESPESA_MAX_CAMPANHA", "COD_SIT_TOT_TURNO",
                   "DESC_SIT_TOT_TURNO", "EMAIL_CANDIDATO")
 
-files <- as.list(paste0("//fs-eesp-01/EESP/Usuarios/arthur.fisch//Dropbox/LOCAL_ELECTIONS/repositorio_data/original_unzipped/consulta_cand/consulta_cand_2012/consulta_cand_2012_", 
+files <- as.list(paste0(dir_d, "original_unzipped/consulta_cand/consulta_cand_2012/consulta_cand_2012_", 
                         ufs_n[!ufs_n %in% c("BR", "ZZ", "DF")], ".txt"))
 cand_2012 <- lapply(files, read.table, sep = ";", header = F, 
                     stringsAsFactors = F, fill = T, fileEncoding = "windows-1252") 
@@ -260,7 +265,7 @@ labels_2016c <- c("DATA_GERACAO", "HORA_GERACAO", "ANO_ELEICAO", "NUM_TURNO", "D
                   "CODIGO_MUNICIPIO_NASCIMENTO", "NOME_MUNICIPIO_NASCIMENTO", "DESPESA_MAX_CAMPANHA",
                   "COD_SIT_TOT_TURNO", "DESC_SIT_TOT_TURNO", "EMAIL_CANDIDATO")
 
-files <- as.list(paste0("//fs-eesp-01/EESP/Usuarios/arthur.fisch//Dropbox/LOCAL_ELECTIONS/repositorio_data/original_unzipped/consulta_cand/consulta_cand_2016/consulta_cand_2016_",
+files <- as.list(paste0(dir, "original_unzipped/consulta_cand/consulta_cand_2016/consulta_cand_2016_",
                         ufs_n[!ufs_n %in% c("BR", "ZZ", "DF")], ".txt"))
 cand_2016 <- lapply(files, read.table, sep = ";", 
                     header = F, stringsAsFactors = F, fill = T, fileEncoding = "windows-1252") 
@@ -269,7 +274,7 @@ names(cand_2016) <- labels_2016c
 cand_2016 <- as_tibble(cand_2016)
 
 cand_2000_2016 <- list(cand_2000, cand_2004, cand_2008, cand_2012, cand_2016)
-save(cand_2000_2016, file = "//fs-eesp-01/EESP/Usuarios/arthur.fisch//Dropbox/LOCAL_ELECTIONS/repositorio_data/original_unzipped/cand_2000_2016.RData")
+save(cand_2000_2016, file = paste0(dir, "original_unzipped/cand_2000_2016.RData")
 
 #Voting data 2000
 labels_pre2012 <- c("DATA_GERACAO", "HORA_GERACAO", "ANO_ELEICAO", "NUM_TURNO", "DESCRICAO_ELEICAO",
@@ -281,7 +286,7 @@ labels_pre2012 <- c("DATA_GERACAO", "HORA_GERACAO", "ANO_ELEICAO", "NUM_TURNO", 
                     "TOTAL_VOTOS")
 
 #Voting 2000
-files <- as.list(paste0("//fs-eesp-01/EESP/Usuarios/arthur.fisch//Dropbox/LOCAL_ELECTIONS/repositorio_data/original_unzipped/votacao_munzona/votacao_candidato_munzona_2000/votacao_candidato_munzona_2000_",
+files <- as.list(paste0(dir_d, "original_unzipped/votacao_munzona/votacao_candidato_munzona_2000/votacao_candidato_munzona_2000_",
                         ufs_n[!ufs_n %in% c("BR", "ZZ", "DF")], ".txt"))
 vot_2000 <- lapply(files, read.table, sep = ";", 
                    header = F, stringsAsFactors = F, fill = T, fileEncoding = "windows-1252") 
