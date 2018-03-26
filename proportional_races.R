@@ -43,12 +43,12 @@ setwd("~")
 if(grepl("bueno",getwd())==TRUE){#Allow for different paths in our computers
   dir <- "~/Dropbox/LOCAL_ELECTIONS/"
 }else{
-  dir <- "//fs-eesp-01/EESP/Usuarios/arthur.fisch/Dropbox/LOCAL_ELECTIONS/"
+  dir <- "D:/Dropbox/LOCAL_ELECTIONS/"
 }
 
 #helper functions
 source(paste0(dir, "codes/helper_functions.R"))
-source("~/Dropbox/TSE_prop_races/proportional_races/margin_functions.R")
+#source("~/Dropbox/TSE_prop_races/proportional_races/margin_functions.R")
 
 ###################################################################
 #0. Downloading 
@@ -58,7 +58,7 @@ setwd("~")
 if(grepl("bueno",getwd())==TRUE){#Allow for different paths in our computers
   dir_d <- "~/Dropbox/LOCAL_ELECTIONS/repositorio_data/"
 }else{
-  dir_d <- "//fs-eesp-01/EESP/Usuarios/arthur.fisch/Dropbox/LOCAL_ELECTIONS/repositorio_data/"
+  dir_d <- "D:/Dropbox/LOCAL_ELECTIONS/repositorio_data/"
 }
 
 #Candidate data
