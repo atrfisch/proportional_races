@@ -266,7 +266,7 @@ labels_2016c <- c("DATA_GERACAO", "HORA_GERACAO", "ANO_ELEICAO", "NUM_TURNO", "D
                   "CODIGO_MUNICIPIO_NASCIMENTO", "NOME_MUNICIPIO_NASCIMENTO", "DESPESA_MAX_CAMPANHA",
                   "COD_SIT_TOT_TURNO", "DESC_SIT_TOT_TURNO", "EMAIL_CANDIDATO")
 
-files <- as.list(paste0(dir, "original_unzipped/consulta_cand/consulta_cand_2016/consulta_cand_2016_",
+files <- as.list(paste0(dir_d, "original_unzipped/consulta_cand/consulta_cand_2016/consulta_cand_2016_",
                         ufs_n[!ufs_n %in% c("BR", "ZZ", "DF")], ".txt"))
 cand_2016 <- lapply(files, read.table, sep = ";", 
                     header = F, stringsAsFactors = F, fill = T, fileEncoding = "windows-1252") 
@@ -275,7 +275,7 @@ names(cand_2016) <- labels_2016c
 cand_2016 <- as_tibble(cand_2016)
 
 cand_2000_2016 <- list(cand_2000, cand_2004, cand_2008, cand_2012, cand_2016)
-save(cand_2000_2016, file = paste0(dir, "original_unzipped/cand_2000_2016.RData"))
+save(cand_2000_2016, file = paste0(dir_d, "original_unzipped/cand_2000_2016.RData"))
 
 #Voting data 2000
 labels_pre2012 <- c("DATA_GERACAO", "HORA_GERACAO", "ANO_ELEICAO", "NUM_TURNO", "DESCRICAO_ELEICAO",
@@ -334,7 +334,7 @@ labels_2016 <- c("DATA_GERACAO", "HORA_GERACAO", "ANO_ELEICAO", "NUM_TURNO", "DE
 files <- as.list(paste0(dir_d, "original_unzipped/votacao_munzona/votacao_candidato_munzona_2016/votacao_candidato_munzona_2016_",
                         ufs_n[!ufs_n %in% c("BR", "ZZ", "DF")], ".txt"))
 vot_2016 <- lapply(files, read.table, sep=";", 
-                   header=F, stringsAsFactors=F, fill = T, fileEncoding = "latin1") 
+                   header=F, stringsAsFactors=F, fill = T, fileEncoding = "windows-1252") 
 vot_2016 <- do.call("rbind", vot_2016)
 names(vot_2016) <- labels_2016
 vot_2016 <- as_tibble(vot_2016)
