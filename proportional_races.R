@@ -37,6 +37,8 @@ library(eeptools)
 library(readr)
 library(qpcR)
 library(readxl)
+library(stringr)
+library(lubridate)
 
 #Change your working directory here
 setwd("~")
@@ -1202,11 +1204,18 @@ fed_dep_2002 <- mutate(fed_dep_2002, sq_legenda2 = ifelse(SEQUENCIAL_LEGENDA==-3
 #creating id for electoral coalition
 fed_dep_2002$idleg <-paste0(fed_dep_2002$SIGLA_UF,fed_dep_2002$CODIGO_CARGO, fed_dep_2002$sq_legenda2)
 
+#correcting the dates
+fed_dep_2002$DATA_NASCIMENTO <- ifelse(nchar(fed_dep_2002$DATA_NASCIMENTO,type = "chars")==8,fed_dep_2002$DATA_NASCIMENTO, paste0("0",fed_dep_2002$DATA_NASCIMENTO))
+
+#using lubridate
+fed_dep_2002$DATA_NASCIMENTO <- dmy(fed_dep_2002$DATA_NASCIMENTO)
+
 #ranking candidates
 fed_dep_2002 <- fed_dep_2002 %>%
-  arrange (idleg, desc(VOTOS)) %>%
+  arrange (idleg, desc(VOTOS), DATA_NASCIMENTO) %>%
   group_by(idleg) %>% 
   mutate(rank = rank(idleg, ties.method = "first"))
+
 
 #identifying elected candidates
 fed_dep_2002 <- mutate(fed_dep_2002, resultado2 = ifelse(DESC_SIT_TOT_TURNO=="ELEITO","Eleito",
@@ -1216,7 +1225,7 @@ fed_dep_2002 <- mutate(fed_dep_2002, resultado2 = ifelse(DESC_SIT_TOT_TURNO=="EL
 fed_dep_2002$idleg2 <-paste0(fed_dep_2002$idleg, fed_dep_2002$resultado2)
 
 fed_dep_2002 <- fed_dep_2002 %>%
-  arrange (idleg2, desc(VOTOS)) %>%
+  arrange (idleg2, desc(VOTOS), DATA_NASCIMENTO) %>%
   group_by(idleg2) %>% 
   mutate(rank2 = rank(c(idleg2), ties.method = "first"))
 
@@ -1225,7 +1234,7 @@ fed_dep_2002 <-mutate(fed_dep_2002, prim_supl = ifelse((rank2==1 & resultado2=="
 
 #identifying last elected
 fed_dep_2002 <- fed_dep_2002 %>%
-  arrange (idleg2, desc(VOTOS)) %>%
+  arrange (idleg2, desc(VOTOS), DATA_NASCIMENTO) %>%
   group_by(idleg2) %>% 
   mutate(flag = ifelse((rank(c(idleg2), ties.method = "last")==1 & resultado2=="Eleito"),1,0))
 
@@ -1258,9 +1267,16 @@ state_dep_2002 <- mutate(state_dep_2002, sq_legenda2 = ifelse(SEQUENCIAL_LEGENDA
 #creating id for electoral coalition
 state_dep_2002$idleg <-paste0(state_dep_2002$SIGLA_UF,state_dep_2002$CODIGO_CARGO, state_dep_2002$sq_legenda2)
 
+#correcting the dates
+state_dep_2002$DATA_NASCIMENTO <- ifelse(nchar(state_dep_2002$DATA_NASCIMENTO,type = "chars")==8,state_dep_2002$DATA_NASCIMENTO, paste0("0",state_dep_2002$DATA_NASCIMENTO))
+
+#using lubridate
+state_dep_2002$DATA_NASCIMENTO <- dmy(state_dep_2002$DATA_NASCIMENTO)
+
+
 #ranking candidates
 state_dep_2002 <- state_dep_2002 %>%
-  arrange (idleg, desc(VOTOS)) %>%
+  arrange (idleg, desc(VOTOS), DATA_NASCIMENTO) %>%
   group_by(idleg) %>% 
   mutate(rank = rank(idleg, ties.method = "first"))
 
@@ -1272,8 +1288,9 @@ state_dep_2002 <-mutate(state_dep_2002, resultado2 = ifelse(DESC_SIT_TOT_TURNO==
 
 state_dep_2002$idleg2 <-paste0(state_dep_2002$idleg, state_dep_2002$resultado2)
 
+
 state_dep_2002 <- state_dep_2002 %>%
-  arrange (idleg2, desc(VOTOS)) %>%
+  arrange (idleg2, desc(VOTOS),DATA_NASCIMENTO) %>%
   group_by(idleg2) %>% 
   mutate(rank2 = rank(c(idleg2), ties.method = "first"))
 
@@ -1282,7 +1299,7 @@ state_dep_2002 <-mutate(state_dep_2002, prim_supl = ifelse((rank2==1 & resultado
 
 #identifying last elected
 state_dep_2002 <- state_dep_2002 %>%
-  arrange (idleg2, desc(VOTOS)) %>%
+  arrange (idleg2, desc(VOTOS), DATA_NASCIMENTO) %>%
   group_by(idleg2) %>% 
   mutate(flag = ifelse((rank(c(idleg2), ties.method = "last")==1 & resultado2=="Eleito"),1,0))
 
@@ -1313,8 +1330,14 @@ distrital_dep_2002 <- mutate(distrital_dep_2002, sq_legenda2 = ifelse(SEQUENCIAL
 
 distrital_dep_2002$idleg <-paste0(distrital_dep_2002$SIGLA_UF,distrital_dep_2002$CODIGO_CARGO, distrital_dep_2002$sq_legenda2)
 
+#correcting the dates
+distrital_dep_2002$DATA_NASCIMENTO <- ifelse(nchar(distrital_dep_2002$DATA_NASCIMENTO,type = "chars")==8,distrital_dep_2002$DATA_NASCIMENTO, paste0("0",distrital_dep_2002$DATA_NASCIMENTO))
+
+#using lubridate
+distrital_dep_2002$DATA_NASCIMENTO <- dmy(distrital_dep_2002$DATA_NASCIMENTO)
+
 distrital_dep_2002 <- distrital_dep_2002 %>%
-  arrange (idleg, desc(VOTOS)) %>%
+  arrange (idleg, desc(VOTOS), DATA_NASCIMENTO) %>%
   group_by(idleg) %>% 
   mutate(rank = rank(idleg, ties.method = "first"))
 
@@ -1325,14 +1348,14 @@ distrital_dep_2002 <-mutate(distrital_dep_2002, resultado2 = ifelse(DESC_SIT_TOT
 distrital_dep_2002$idleg2 <-paste0(distrital_dep_2002$idleg, distrital_dep_2002$resultado2)
 
 distrital_dep_2002 <- distrital_dep_2002 %>%
-  arrange (idleg2, desc(VOTOS)) %>%
+  arrange (idleg2, desc(VOTOS), DATA_NASCIMENTO) %>%
   group_by(idleg2) %>% 
   mutate(rank2 = rank(c(idleg2), ties.method = "first"))
 
 distrital_dep_2002 <-mutate(distrital_dep_2002, prim_supl = ifelse((rank2==1 & resultado2=="Suplente"),1,0))
 
 distrital_dep_2002 <- distrital_dep_2002 %>%
-  arrange (idleg2, desc(VOTOS)) %>%
+  arrange (idleg2, desc(VOTOS), DATA_NASCIMENTO) %>%
   group_by(idleg2) %>% 
   mutate(flag = ifelse( (rank(c(idleg2), ties.method = "last")==1 & resultado2=="Eleito"),1,0))
 
@@ -1397,8 +1420,13 @@ fed_dep_2006 <- mutate(fed_dep_2006, sq_legenda2 = ifelse(SEQUENCIAL_LEGENDA==-3
 
 fed_dep_2006$idleg <-paste0(fed_dep_2006$SIGLA_UF,fed_dep_2006$CODIGO_CARGO, fed_dep_2006$sq_legenda2)
 
+
+#using lubridate
+fed_dep_2006$DATA_NASCIMENTO <- dmy(fed_dep_2006$DATA_NASCIMENTO)
+
+
 fed_dep_2006 <- fed_dep_2006 %>%
-  arrange (idleg, desc(VOTOS)) %>%
+  arrange (idleg, desc(VOTOS), DATA_NASCIMENTO) %>%
   group_by(idleg) %>% 
   mutate(rank = rank(idleg, ties.method = "first"))
 
@@ -1409,14 +1437,14 @@ fed_dep_2006 <-mutate(fed_dep_2006, resultado2 = ifelse(DESC_SIT_TOT_TURNO=="ELE
 fed_dep_2006$idleg2 <-paste0(fed_dep_2006$idleg, fed_dep_2006$resultado2)
 
 fed_dep_2006 <- fed_dep_2006 %>%
-  arrange (idleg2, desc(VOTOS)) %>%
+  arrange (idleg2, desc(VOTOS), DATA_NASCIMENTO) %>%
   group_by(idleg2) %>% 
   mutate(rank2 = rank(c(idleg2), ties.method = "first"))
 
 fed_dep_2006 <-mutate(fed_dep_2006, prim_supl = ifelse((rank2==1 & resultado2=="Suplente"),1,0))
 
 fed_dep_2006 <- fed_dep_2006 %>%
-  arrange (idleg2, desc(VOTOS)) %>%
+  arrange (idleg2, desc(VOTOS), DATA_NASCIMENTO) %>%
   group_by(idleg2) %>% 
   mutate(flag = ifelse( (rank(c(idleg2), ties.method = "last")==1 & resultado2=="Eleito"),1,0))
 
@@ -1447,8 +1475,12 @@ state_dep_2006 <- mutate(state_dep_2006, sq_legenda2 = ifelse(SEQUENCIAL_LEGENDA
 
 state_dep_2006$idleg <-paste0(state_dep_2006$SIGLA_UF,state_dep_2006$CODIGO_CARGO, state_dep_2006$sq_legenda2)
 
+#using lubridate
+state_dep_2006$DATA_NASCIMENTO <- dmy(state_dep_2006$DATA_NASCIMENTO)
+
+
 state_dep_2006 <- state_dep_2006 %>%
-  arrange (idleg, desc(VOTOS)) %>%
+  arrange (idleg, desc(VOTOS), DATA_NASCIMENTO) %>%
   group_by(idleg) %>% 
   mutate(rank = rank(idleg, ties.method = "first"))
 
@@ -1460,14 +1492,14 @@ state_dep_2006 <-mutate(state_dep_2006, resultado2 = ifelse(DESC_SIT_TOT_TURNO==
 state_dep_2006$idleg2 <-paste0(state_dep_2006$idleg, state_dep_2006$resultado2)
 
 state_dep_2006 <- state_dep_2006 %>%
-  arrange (idleg2, desc(VOTOS)) %>%
+  arrange (idleg2, desc(VOTOS), DATA_NASCIMENTO) %>%
   group_by(idleg2) %>% 
   mutate(rank2 = rank(c(idleg2), ties.method = "first"))
 
 state_dep_2006 <-mutate(state_dep_2006, prim_supl = ifelse((rank2==1 & resultado2=="Suplente"),1,0))
 
 state_dep_2006 <- state_dep_2006 %>%
-  arrange (idleg2, desc(VOTOS)) %>%
+  arrange (idleg2, desc(VOTOS), DATA_NASCIMENTO) %>%
   group_by(idleg2) %>% 
   mutate(flag = ifelse( (rank(c(idleg2), ties.method = "last")==1 & resultado2=="Eleito"),1,0))
 
@@ -1500,8 +1532,13 @@ distrital_dep_2006 <- mutate(distrital_dep_2006, sq_legenda2 = ifelse(SEQUENCIAL
 
 distrital_dep_2006$idleg <-paste0(distrital_dep_2006$SIGLA_UF,distrital_dep_2006$CODIGO_CARGO, distrital_dep_2006$sq_legenda2)
 
+
+#using lubridate
+distrital_dep_2006$DATA_NASCIMENTO <- dmy(distrital_dep_2006$DATA_NASCIMENTO)
+
+
 distrital_dep_2006 <- distrital_dep_2006 %>%
-  arrange (idleg, desc(VOTOS)) %>%
+  arrange (idleg, desc(VOTOS), DATA_NASCIMENTO) %>%
   group_by(idleg) %>% 
   mutate(rank = rank(idleg, ties.method = "first"))
 
@@ -1514,14 +1551,14 @@ distrital_dep_2006 <-mutate(distrital_dep_2006, resultado2 = ifelse(DESC_SIT_TOT
 distrital_dep_2006$idleg2 <-paste0(distrital_dep_2006$idleg, distrital_dep_2006$resultado2)
 
 distrital_dep_2006 <- distrital_dep_2006 %>%
-  arrange (idleg2, desc(VOTOS)) %>%
+  arrange (idleg2, desc(VOTOS), DATA_NASCIMENTO) %>%
   group_by(idleg2) %>% 
   mutate(rank2 = rank(c(idleg2), ties.method = "first"))
 
 distrital_dep_2006 <-mutate(distrital_dep_2006, prim_supl = ifelse((rank2==1 & resultado2=="Suplente"),1,0))
 
 distrital_dep_2006 <- distrital_dep_2006 %>%
-  arrange (idleg2, desc(VOTOS)) %>%
+  arrange (idleg2, desc(VOTOS), DATA_NASCIMENTO) %>%
   group_by(idleg2) %>% 
   mutate(flag = ifelse( (rank(c(idleg2), ties.method = "last")==1 & resultado2=="Eleito"),1,0))
 
@@ -1587,8 +1624,12 @@ fed_dep_2010 <- mutate(fed_dep_2010, sq_legenda2 = ifelse(SEQUENCIAL_LEGENDA==-3
 
 fed_dep_2010$idleg <-paste0(fed_dep_2010$SIGLA_UF,fed_dep_2010$CODIGO_CARGO, fed_dep_2010$sq_legenda2)
 
+#using lubridate
+fed_dep_2010$DATA_NASCIMENTO <- dmy(sub("-(\\d+)", "-19\\1", fed_dep_2010$DATA_NASCIMENTO))
+
+
 fed_dep_2010 <- fed_dep_2010 %>%
-  arrange (idleg, desc(VOTOS)) %>%
+  arrange (idleg, desc(VOTOS), DATA_NASCIMENTO) %>%
   group_by(idleg) %>% 
   mutate(rank = rank(idleg, ties.method = "first"))
 
@@ -1599,14 +1640,14 @@ fed_dep_2010 <-mutate(fed_dep_2010, resultado2 = ifelse(DESC_SIT_TOT_TURNO=="ELE
 fed_dep_2010$idleg2 <-paste0(fed_dep_2010$idleg, fed_dep_2010$resultado2)
 
 fed_dep_2010 <- fed_dep_2010 %>%
-  arrange (idleg2, desc(VOTOS)) %>%
+  arrange (idleg2, desc(VOTOS), DATA_NASCIMENTO) %>%
   group_by(idleg2) %>% 
   mutate(rank2 = rank(c(idleg2), ties.method = "first"))
 
 fed_dep_2010 <-mutate(fed_dep_2010, prim_supl = ifelse((rank2==1 & resultado2=="Suplente"),1,0))
 
 fed_dep_2010 <- fed_dep_2010 %>%
-  arrange (idleg2, desc(VOTOS)) %>%
+  arrange (idleg2, desc(VOTOS), DATA_NASCIMENTO) %>%
   group_by(idleg2) %>% 
   mutate(flag = ifelse( (rank(c(idleg2), ties.method = "last")==1 & resultado2=="Eleito"),1,0))
 
@@ -1638,8 +1679,13 @@ state_dep_2010 <- mutate(state_dep_2010, sq_legenda2 = ifelse(SEQUENCIAL_LEGENDA
 
 state_dep_2010$idleg <-paste0(state_dep_2010$SIGLA_UF,state_dep_2010$CODIGO_CARGO, state_dep_2010$sq_legenda2)
 
+
+#using lubridate
+state_dep_2010$DATA_NASCIMENTO <- dmy(sub("-(\\d+)", "-19\\1", state_dep_2010$DATA_NASCIMENTO))
+
+
 state_dep_2010 <- state_dep_2010 %>%
-  arrange (idleg, desc(VOTOS)) %>%
+  arrange (idleg, desc(VOTOS), DATA_NASCIMENTO) %>%
   group_by(idleg) %>% 
   mutate(rank = rank(idleg, ties.method = "first"))
 
@@ -1649,14 +1695,14 @@ state_dep_2010 <-mutate(state_dep_2010, resultado2 = ifelse(DESC_SIT_TOT_TURNO==
 state_dep_2010$idleg2 <-paste0(state_dep_2010$idleg, state_dep_2010$resultado2)
 
 state_dep_2010 <- state_dep_2010 %>%
-  arrange (idleg2, desc(VOTOS)) %>%
+  arrange (idleg2, desc(VOTOS), DATA_NASCIMENTO) %>%
   group_by(idleg2) %>% 
   mutate(rank2 = rank(c(idleg2), ties.method = "first"))
 
 state_dep_2010 <-mutate(state_dep_2010, prim_supl = ifelse((rank2==1 & resultado2=="Suplente"),1,0))
 
 state_dep_2010 <- state_dep_2010 %>%
-  arrange (idleg2, desc(VOTOS)) %>%
+  arrange (idleg2, desc(VOTOS), DATA_NASCIMENTO) %>%
   group_by(idleg2) %>% 
   mutate(flag = ifelse( (rank(c(idleg2), ties.method = "last")==1 & resultado2=="Eleito"),1,0))
 
@@ -1687,8 +1733,12 @@ distrital_dep_2010 <- mutate(distrital_dep_2010, sq_legenda2 = ifelse(SEQUENCIAL
 
 distrital_dep_2010$idleg <-paste0(distrital_dep_2010$SIGLA_UF,distrital_dep_2010$CODIGO_CARGO, distrital_dep_2010$sq_legenda2)
 
+#using lubridate
+distrital_dep_2010$DATA_NASCIMENTO <- dmy(sub("-(\\d+)", "-19\\1", distrital_dep_2010$DATA_NASCIMENTO))
+
+
 distrital_dep_2010 <- distrital_dep_2010 %>%
-  arrange (idleg, desc(VOTOS)) %>%
+  arrange (idleg, desc(VOTOS), DATA_NASCIMENTO) %>%
   group_by(idleg) %>% 
   mutate(rank = rank(idleg, ties.method = "first"))
 
@@ -1699,14 +1749,14 @@ distrital_dep_2010 <- mutate(distrital_dep_2010, resultado2 = ifelse(DESC_SIT_TO
 distrital_dep_2010$idleg2 <-paste0(distrital_dep_2010$idleg, distrital_dep_2010$resultado2)
 
 distrital_dep_2010 <- distrital_dep_2010 %>%
-  arrange (idleg2, desc(VOTOS)) %>%
+  arrange (idleg2, desc(VOTOS), DATA_NASCIMENTO) %>%
   group_by(idleg2) %>% 
   mutate(rank2 = rank(c(idleg2), ties.method = "first"))
 
 distrital_dep_2010 <-mutate(distrital_dep_2010, prim_supl = ifelse((rank2==1 & resultado2=="Suplente"),1,0))
 
 distrital_dep_2010 <- distrital_dep_2010 %>%
-  arrange (idleg2, desc(VOTOS)) %>%
+  arrange (idleg2, desc(VOTOS), DATA_NASCIMENTO) %>%
   group_by(idleg2) %>% 
   mutate(flag = ifelse( (rank(c(idleg2), ties.method = "last")==1 & resultado2=="Eleito"),1,0))
 
@@ -1771,8 +1821,12 @@ fed_dep_2014 <- mutate(fed_dep_2014, sq_legenda2 = ifelse(SEQUENCIAL_LEGENDA==-3
 
 fed_dep_2014$idleg <-paste0(fed_dep_2014$SIGLA_UF,fed_dep_2014$CODIGO_CARGO, fed_dep_2014$sq_legenda2)
 
+#using lubridate
+fed_dep_2014$DATA_NASCIMENTO <- dmy(fed_dep_2014$DATA_NASCIMENTO)
+
+
 fed_dep_2014 <- fed_dep_2014 %>%
-  arrange (idleg, desc(VOTOS)) %>%
+  arrange (idleg, desc(VOTOS), DATA_NASCIMENTO) %>%
   group_by(idleg) %>% 
   mutate(rank = rank(idleg, ties.method = "first"))
 
@@ -1781,14 +1835,14 @@ fed_dep_2014 <-mutate(fed_dep_2014, resultado2 = ifelse(DESC_SIT_TOT_TURNO=="ELE
 fed_dep_2014$idleg2 <-paste0(fed_dep_2014$idleg, fed_dep_2014$resultado2)
 
 fed_dep_2014 <- fed_dep_2014 %>%
-  arrange (idleg2, desc(VOTOS)) %>%
+  arrange (idleg2, desc(VOTOS), DATA_NASCIMENTO) %>%
   group_by(idleg2) %>% 
   mutate(rank2 = rank(c(idleg2), ties.method = "first"))
 
 fed_dep_2014 <-mutate(fed_dep_2014, prim_supl = ifelse((rank2==1 & resultado2=="Suplente"),1,0))
 
 fed_dep_2014 <- fed_dep_2014 %>%
-  arrange (idleg2, desc(VOTOS)) %>%
+  arrange (idleg2, desc(VOTOS),DATA_NASCIMENTO) %>%
   group_by(idleg2) %>% 
   mutate(flag = ifelse( (rank(c(idleg2), ties.method = "last")==1 & resultado2=="Eleito"),1,0))
 
@@ -1798,7 +1852,7 @@ fed_dep_2014<-fed_dep_2014%>%
                 NOME_URNA_CANDIDATO.x, COD_SITUACAO_CANDIDATURA, DES_SITUACAO_CANDIDATURA, NUMERO_PARTIDO, SIGLA_PARTIDO.x,
                 NOME_PARTIDO,CODIGO_LEGENDA, SIGLA_LEGENDA, COMPOSICAO_LEGENDA, NOME_COLIGACAO, CODIGO_OCUPACAO, DESCRICAO_OCUPACAO,
                 DATA_NASCIMENTO, NUM_TITULO_ELEITORAL_CANDIDATO, IDADE_DATA_ELEICAO, CODIGO_SEXO, COD_GRAU_INSTRUCAO, CODIGO_ESTADO_CIVIL,
-                DESCRICAO_ESTADO_CIVIL, CODIGO_NACIONALIDADE, DESCRICAO_NACIONALIDADE, SIGLA_UF_NASCIMENTO, CODIGO_MUNICIPIO_NASCIMENTO,
+                DESCRICAO_ESTADO_CIVIL, CODIGO_NACIONALIDADE, DESCRICAO_NACIONALIDADE, CODIGO_COR_RACA,DESCRICAO_COR_RACA ,SIGLA_UF_NASCIMENTO, CODIGO_MUNICIPIO_NASCIMENTO,
                 NOME_MUNICIPIO_NASCIMENTO, DESPESA_MAX_CAMPANHA, COD_SIT_TOT_TURNO, DESC_SIT_TOT_TURNO,VOTOS,sq_legenda2,idleg, idleg2, rank, rank2, resultado2, prim_supl, flag)
 
 fed_dep_2014<-fed_dep_2014%>%
@@ -1819,8 +1873,12 @@ state_dep_2014 <- mutate(state_dep_2014, sq_legenda2 = ifelse(SEQUENCIAL_LEGENDA
 
 state_dep_2014$idleg <-paste0(state_dep_2014$SIGLA_UF,state_dep_2014$CODIGO_CARGO, state_dep_2014$sq_legenda2)
 
+#using lubridate
+state_dep_2014$DATA_NASCIMENTO <- dmy(state_dep_2014$DATA_NASCIMENTO)
+
+
 state_dep_2014 <- state_dep_2014 %>%
-  arrange (idleg, desc(VOTOS)) %>%
+  arrange (idleg, desc(VOTOS), DATA_NASCIMENTO) %>%
   group_by(idleg) %>% 
   mutate(rank = rank(idleg, ties.method = "first"))
 
@@ -1831,14 +1889,14 @@ state_dep_2014 <-mutate(state_dep_2014, resultado2 = ifelse(DESC_SIT_TOT_TURNO==
 state_dep_2014$idleg2 <-paste0(state_dep_2014$idleg, state_dep_2014$resultado2)
 
 state_dep_2014 <- state_dep_2014 %>%
-  arrange (idleg2, desc(VOTOS)) %>%
+  arrange (idleg2, desc(VOTOS), DATA_NASCIMENTO) %>%
   group_by(idleg2) %>% 
   mutate(rank2 = rank(c(idleg2), ties.method = "first"))
 
 state_dep_2014 <-mutate(state_dep_2014, prim_supl = ifelse((rank2==1 & resultado2=="Suplente"),1,0))
 
 state_dep_2014 <- state_dep_2014 %>%
-  arrange (idleg2, desc(VOTOS)) %>%
+  arrange (idleg2, desc(VOTOS), DATA_NASCIMENTO) %>%
   group_by(idleg2) %>% 
   mutate(flag = ifelse( (rank(c(idleg2), ties.method = "last")==1 & resultado2=="Eleito"),1,0))
 
@@ -1848,7 +1906,7 @@ state_dep_2014<-state_dep_2014%>%
                 NOME_URNA_CANDIDATO.x, COD_SITUACAO_CANDIDATURA, DES_SITUACAO_CANDIDATURA, NUMERO_PARTIDO, SIGLA_PARTIDO.x,
                 NOME_PARTIDO,CODIGO_LEGENDA, SIGLA_LEGENDA, COMPOSICAO_LEGENDA, NOME_COLIGACAO, CODIGO_OCUPACAO, DESCRICAO_OCUPACAO,
                 DATA_NASCIMENTO, NUM_TITULO_ELEITORAL_CANDIDATO, IDADE_DATA_ELEICAO, CODIGO_SEXO, COD_GRAU_INSTRUCAO, CODIGO_ESTADO_CIVIL,
-                DESCRICAO_ESTADO_CIVIL, CODIGO_NACIONALIDADE, DESCRICAO_NACIONALIDADE, SIGLA_UF_NASCIMENTO, CODIGO_MUNICIPIO_NASCIMENTO,
+                DESCRICAO_ESTADO_CIVIL, CODIGO_NACIONALIDADE, DESCRICAO_NACIONALIDADE, CODIGO_COR_RACA,DESCRICAO_COR_RACA, SIGLA_UF_NASCIMENTO, CODIGO_MUNICIPIO_NASCIMENTO,
                 NOME_MUNICIPIO_NASCIMENTO, DESPESA_MAX_CAMPANHA, COD_SIT_TOT_TURNO, DESC_SIT_TOT_TURNO,VOTOS,sq_legenda2,idleg, idleg2, rank, rank2, resultado2, prim_supl, flag)
 
 
@@ -1869,8 +1927,12 @@ distrital_dep_2014 <- mutate(distrital_dep_2014, sq_legenda2 = ifelse(SEQUENCIAL
 
 distrital_dep_2014$idleg <-paste0(distrital_dep_2014$SIGLA_UF,distrital_dep_2014$CODIGO_CARGO, distrital_dep_2014$sq_legenda2)
 
+#using lubridate
+distrital_dep_2014$DATA_NASCIMENTO <- dmy(distrital_dep_2014$DATA_NASCIMENTO)
+
+
 distrital_dep_2014 <- distrital_dep_2014 %>%
-  arrange (idleg, desc(VOTOS)) %>%
+  arrange (idleg, desc(VOTOS), DATA_NASCIMENTO) %>%
   group_by(idleg) %>% 
   mutate(rank = rank(idleg, ties.method = "first"))
 
@@ -1882,14 +1944,14 @@ distrital_dep_2014 <-mutate(distrital_dep_2014, resultado2 = ifelse(DESC_SIT_TOT
 distrital_dep_2014$idleg2 <-paste0(distrital_dep_2014$idleg, distrital_dep_2014$resultado2)
 
 distrital_dep_2014 <- distrital_dep_2014 %>%
-  arrange (idleg2, desc(VOTOS)) %>%
+  arrange (idleg2, desc(VOTOS), DATA_NASCIMENTO) %>%
   group_by(idleg2) %>% 
   mutate(rank2 = rank(c(idleg2), ties.method = "first"))
 
 distrital_dep_2014 <-mutate(distrital_dep_2014, prim_supl = ifelse((rank2==1 & resultado2=="Suplente"),1,0))
 
 distrital_dep_2014 <- distrital_dep_2014 %>%
-  arrange (idleg2, desc(VOTOS)) %>%
+  arrange (idleg2, desc(VOTOS), DATA_NASCIMENTO) %>%
   group_by(idleg2) %>% 
   mutate(flag = ifelse( (rank(c(idleg2), ties.method = "last")==1 & resultado2=="Eleito"),1,0))
 
@@ -1900,7 +1962,7 @@ distrital_dep_2014<-distrital_dep_2014%>%
                 NOME_URNA_CANDIDATO.x, COD_SITUACAO_CANDIDATURA, DES_SITUACAO_CANDIDATURA, NUMERO_PARTIDO, SIGLA_PARTIDO.x,
                 NOME_PARTIDO,CODIGO_LEGENDA, SIGLA_LEGENDA, COMPOSICAO_LEGENDA, NOME_COLIGACAO, CODIGO_OCUPACAO, DESCRICAO_OCUPACAO,
                 DATA_NASCIMENTO, NUM_TITULO_ELEITORAL_CANDIDATO, IDADE_DATA_ELEICAO, CODIGO_SEXO, COD_GRAU_INSTRUCAO, CODIGO_ESTADO_CIVIL,
-                DESCRICAO_ESTADO_CIVIL, CODIGO_NACIONALIDADE, DESCRICAO_NACIONALIDADE, SIGLA_UF_NASCIMENTO, CODIGO_MUNICIPIO_NASCIMENTO,
+                DESCRICAO_ESTADO_CIVIL, CODIGO_NACIONALIDADE, DESCRICAO_NACIONALIDADE, CODIGO_COR_RACA,DESCRICAO_COR_RACA, SIGLA_UF_NASCIMENTO, CODIGO_MUNICIPIO_NASCIMENTO,
                 NOME_MUNICIPIO_NASCIMENTO, DESPESA_MAX_CAMPANHA, COD_SIT_TOT_TURNO, DESC_SIT_TOT_TURNO,VOTOS,sq_legenda2,idleg, idleg2, rank, rank2, resultado2, prim_supl, flag)
 
 
@@ -1960,8 +2022,16 @@ ver_2004 <- mutate(ver_2004, sq_legenda2 = ifelse(SEQUENCIAL_LEGENDA==-3, as.cha
 
 ver_2004$idleg <-paste0(ver_2004$SIGLA_UE,ver_2004$CODIGO_CARGO, ver_2004$sq_legenda2)
 
+
+#correcting the dates
+ver_2004$DATA_NASCIMENTO <- ifelse(nchar(ver_2004$DATA_NASCIMENTO,type = "chars")==8,ver_2004$DATA_NASCIMENTO, paste0("0",ver_2004$DATA_NASCIMENTO))
+
+#using lubridate
+ver_2004$DATA_NASCIMENTO <- dmy(ver_2004$DATA_NASCIMENTO)
+
+
 ver_2004 <- ver_2004 %>%
-  arrange (idleg, desc(VOTOS)) %>%
+  arrange (idleg, desc(VOTOS), DATA_NASCIMENTO) %>%
   group_by(idleg) %>% 
   mutate(rank = rank(idleg, ties.method = "first"))
 
@@ -1970,14 +2040,14 @@ ver_2004 <-mutate(ver_2004, resultado2 = ifelse(DESC_SIT_TOT_TURNO=="ELEITO","El
 ver_2004$idleg2 <-paste0(ver_2004$idleg, ver_2004$resultado2)
 
 ver_2004 <- ver_2004 %>%
-  arrange (idleg2, desc(VOTOS)) %>%
+  arrange (idleg2, desc(VOTOS), DATA_NASCIMENTO) %>%
   group_by(idleg2) %>% 
   mutate(rank2 = rank(c(idleg2), ties.method = "first"))
 
 ver_2004 <-mutate(ver_2004, prim_supl = ifelse((rank2==1 & resultado2=="Suplente"),1,0))
 
 ver_2004 <- ver_2004 %>%
-  arrange (idleg2, desc(VOTOS)) %>%
+  arrange (idleg2, desc(VOTOS), DATA_NASCIMENTO) %>%
   group_by(idleg2) %>% 
   mutate(flag = ifelse( (rank(c(idleg2), ties.method = "last")==1 & resultado2=="Eleito"),1,0))
 
@@ -2028,10 +2098,6 @@ problems <- cand_2008v2 %>% group_by(NUM_TURNO, NUMERO_CANDIDATO, CODIGO_CARGO, 
 casos <- cand_2008v2 %>% right_join(problems, by = c("NUM_TURNO", 
                                                      "NUMERO_CANDIDATO", "CODIGO_CARGO", "SIGLA_UE"))
 
-######
-###### necessidade de filtrar pelos candidatos repeditos
-######
-
 #### VEREADOR ####
 
 #filter to only Federal representatives
@@ -2046,8 +2112,12 @@ ver_2008 <- mutate(ver_2008, sq_legenda2 = ifelse(SEQUENCIAL_LEGENDA==-3, as.cha
 
 ver_2008$idleg <-paste0(ver_2008$SIGLA_UE,ver_2008$CODIGO_CARGO, ver_2008$sq_legenda2)
 
+#using lubridate
+ver_2008$DATA_NASCIMENTO <- dmy(sub("-(\\d+)", "-19\\1", ver_2008$DATA_NASCIMENTO))
+
+
 ver_2008 <- ver_2008 %>%
-  arrange (idleg, desc(VOTOS)) %>%
+  arrange (idleg, desc(VOTOS), DATA_NASCIMENTO) %>%
   group_by(idleg) %>% 
   mutate(rank = rank(idleg, ties.method = "first"))
 
@@ -2056,14 +2126,14 @@ ver_2008 <-mutate(ver_2008, resultado2 = ifelse(DESC_SIT_TOT_TURNO=="ELEITO","El
 ver_2008$idleg2 <-paste0(ver_2008$idleg, ver_2008$resultado2)
 
 ver_2008 <- ver_2008 %>%
-  arrange (idleg2, desc(VOTOS)) %>%
+  arrange (idleg2, desc(VOTOS), DATA_NASCIMENTO) %>%
   group_by(idleg2) %>% 
   mutate(rank2 = rank(c(idleg2), ties.method = "first"))
 
 ver_2008 <-mutate(ver_2008, prim_supl = ifelse((rank2==1 & resultado2=="Suplente"),1,0))
 
 ver_2008 <- ver_2008 %>%
-  arrange (idleg2, desc(VOTOS)) %>%
+  arrange (idleg2, desc(VOTOS), DATA_NASCIMENTO) %>%
   group_by(idleg2) %>% 
   mutate(flag = ifelse( (rank(c(idleg2), ties.method = "last")==1 & resultado2=="Eleito"),1,0))
 
@@ -2126,8 +2196,12 @@ ver_2012 <- mutate(ver_2012, sq_legenda2 = ifelse(SEQUENCIAL_LEGENDA==-3, as.cha
 
 ver_2012$idleg <-paste0(ver_2012$SIGLA_UE,ver_2012$CODIGO_CARGO, ver_2012$sq_legenda2)
 
+#using lubridate
+ver_2012$DATA_NASCIMENTO <- dmy(ver_2012$DATA_NASCIMENTO)
+
+
 ver_2012 <- ver_2012 %>%
-  arrange (idleg, desc(VOTOS)) %>%
+  arrange (idleg, desc(VOTOS), DATA_NASCIMENTO) %>%
   group_by(idleg) %>% 
   mutate(rank = rank(idleg, ties.method = "first"))
 
@@ -2136,14 +2210,14 @@ ver_2012 <-mutate(ver_2012, resultado2 = ifelse(DESC_SIT_TOT_TURNO=="ELEITO POR 
 ver_2012$idleg2 <-paste0(ver_2012$idleg, ver_2012$resultado2)
 
 ver_2012 <- ver_2012 %>%
-  arrange (idleg2, desc(VOTOS)) %>%
+  arrange (idleg2, desc(VOTOS), DATA_NASCIMENTO) %>%
   group_by(idleg2) %>% 
   mutate(rank2 = rank(c(idleg2), ties.method = "first"))
 
 ver_2012 <-mutate(ver_2012, prim_supl = ifelse((rank2==1 & resultado2=="Suplente"),1,0))
 
 ver_2012 <- ver_2012 %>%
-  arrange (idleg2, desc(VOTOS)) %>%
+  arrange (idleg2, desc(VOTOS),DATA_NASCIMENTO) %>%
   group_by(idleg2) %>% 
   mutate(flag = ifelse( (rank(c(idleg2), ties.method = "last")==1 & resultado2=="Eleito"),1,0))
 
@@ -2153,7 +2227,7 @@ ver_2012<-ver_2012%>%
                 NOME_URNA_CANDIDATO.x, COD_SITUACAO_CANDIDATURA, DES_SITUACAO_CANDIDATURA, NUMERO_PARTIDO, SIGLA_PARTIDO.x,
                 NOME_PARTIDO,CODIGO_LEGENDA, SIGLA_LEGENDA, COMPOSICAO_LEGENDA, NOME_COLIGACAO, CODIGO_OCUPACAO, DESCRICAO_OCUPACAO,
                 DATA_NASCIMENTO, NUM_TITULO_ELEITORAL_CANDIDATO, IDADE_DATA_ELEICAO, CODIGO_SEXO, COD_GRAU_INSTRUCAO, CODIGO_ESTADO_CIVIL,
-                DESCRICAO_ESTADO_CIVIL, CODIGO_NACIONALIDADE, DESCRICAO_NACIONALIDADE, SIGLA_UF_NASCIMENTO, CODIGO_MUNICIPIO_NASCIMENTO,
+                DESCRICAO_ESTADO_CIVIL, CODIGO_NACIONALIDADE, DESCRICAO_NACIONALIDADE ,SIGLA_UF_NASCIMENTO, CODIGO_MUNICIPIO_NASCIMENTO,
                 NOME_MUNICIPIO_NASCIMENTO, DESPESA_MAX_CAMPANHA, COD_SIT_TOT_TURNO, DESC_SIT_TOT_TURNO,VOTOS,sq_legenda2,idleg, idleg2, rank, rank2, resultado2, prim_supl, flag)
 
 
@@ -2208,8 +2282,12 @@ ver_2016 <- mutate(ver_2016, sq_legenda2 = ifelse(SEQUENCIAL_LEGENDA==-3, as.cha
 
 ver_2016$idleg <-paste0(ver_2016$SIGLA_UE,ver_2016$CODIGO_CARGO, ver_2016$sq_legenda2)
 
+#using lubridate
+ver_2016$DATA_NASCIMENTO <- dmy( ver_2016$DATA_NASCIMENTO)
+
+
 ver_2016 <- ver_2016 %>%
-  arrange (idleg, desc(VOTOS)) %>%
+  arrange (idleg, desc(VOTOS), DATA_NASCIMENTO) %>%
   group_by(idleg) %>% 
   mutate(rank = rank(idleg, ties.method = "first"))
 
@@ -2218,14 +2296,14 @@ ver_2016 <-mutate(ver_2016, resultado2 = ifelse(DESC_SIT_TOT_TURNO=="ELEITO POR 
 ver_2016$idleg2 <-paste0(ver_2016$idleg, ver_2016$resultado2)
 
 ver_2016 <- ver_2016 %>%
-  arrange (idleg2, desc(VOTOS)) %>%
+  arrange (idleg2, desc(VOTOS), DATA_NASCIMENTO) %>%
   group_by(idleg2) %>% 
   mutate(rank2 = rank(c(idleg2), ties.method = "first"))
 
 ver_2016 <-mutate(ver_2016, prim_supl = ifelse((rank2==1 & resultado2=="Suplente"),1,0))
 
 ver_2016 <- ver_2016 %>%
-  arrange (idleg2, desc(VOTOS)) %>%
+  arrange (idleg2, desc(VOTOS), DATA_NASCIMENTO) %>%
   group_by(idleg2) %>% 
   mutate(flag = ifelse( (rank(c(idleg2), ties.method = "last")==1 & resultado2=="Eleito"),1,0))
 
@@ -2236,7 +2314,7 @@ ver_2016<-ver_2016%>%
                 NOME_URNA_CANDIDATO.x, COD_SITUACAO_CANDIDATURA, DES_SITUACAO_CANDIDATURA, NUMERO_PARTIDO, SIGLA_PARTIDO.x,
                 NOME_PARTIDO,CODIGO_LEGENDA, SIGLA_LEGENDA, COMPOSICAO_LEGENDA, NOME_COLIGACAO, CODIGO_OCUPACAO, DESCRICAO_OCUPACAO,
                 DATA_NASCIMENTO, NUM_TITULO_ELEITORAL_CANDIDATO, IDADE_DATA_ELEICAO, CODIGO_SEXO, COD_GRAU_INSTRUCAO, CODIGO_ESTADO_CIVIL,
-                DESCRICAO_ESTADO_CIVIL, CODIGO_NACIONALIDADE, DESCRICAO_NACIONALIDADE, SIGLA_UF_NASCIMENTO, CODIGO_MUNICIPIO_NASCIMENTO,
+                DESCRICAO_ESTADO_CIVIL, CODIGO_NACIONALIDADE, DESCRICAO_NACIONALIDADE, CODIGO_COR_RACA, DESCRICAO_COR_RACA,SIGLA_UF_NASCIMENTO, CODIGO_MUNICIPIO_NASCIMENTO,
                 NOME_MUNICIPIO_NASCIMENTO, DESPESA_MAX_CAMPANHA, COD_SIT_TOT_TURNO, DESC_SIT_TOT_TURNO,VOTOS,sq_legenda2,idleg, idleg2, rank, rank2, resultado2, prim_supl, flag)
 
 
