@@ -3208,84 +3208,467 @@ ver_2008$shareue_tot<-ver_2008$VOTOS/ver_2008$VOT_UE_TOT
 ver_2012$shareue_tot<-ver_2012$VOTOS/ver_2012$VOT_UE_TOT
 ver_2016$shareue_tot<-ver_2016$VOTOS/ver_2016$VOT_UE_TOT
 
-########### Calculating absolute margin
+########### Number of seats
+
+### fed dep
+
+fed_dep_nseats_2002 <- fed_dep_2002%>%
+  filter(flag==1)%>%
+  dplyr::select(SIGLA_UE, idleg, rank)%>%
+  rename(n_seat = rank)
+
+fed_dep_nseats_2006 <- fed_dep_2006%>%
+  filter(flag==1)%>%
+  dplyr::select(SIGLA_UE, idleg, rank)%>%
+  rename(n_seat = rank)
+
+fed_dep_nseats_2010 <- fed_dep_2010%>%
+  filter(flag==1)%>%
+  dplyr::select(SIGLA_UE, idleg, rank)%>%
+  rename(n_seat = rank)
+
+fed_dep_nseats_2014 <- fed_dep_2014%>%
+  filter(flag==1)%>%
+  dplyr::select(SIGLA_UE, idleg, rank)%>%
+  rename(n_seat = rank)
+
+### state dep
+
+state_dep_nseats_2002 <- state_dep_2002%>%
+  filter(flag==1)%>%
+  dplyr::select(SIGLA_UE, idleg, rank)%>%
+  rename(n_seat = rank)
+
+state_dep_nseats_2006 <- state_dep_2006%>%
+  filter(flag==1)%>%
+  dplyr::select(SIGLA_UE, idleg, rank)%>%
+  rename(n_seat = rank)
+
+state_dep_nseats_2010 <- state_dep_2010%>%
+  filter(flag==1)%>%
+  dplyr::select(SIGLA_UE, idleg, rank)%>%
+  rename(n_seat = rank)
+
+state_dep_nseats_2014 <- state_dep_2014%>%
+  filter(flag==1)%>%
+  dplyr::select(SIGLA_UE, idleg, rank)%>%
+  rename(n_seat = rank)
 
 
+### distrital dep
 
-# binding rows in order to make a dataset with partisan votes
-# federal deputy
-#fed_dep_part_2002 <-bind_rows(fed_dep_2002, fed_dep_votpar_ue_2002)
-#fed_dep_part_2002$total<-NULL
+distrital_dep_nseats_2002 <- distrital_dep_2002%>%
+  filter(flag==1)%>%
+  dplyr::select(SIGLA_UE, idleg, rank)%>%
+  rename(n_seat = rank)
 
-#fed_dep_part_2006 <-bind_rows(fed_dep_2006, fed_dep_votpar_ue_2006)
-#fed_dep_part_2006$total<-NULL
+distrital_dep_nseats_2006 <- distrital_dep_2006%>%
+  filter(flag==1)%>%
+  dplyr::select(SIGLA_UE, idleg, rank)%>%
+  rename(n_seat = rank)
 
-#fed_dep_part_2010 <-bind_rows(fed_dep_2010, fed_dep_votpar_ue_2010)
-#fed_dep_part_2010$total<-NULL
+distrital_dep_nseats_2010 <- distrital_dep_2010%>%
+  filter(flag==1)%>%
+  dplyr::select(SIGLA_UE, idleg, rank)%>%
+  rename(n_seat = rank)
 
-#fed_dep_part_2014 <-bind_rows(fed_dep_2014, fed_dep_votpar_ue_2014)
-#fed_dep_part_2014$total<-NULL
+distrital_dep_nseats_2014 <- distrital_dep_2014%>%
+  filter(flag==1)%>%
+  dplyr::select(SIGLA_UE, idleg, rank)%>%
+  rename(n_seat = rank)
+
+### ver
+
+ver_nseats_2004 <- ver_2004%>%
+  filter(flag==1)%>%
+  dplyr::select(SIGLA_UE, idleg, rank)%>%
+  rename(n_seat = rank)
+
+ver_nseats_2008 <- ver_2008%>%
+  filter(flag==1)%>%
+  dplyr::select(SIGLA_UE, idleg, rank)%>%
+  rename(n_seat = rank)
+
+ver_nseats_2012 <- ver_2012%>%
+  filter(flag==1)%>%
+  dplyr::select(SIGLA_UE, idleg, rank)%>%
+  rename(n_seat = rank)
+
+ver_nseats_2016 <- ver_2016%>%
+  filter(flag==1)%>%
+  dplyr::select(SIGLA_UE, idleg, rank)%>%
+  rename(n_seat = rank)
+
+# merging N SEATS
+
+#fed dep
+fed_dep_2002<- merge(fed_dep_2002, fed_dep_nseats_2002, by=c(  "SIGLA_UE", "idleg"), all.x=TRUE)
+fed_dep_2006<- merge(fed_dep_2006, fed_dep_nseats_2006, by=c(  "SIGLA_UE", "idleg"), all.x=TRUE)
+fed_dep_2010<- merge(fed_dep_2010, fed_dep_nseats_2010, by=c(  "SIGLA_UE", "idleg"), all.x=TRUE)
+fed_dep_2014<- merge(fed_dep_2014, fed_dep_nseats_2014, by=c(  "SIGLA_UE", "idleg"), all.x=TRUE)
 
 
-# binding rows in order to make a dataset with partisan votes
-# state deputy
-#state_dep_part_2002 <-bind_rows(state_dep_2002, state_dep_votpar_ue_2002)
-#state_dep_part_2002$total<-NULL
-
-#state_dep_part_2006 <-bind_rows(state_dep_2006, state_dep_votpar_ue_2006)
-#state_dep_part_2006$total<-NULL
-
-#state_dep_part_2010 <-bind_rows(state_dep_2010, state_dep_votpar_ue_2010)
-#state_dep_part_2010$total<-NULL
-
-#state_dep_part_2014 <-bind_rows(state_dep_2014, state_dep_votpar_ue_2014)
-#state_dep_part_2014$total<-NULL
+#state dep
+state_dep_2002<- merge(state_dep_2002, state_dep_nseats_2002, by=c(  "SIGLA_UE", "idleg"), all.x=TRUE)
+state_dep_2006<- merge(state_dep_2006, state_dep_nseats_2006, by=c(  "SIGLA_UE", "idleg"), all.x=TRUE)
+state_dep_2010<- merge(state_dep_2010, state_dep_nseats_2010, by=c(  "SIGLA_UE", "idleg"), all.x=TRUE)
+state_dep_2014<- merge(state_dep_2014, state_dep_nseats_2014, by=c(  "SIGLA_UE", "idleg"), all.x=TRUE)
 
 
-# binding rows in order to make a dataset with partisan votes
-# distrital deputy
-#distrital_dep_part_2002 <-bind_rows(distrital_dep_2002, distrital_dep_votpar_ue_2002)
-#distrital_dep_part_2002$total<-NULL
-
-#distrital_dep_part_2006 <-bind_rows(distrital_dep_2006, distrital_dep_votpar_ue_2006)
-#distrital_dep_part_2006$total<-NULL
-
-#distrital_dep_part_2010 <-bind_rows(distrital_dep_2010, distrital_dep_votpar_ue_2010)
-#distrital_dep_part_2010$total<-NULL
-
-#distrital_dep_part_2014 <-bind_rows(distrital_dep_2014, distrital_dep_votpar_ue_2014)
-#distrital_dep_part_2014$total<-NULL
+#distrital dep
+distrital_dep_2002<- merge(distrital_dep_2002, distrital_dep_nseats_2002, by=c(  "SIGLA_UE", "idleg"), all.x=TRUE)
+distrital_dep_2006<- merge(distrital_dep_2006, distrital_dep_nseats_2006, by=c(  "SIGLA_UE", "idleg"), all.x=TRUE)
+distrital_dep_2010<- merge(distrital_dep_2010, distrital_dep_nseats_2010, by=c(  "SIGLA_UE", "idleg"), all.x=TRUE)
+distrital_dep_2014<- merge(distrital_dep_2014, distrital_dep_nseats_2014, by=c(  "SIGLA_UE", "idleg"), all.x=TRUE)
 
 
-# binding rows in order to make a dataset with partisan votes
-# vereador
-#ver_part_2004 <-bind_rows(ver_2004, ver_votpar_ue_2004)
-#ver_part_2004$total<-NULL
+#ver
+ver_2004<- merge(ver_2004, ver_nseats_2004, by=c(  "SIGLA_UE", "idleg"), all.x=TRUE)
+ver_2008<- merge(ver_2008, ver_nseats_2008, by=c(  "SIGLA_UE", "idleg"), all.x=TRUE)
+ver_2012<- merge(ver_2012, ver_nseats_2012, by=c(  "SIGLA_UE", "idleg"), all.x=TRUE)
+ver_2016<- merge(ver_2016, ver_nseats_2016, by=c(  "SIGLA_UE", "idleg"), all.x=TRUE)
 
-#ver_part_2008 <-bind_rows(ver_2008, ver_votpar_ue_2008)
-#ver_part_2008$total<-NULL
 
-#ver_part_2012 <-bind_rows(ver_2012, ver_votpar_ue_2012)
-#ver_part_2012$total<-NULL
+#### calculating rank difference
 
-#ver_part_2016 <-bind_rows(ver_2016, ver_votpar_ue_2016)
-#ver_part_2016$total<-NULL
+#fed dep
+fed_dep_2002<-fed_dep_2002%>%
+  arrange(idleg, -VOTOS, DATA_NASCIMENTO)
+fed_dep_2002$dist_pos <- fed_dep_2002$n_seat - fed_dep_2002$rank
+
+fed_dep_2006<-fed_dep_2006%>%
+  arrange(idleg, -VOTOS, DATA_NASCIMENTO)
+fed_dep_2006$dist_pos <- fed_dep_2006$n_seat - fed_dep_2006$rank
+
+fed_dep_2010<-fed_dep_2010%>%
+  arrange(idleg, -VOTOS, DATA_NASCIMENTO)
+fed_dep_2010$dist_pos <- fed_dep_2010$n_seat - fed_dep_2010$rank
+
+fed_dep_2014<-fed_dep_2014%>%
+  arrange(idleg, -VOTOS, DATA_NASCIMENTO)
+fed_dep_2014$dist_pos <- fed_dep_2014$n_seat - fed_dep_2014$rank
+
+#state dep
+state_dep_2002<-state_dep_2002%>%
+  arrange(idleg, -VOTOS, DATA_NASCIMENTO)
+state_dep_2002$dist_pos <- state_dep_2002$n_seat - state_dep_2002$rank
+
+state_dep_2006<-state_dep_2006%>%
+  arrange(idleg, -VOTOS, DATA_NASCIMENTO)
+state_dep_2006$dist_pos <- state_dep_2006$n_seat - state_dep_2006$rank
+
+state_dep_2010<-state_dep_2010%>%
+  arrange(idleg, -VOTOS, DATA_NASCIMENTO)
+state_dep_2010$dist_pos <- state_dep_2010$n_seat - state_dep_2010$rank
+
+state_dep_2014<-state_dep_2014%>%
+  arrange(idleg, -VOTOS, DATA_NASCIMENTO)
+state_dep_2014$dist_pos <- state_dep_2014$n_seat - state_dep_2014$rank
+
+
+#distrital dep
+distrital_dep_2002<-distrital_dep_2002%>%
+  arrange(idleg, -VOTOS, DATA_NASCIMENTO)
+distrital_dep_2002$dist_pos <- distrital_dep_2002$n_seat - distrital_dep_2002$rank
+
+distrital_dep_2006<-distrital_dep_2006%>%
+  arrange(idleg, -VOTOS, DATA_NASCIMENTO)
+distrital_dep_2006$dist_pos <- distrital_dep_2006$n_seat - distrital_dep_2006$rank
+
+distrital_dep_2010<-distrital_dep_2010%>%
+  arrange(idleg, -VOTOS, DATA_NASCIMENTO)
+distrital_dep_2010$dist_pos <- distrital_dep_2010$n_seat - distrital_dep_2010$rank
+
+distrital_dep_2014<-distrital_dep_2014%>%
+  arrange(idleg, -VOTOS, DATA_NASCIMENTO)
+distrital_dep_2014$dist_pos <- distrital_dep_2014$n_seat - distrital_dep_2014$rank
+
+#ver
+ver_2004<-ver_2004%>%
+  arrange(idleg, -VOTOS, DATA_NASCIMENTO)
+ver_2004$dist_pos <- ver_2004$n_seat - ver_2004$rank
+
+ver_2008<-ver_2008%>%
+  arrange(idleg, -VOTOS, DATA_NASCIMENTO)
+ver_2008$dist_pos <- ver_2008$n_seat - ver_2008$rank
+
+ver_2012<-ver_2012%>%
+  arrange(idleg, -VOTOS, DATA_NASCIMENTO)
+ver_2012$dist_pos <- ver_2012$n_seat - ver_2012$rank
+
+ver_2016<-ver_2016%>%
+  arrange(idleg, -VOTOS, DATA_NASCIMENTO)
+ver_2016$dist_pos <- ver_2016$n_seat - ver_2016$rank
+
+
+######## Calculating distance to last elected
+
+
+### fed dep
+
+fed_dep_votmarg_2002 <- fed_dep_2002%>%
+  filter(flag==1)%>%
+  dplyr::select(SIGLA_UE, idleg, VOTOS)%>%
+  rename(vot_marg = VOTOS)
+
+fed_dep_votmarg_2006 <- fed_dep_2006%>%
+  filter(flag==1)%>%
+  dplyr::select(SIGLA_UE, idleg, VOTOS)%>%
+  rename(vot_marg = VOTOS)
+
+fed_dep_votmarg_2010 <- fed_dep_2010%>%
+  filter(flag==1)%>%
+  dplyr::select(SIGLA_UE, idleg, VOTOS)%>%
+  rename(vot_marg = VOTOS)
+
+fed_dep_votmarg_2014 <- fed_dep_2014%>%
+  filter(flag==1)%>%
+  dplyr::select(SIGLA_UE, idleg, VOTOS)%>%
+  rename(vot_marg = VOTOS)
+
+### state dep
+
+state_dep_votmarg_2002 <- state_dep_2002%>%
+  filter(flag==1)%>%
+  dplyr::select(SIGLA_UE, idleg, VOTOS)%>%
+  rename(vot_marg = VOTOS)
+
+state_dep_votmarg_2006 <- state_dep_2006%>%
+  filter(flag==1)%>%
+  dplyr::select(SIGLA_UE, idleg, VOTOS)%>%
+  rename(vot_marg = VOTOS)
+
+state_dep_votmarg_2010 <- state_dep_2010%>%
+  filter(flag==1)%>%
+  dplyr::select(SIGLA_UE, idleg, VOTOS)%>%
+  rename(vot_marg = VOTOS)
+
+state_dep_votmarg_2014 <- state_dep_2014%>%
+  filter(flag==1)%>%
+  dplyr::select(SIGLA_UE, idleg, VOTOS)%>%
+  rename(vot_marg = VOTOS)
+
+
+### distrital dep
+
+distrital_dep_votmarg_2002 <- distrital_dep_2002%>%
+  filter(flag==1)%>%
+  dplyr::select(SIGLA_UE, idleg, VOTOS)%>%
+  rename(vot_marg = VOTOS)
+
+distrital_dep_votmarg_2006 <- distrital_dep_2006%>%
+  filter(flag==1)%>%
+  dplyr::select(SIGLA_UE, idleg, VOTOS)%>%
+  rename(vot_marg = VOTOS)
+
+distrital_dep_votmarg_2010 <- distrital_dep_2010%>%
+  filter(flag==1)%>%
+  dplyr::select(SIGLA_UE, idleg, VOTOS)%>%
+  rename(vot_marg = VOTOS)
+
+distrital_dep_votmarg_2014 <- distrital_dep_2014%>%
+  filter(flag==1)%>%
+  dplyr::select(SIGLA_UE, idleg, VOTOS)%>%
+  rename(vot_marg = VOTOS)
+
+### ver
+
+ver_votmarg_2004 <- ver_2004%>%
+  filter(flag==1)%>%
+  dplyr::select(SIGLA_UE, idleg, VOTOS)%>%
+  rename(vot_marg = VOTOS)
+
+ver_votmarg_2008 <- ver_2008%>%
+  filter(flag==1)%>%
+  dplyr::select(SIGLA_UE, idleg, VOTOS)%>%
+  rename(vot_marg = VOTOS)
+
+ver_votmarg_2012 <- ver_2012%>%
+  filter(flag==1)%>%
+  dplyr::select(SIGLA_UE, idleg, VOTOS)%>%
+  rename(vot_marg = VOTOS)
+
+ver_votmarg_2016 <- ver_2016%>%
+  filter(flag==1)%>%
+  dplyr::select(SIGLA_UE, idleg, VOTOS)%>%
+  rename(vot_marg = VOTOS)
+
+# merging N SEATS
+
+#fed dep
+fed_dep_2002<- merge(fed_dep_2002, fed_dep_nseats_2002, by=c(  "SIGLA_UE", "idleg"), all.x=TRUE)
+fed_dep_2006<- merge(fed_dep_2006, fed_dep_nseats_2006, by=c(  "SIGLA_UE", "idleg"), all.x=TRUE)
+fed_dep_2010<- merge(fed_dep_2010, fed_dep_nseats_2010, by=c(  "SIGLA_UE", "idleg"), all.x=TRUE)
+fed_dep_2014<- merge(fed_dep_2014, fed_dep_nseats_2014, by=c(  "SIGLA_UE", "idleg"), all.x=TRUE)
+
+
+#state dep
+state_dep_2002<- merge(state_dep_2002, state_dep_nseats_2002, by=c(  "SIGLA_UE", "idleg"), all.x=TRUE)
+state_dep_2006<- merge(state_dep_2006, state_dep_nseats_2006, by=c(  "SIGLA_UE", "idleg"), all.x=TRUE)
+state_dep_2010<- merge(state_dep_2010, state_dep_nseats_2010, by=c(  "SIGLA_UE", "idleg"), all.x=TRUE)
+state_dep_2014<- merge(state_dep_2014, state_dep_nseats_2014, by=c(  "SIGLA_UE", "idleg"), all.x=TRUE)
+
+
+#distrital dep
+distrital_dep_2002<- merge(distrital_dep_2002, distrital_dep_nseats_2002, by=c(  "SIGLA_UE", "idleg"), all.x=TRUE)
+distrital_dep_2006<- merge(distrital_dep_2006, distrital_dep_nseats_2006, by=c(  "SIGLA_UE", "idleg"), all.x=TRUE)
+distrital_dep_2010<- merge(distrital_dep_2010, distrital_dep_nseats_2010, by=c(  "SIGLA_UE", "idleg"), all.x=TRUE)
+distrital_dep_2014<- merge(distrital_dep_2014, distrital_dep_nseats_2014, by=c(  "SIGLA_UE", "idleg"), all.x=TRUE)
+
+
+#ver
+ver_2004<- merge(ver_2004, ver_nseats_2004, by=c(  "SIGLA_UE", "idleg"), all.x=TRUE)
+ver_2008<- merge(ver_2008, ver_nseats_2008, by=c(  "SIGLA_UE", "idleg"), all.x=TRUE)
+ver_2012<- merge(ver_2012, ver_nseats_2012, by=c(  "SIGLA_UE", "idleg"), all.x=TRUE)
+ver_2016<- merge(ver_2016, ver_nseats_2016, by=c(  "SIGLA_UE", "idleg"), all.x=TRUE)
+
+
+#### calculating vote difference
+
+#fed dep
+fed_dep_2002<-fed_dep_2002%>%
+  arrange(idleg, -VOTOS, DATA_NASCIMENTO)
+fed_dep_2002$dist_vot <- fed_dep_2002$VOTOS - fed_dep_2002$vot_marg
+fed_dep_2002$vot_marg<-NULL
+
+fed_dep_2006<-fed_dep_2006%>%
+  arrange(idleg, -VOTOS, DATA_NASCIMENTO)
+fed_dep_2006$dist_vot <- fed_dep_2006$VOTOS - fed_dep_2006$vot_marg
+fed_dep_2006$vot_marg<-NULL
+
+fed_dep_2010<-fed_dep_2010%>%
+  arrange(idleg, -VOTOS, DATA_NASCIMENTO)
+fed_dep_2010$dist_vot <- fed_dep_2010$VOTOS - fed_dep_2010$vot_marg
+fed_dep_2010$vot_marg<-NULL
+
+fed_dep_2014<-fed_dep_2014%>%
+  arrange(idleg, -VOTOS, DATA_NASCIMENTO)
+fed_dep_2014$dist_vot <- fed_dep_2014$VOTOS - fed_dep_2014$vot_marg
+fed_dep_2014$vot_marg<-NULL
+
+#state dep
+state_dep_2002<-state_dep_2002%>%
+  arrange(idleg, -VOTOS, DATA_NASCIMENTO)
+state_dep_2002$dist_vot <- state_dep_2002$VOTOS - state_dep_2002$vot_marg
+state_dep_2002$vot_marg<-NULL
+
+state_dep_2006<-state_dep_2006%>%
+  arrange(idleg, -VOTOS, DATA_NASCIMENTO)
+state_dep_2006$dist_vot <- state_dep_2006$VOTOS - state_dep_2006$vot_marg
+state_dep_2006$vot_marg<-NULL
+
+state_dep_2010<-state_dep_2010%>%
+  arrange(idleg, -VOTOS, DATA_NASCIMENTO)
+state_dep_2010$dist_vot <- state_dep_2010$VOTOS - state_dep_2010$vot_marg
+state_dep_2010$vot_marg<-NULL
+
+state_dep_2014<-state_dep_2014%>%
+  arrange(idleg, -VOTOS, DATA_NASCIMENTO)
+state_dep_2014$dist_vot <- state_dep_2014$VOTOS - state_dep_2014$vot_marg
+state_dep_2014$vot_marg<-NULL
+
+#distrital dep
+distrital_dep_2002<-distrital_dep_2002%>%
+  arrange(idleg, -VOTOS, DATA_NASCIMENTO)
+distrital_dep_2002$dist_vot <- distrital_dep_2002$VOTOS - distrital_dep_2002$vot_marg
+distrital_dep_2002$vot_marg<-NULL
+
+distrital_dep_2006<-distrital_dep_2006%>%
+  arrange(idleg, -VOTOS, DATA_NASCIMENTO)
+distrital_dep_2006$dist_vot <- distrital_dep_2006$VOTOS - distrital_dep_2006$vot_marg
+distrital_dep_2006$vot_marg<-NULL
+
+distrital_dep_2010<-distrital_dep_2010%>%
+  arrange(idleg, -VOTOS, DATA_NASCIMENTO)
+distrital_dep_2010$dist_vot <- distrital_dep_2010$VOTOS - distrital_dep_2010$vot_marg
+distrital_dep_2010$vot_marg<-NULL
+
+distrital_dep_2014<-distrital_dep_2014%>%
+  arrange(idleg, -VOTOS, DATA_NASCIMENTO)
+distrital_dep_2014$dist_vot <- distrital_dep_2014$VOTOS - distrital_dep_2014$vot_marg
+distrital_dep_2014$vot_marg<-NULL
+
+#ver
+ver_2004<-ver_2004%>%
+  arrange(idleg, -VOTOS, DATA_NASCIMENTO)
+ver_2004$dist_vot <- ver_2004$VOTOS - ver_2004$vot_marg
+ver_2004$vot_marg<-NULL
+
+ver_2008<-ver_2008%>%
+  arrange(idleg, -VOTOS, DATA_NASCIMENTO)
+ver_2008$dist_vot <- ver_2008$VOTOS - ver_2008$vot_marg
+ver_2008$vot_marg<-NULL
+
+ver_2012<-ver_2012%>%
+  arrange(idleg, -VOTOS, DATA_NASCIMENTO)
+ver_2012$dist_vot <- ver_2012$VOTOS - ver_2012$vot_marg
+ver_2012$vot_marg<-NULL
+
+ver_2016<-ver_2016%>%
+  arrange(idleg, -VOTOS, DATA_NASCIMENTO)
+ver_2016$dist_vot <- ver_2016$VOTOS - ver_2016$vot_marg
+ver_2016$vot_marg<-NULL
+
+########################################
+##### renaming variables ###############
 
 ######################################## 
 
+#fed dep
+fed_dep_2002<-fed_dep_2002%>%
+  rename( ANO_ELEICAO = ANO_ELEICAO.x, DESCRICAO_CARGO =DESCRICAO_CARGO.x, NOME_CANDIDATO = NOME_CANDIDATO.x, NOME_URNA_CANDIDATO = NOME_URNA_CANDIDATO.x,  SIGLA_PARTIDO = SIGLA_PARTIDO.x)
+fed_dep_2006<-fed_dep_2006%>%
+  rename( ANO_ELEICAO = ANO_ELEICAO.x, DESCRICAO_CARGO =DESCRICAO_CARGO.x, NOME_CANDIDATO = NOME_CANDIDATO.x, NOME_URNA_CANDIDATO = NOME_URNA_CANDIDATO.x,  SIGLA_PARTIDO = SIGLA_PARTIDO.x)
+fed_dep_2010<-fed_dep_2010%>%
+  rename( ANO_ELEICAO = ANO_ELEICAO.x, DESCRICAO_CARGO =DESCRICAO_CARGO.x, NOME_CANDIDATO = NOME_CANDIDATO.x, NOME_URNA_CANDIDATO = NOME_URNA_CANDIDATO.x,  SIGLA_PARTIDO = SIGLA_PARTIDO.x)
+fed_dep_2014<-fed_dep_2014%>%
+  rename( ANO_ELEICAO = ANO_ELEICAO.x, DESCRICAO_CARGO =DESCRICAO_CARGO.x, NOME_CANDIDATO = NOME_CANDIDATO.x, NOME_URNA_CANDIDATO = NOME_URNA_CANDIDATO.x,  SIGLA_PARTIDO = SIGLA_PARTIDO.x)
+
+#state dep
+state_dep_2002<-state_dep_2002%>%
+  rename( ANO_ELEICAO = ANO_ELEICAO.x, DESCRICAO_CARGO =DESCRICAO_CARGO.x, NOME_CANDIDATO = NOME_CANDIDATO.x, NOME_URNA_CANDIDATO = NOME_URNA_CANDIDATO.x,  SIGLA_PARTIDO = SIGLA_PARTIDO.x)
+state_dep_2006<-state_dep_2006%>%
+  rename( ANO_ELEICAO = ANO_ELEICAO.x, DESCRICAO_CARGO =DESCRICAO_CARGO.x, NOME_CANDIDATO = NOME_CANDIDATO.x, NOME_URNA_CANDIDATO = NOME_URNA_CANDIDATO.x,  SIGLA_PARTIDO = SIGLA_PARTIDO.x)
+state_dep_2010<-state_dep_2010%>%
+  rename( ANO_ELEICAO = ANO_ELEICAO.x, DESCRICAO_CARGO =DESCRICAO_CARGO.x, NOME_CANDIDATO = NOME_CANDIDATO.x, NOME_URNA_CANDIDATO = NOME_URNA_CANDIDATO.x,  SIGLA_PARTIDO = SIGLA_PARTIDO.x)
+state_dep_2014<-state_dep_2014%>%
+  rename( ANO_ELEICAO = ANO_ELEICAO.x, DESCRICAO_CARGO =DESCRICAO_CARGO.x, NOME_CANDIDATO = NOME_CANDIDATO.x, NOME_URNA_CANDIDATO = NOME_URNA_CANDIDATO.x,  SIGLA_PARTIDO = SIGLA_PARTIDO.x)
+
+#distrital dep
+distrital_dep_2002<-distrital_dep_2002%>%
+  rename( ANO_ELEICAO = ANO_ELEICAO.x, DESCRICAO_CARGO =DESCRICAO_CARGO.x, NOME_CANDIDATO = NOME_CANDIDATO.x, NOME_URNA_CANDIDATO = NOME_URNA_CANDIDATO.x,  SIGLA_PARTIDO = SIGLA_PARTIDO.x)
+distrital_dep_2006<-distrital_dep_2006%>%
+  rename( ANO_ELEICAO = ANO_ELEICAO.x, DESCRICAO_CARGO =DESCRICAO_CARGO.x, NOME_CANDIDATO = NOME_CANDIDATO.x, NOME_URNA_CANDIDATO = NOME_URNA_CANDIDATO.x,  SIGLA_PARTIDO = SIGLA_PARTIDO.x)
+distrital_dep_2010<-distrital_dep_2010%>%
+  rename( ANO_ELEICAO = ANO_ELEICAO.x, DESCRICAO_CARGO =DESCRICAO_CARGO.x, NOME_CANDIDATO = NOME_CANDIDATO.x, NOME_URNA_CANDIDATO = NOME_URNA_CANDIDATO.x,  SIGLA_PARTIDO = SIGLA_PARTIDO.x)
+distrital_dep_2014<-distrital_dep_2014%>%
+  rename( ANO_ELEICAO = ANO_ELEICAO.x, DESCRICAO_CARGO =DESCRICAO_CARGO.x, NOME_CANDIDATO = NOME_CANDIDATO.x, NOME_URNA_CANDIDATO = NOME_URNA_CANDIDATO.x,  SIGLA_PARTIDO = SIGLA_PARTIDO.x)
+
+#ver
+ver_2004<-ver_2004%>%
+  rename( ANO_ELEICAO = ANO_ELEICAO.x, DESCRICAO_CARGO =DESCRICAO_CARGO.x, NOME_CANDIDATO = NOME_CANDIDATO.x, NOME_URNA_CANDIDATO = NOME_URNA_CANDIDATO.x,  SIGLA_PARTIDO = SIGLA_PARTIDO.x)
+ver_2008<-ver_2008%>%
+  rename( ANO_ELEICAO = ANO_ELEICAO.x, DESCRICAO_CARGO =DESCRICAO_CARGO.x, NOME_CANDIDATO = NOME_CANDIDATO.x, NOME_URNA_CANDIDATO = NOME_URNA_CANDIDATO.x,  SIGLA_PARTIDO = SIGLA_PARTIDO.x)
+ver_2012<-ver_2012%>%
+  rename( ANO_ELEICAO = ANO_ELEICAO.x, DESCRICAO_CARGO =DESCRICAO_CARGO.x, NOME_CANDIDATO = NOME_CANDIDATO.x, NOME_URNA_CANDIDATO = NOME_URNA_CANDIDATO.x,  SIGLA_PARTIDO = SIGLA_PARTIDO.x)
+ver_2016<-ver_2016%>%
+  rename( ANO_ELEICAO = ANO_ELEICAO.x, DESCRICAO_CARGO =DESCRICAO_CARGO.x, NOME_CANDIDATO = NOME_CANDIDATO.x, NOME_URNA_CANDIDATO = NOME_URNA_CANDIDATO.x,  SIGLA_PARTIDO = SIGLA_PARTIDO.x)
+
+
 # Saving datasets with partisan votes
 
-distrital_dep_part_2002_2014 <- list(distrital_dep_part_2002, distrital_dep_part_2006, distrital_dep_part_2010, distrital_dep_part_2014)
-save(distrital_dep_part_2002_2014, file = "//fs-eesp-01/EESP/Usuarios/arthur.fisch//Dropbox/LOCAL_ELECTIONS/repositorio_data/original_unzipped/distrital_dep_part_2002_2014.RData")
 
-state_dep_part_2002_2014 <- list(state_dep_part_2002, state_dep_part_2006, state_dep_part_2010, state_dep_part_2014)
-save(state_dep_part_2002_2014, file = "//fs-eesp-01/EESP/Usuarios/arthur.fisch//Dropbox/LOCAL_ELECTIONS/repositorio_data/original_unzipped/state_dep_part_2002_2014.RData")
+distrital_dep_2002_2014 <- list(distrital_dep_2002, distrital_dep_2006, distrital_dep_2010, distrital_dep_2014)
+save(distrital_dep_2002_2014, file = paste0(dir_d, "original_unzipped/distrital_dep_2002_2014.RData"))
 
-fed_dep_part_2002_2014 <- list(fed_dep_part_2002, fed_dep_part_2006, fed_dep_part_2010, fed_dep_part_2014)
-save(fed_dep_part_2002_2014, file = "//fs-eesp-01/EESP/Usuarios/arthur.fisch//Dropbox/LOCAL_ELECTIONS/repositorio_data/original_unzipped/fed_dep_part_2002_2014.RData")
+state_dep_2002_2014 <- list(state_dep_2002, state_dep_2006, state_dep_2010, state_dep_2014)
+save(state_dep_2002_2014, file = paste0(dir_d, "original_unzipped/state_dep_2002_2014.RData"))
 
-ver_part_2004_2016 <- list(ver_part_2004, ver_part_2008, ver_part_2012, ver_part_2016)
-save(ver_part_2004_2016, file = "//fs-eesp-01/EESP/Usuarios/arthur.fisch//Dropbox/LOCAL_ELECTIONS/repositorio_data/original_unzipped/ver_part_2004_2016.RData")
+fed_dep_2002_2014 <- list(fed_dep_2002, fed_dep_2006, fed_dep_2010, fed_dep_2014)
+save(fed_dep_2002_2014, file = paste0(dir_d, "original_unzipped/fed_dep_2002_2014.RData"))
+
+ver_2004_2016 <- list(ver_2004, ver_2008, ver_2012, ver_2016)
+save(ver_2004_2016, file = paste0(dir_d, "original_unzipped/ver_2004_2016.RData"))
 
 
 
