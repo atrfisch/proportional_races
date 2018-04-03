@@ -2746,31 +2746,31 @@ ver_votpar_ue_2016 <- ver_votpar_ue_2016 %>%
 # merging votos legendas
 
 #fed dep
-fed_dep_2002<- merge(fed_dep_2002, fed_dep_votpar_ue_2002, by=c("idleg", "CODIGO_CARGO", "SIGLA_UF"), all.x=TRUE)
-fed_dep_2006<- merge(fed_dep_2006, fed_dep_votpar_ue_2006, by=c("idleg", "CODIGO_CARGO", "SIGLA_UF"), all.x=TRUE)
-fed_dep_2010<- merge(fed_dep_2010, fed_dep_votpar_ue_2010, by=c("idleg", "CODIGO_CARGO", "SIGLA_UF"), all.x=TRUE)
-fed_dep_2014<- merge(fed_dep_2014, fed_dep_votpar_ue_2014, by=c("idleg", "CODIGO_CARGO", "SIGLA_UF"), all.x=TRUE)
+fed_dep_2002 <- merge(fed_dep_2002, fed_dep_votpar_ue_2002, by=c("idleg", "CODIGO_CARGO", "SIGLA_UF"), all.x=TRUE)
+fed_dep_2006 <- merge(fed_dep_2006, fed_dep_votpar_ue_2006, by=c("idleg", "CODIGO_CARGO", "SIGLA_UF"), all.x=TRUE)
+fed_dep_2010 <- merge(fed_dep_2010, fed_dep_votpar_ue_2010, by=c("idleg", "CODIGO_CARGO", "SIGLA_UF"), all.x=TRUE)
+fed_dep_2014 <- merge(fed_dep_2014, fed_dep_votpar_ue_2014, by=c("idleg", "CODIGO_CARGO", "SIGLA_UF"), all.x=TRUE)
 
 
 #state dep
-state_dep_2002<- merge(state_dep_2002, state_dep_votpar_ue_2002, by=c("idleg", "CODIGO_CARGO", "SIGLA_UF"), all.x=TRUE)
-state_dep_2006<- merge(state_dep_2006, state_dep_votpar_ue_2006, by=c("idleg", "CODIGO_CARGO", "SIGLA_UF"), all.x=TRUE)
-state_dep_2010<- merge(state_dep_2010, state_dep_votpar_ue_2010, by=c("idleg", "CODIGO_CARGO", "SIGLA_UF"), all.x=TRUE)
-state_dep_2014<- merge(state_dep_2014, state_dep_votpar_ue_2014, by=c("idleg", "CODIGO_CARGO", "SIGLA_UF"), all.x=TRUE)
+state_dep_2002 <- merge(state_dep_2002, state_dep_votpar_ue_2002, by=c("idleg", "CODIGO_CARGO", "SIGLA_UF"), all.x=TRUE)
+state_dep_2006 <- merge(state_dep_2006, state_dep_votpar_ue_2006, by=c("idleg", "CODIGO_CARGO", "SIGLA_UF"), all.x=TRUE)
+state_dep_2010 <- merge(state_dep_2010, state_dep_votpar_ue_2010, by=c("idleg", "CODIGO_CARGO", "SIGLA_UF"), all.x=TRUE)
+state_dep_2014 <- merge(state_dep_2014, state_dep_votpar_ue_2014, by=c("idleg", "CODIGO_CARGO", "SIGLA_UF"), all.x=TRUE)
 
 
 #distrital dep
-distrital_dep_2002<- merge(distrital_dep_2002, distrital_dep_votpar_ue_2002, by=c("idleg", "CODIGO_CARGO", "SIGLA_UF"), all.x=TRUE)
-distrital_dep_2006<- merge(distrital_dep_2006, distrital_dep_votpar_ue_2006, by=c("idleg", "CODIGO_CARGO", "SIGLA_UF"), all.x=TRUE)
-distrital_dep_2010<- merge(distrital_dep_2010, distrital_dep_votpar_ue_2010, by=c("idleg", "CODIGO_CARGO", "SIGLA_UF"), all.x=TRUE)
-distrital_dep_2014<- merge(distrital_dep_2014, distrital_dep_votpar_ue_2014, by=c("idleg", "CODIGO_CARGO", "SIGLA_UF"), all.x=TRUE)
+distrital_dep_2002 <- merge(distrital_dep_2002, distrital_dep_votpar_ue_2002, by=c("idleg", "CODIGO_CARGO", "SIGLA_UF"), all.x=TRUE)
+distrital_dep_2006 <- merge(distrital_dep_2006, distrital_dep_votpar_ue_2006, by=c("idleg", "CODIGO_CARGO", "SIGLA_UF"), all.x=TRUE)
+distrital_dep_2010 <- merge(distrital_dep_2010, distrital_dep_votpar_ue_2010, by=c("idleg", "CODIGO_CARGO", "SIGLA_UF"), all.x=TRUE)
+distrital_dep_2014 <- merge(distrital_dep_2014, distrital_dep_votpar_ue_2014, by=c("idleg", "CODIGO_CARGO", "SIGLA_UF"), all.x=TRUE)
 
 
 #ver
-ver_2004<- merge(ver_2004, ver_votpar_ue_2004, by=c("idleg", "CODIGO_CARGO", "SIGLA_UE"), all.x=TRUE)
-ver_2008<- merge(ver_2008, ver_votpar_ue_2008, by=c("idleg", "CODIGO_CARGO", "SIGLA_UE"), all.x=TRUE)
-ver_2012<- merge(ver_2012, ver_votpar_ue_2012, by=c("idleg", "CODIGO_CARGO", "SIGLA_UE"), all.x=TRUE)
-ver_2016<- merge(ver_2016, ver_votpar_ue_2016, by=c("idleg", "CODIGO_CARGO", "SIGLA_UE"), all.x=TRUE)
+ver_2004 <- merge(ver_2004, ver_votpar_ue_2004, by=c("idleg", "CODIGO_CARGO", "SIGLA_UE"), all.x=TRUE)
+ver_2008 <- merge(ver_2008, ver_votpar_ue_2008, by=c("idleg", "CODIGO_CARGO", "SIGLA_UE"), all.x=TRUE)
+ver_2012 <- merge(ver_2012, ver_votpar_ue_2012, by=c("idleg", "CODIGO_CARGO", "SIGLA_UE"), all.x=TRUE)
+ver_2016 <- merge(ver_2016, ver_votpar_ue_2016, by=c("idleg", "CODIGO_CARGO", "SIGLA_UE"), all.x=TRUE)
 
 
 #### Creating columns of total nominal votes
@@ -2854,24 +2854,24 @@ fed_dep_2014<- merge(fed_dep_2014, fed_dep_aux_votnom_2014, by=c("idleg",  "SIGL
 
 
 #state dep
-state_dep_2002<- merge(state_dep_2002, state_dep_aux_votnom_2002, by=c("idleg",  "SIGLA_UE"), all.x=TRUE)
-state_dep_2006<- merge(state_dep_2006, state_dep_aux_votnom_2006, by=c("idleg",  "SIGLA_UE"), all.x=TRUE)
-state_dep_2010<- merge(state_dep_2010, state_dep_aux_votnom_2010, by=c("idleg",  "SIGLA_UE"), all.x=TRUE)
-state_dep_2014<- merge(state_dep_2014, state_dep_aux_votnom_2014, by=c("idleg",  "SIGLA_UE"), all.x=TRUE)
+state_dep_2002 <- merge(state_dep_2002, state_dep_aux_votnom_2002, by=c("idleg",  "SIGLA_UE"), all.x=TRUE)
+state_dep_2006 <- merge(state_dep_2006, state_dep_aux_votnom_2006, by=c("idleg",  "SIGLA_UE"), all.x=TRUE)
+state_dep_2010 <- merge(state_dep_2010, state_dep_aux_votnom_2010, by=c("idleg",  "SIGLA_UE"), all.x=TRUE)
+state_dep_2014 <- merge(state_dep_2014, state_dep_aux_votnom_2014, by=c("idleg",  "SIGLA_UE"), all.x=TRUE)
 
 
 #distrital dep
-distrital_dep_2002<- merge(distrital_dep_2002, distrital_dep_aux_votnom_2002, by=c("idleg",  "SIGLA_UE"), all.x=TRUE)
-distrital_dep_2006<- merge(distrital_dep_2006, distrital_dep_aux_votnom_2006, by=c("idleg",  "SIGLA_UE"), all.x=TRUE)
-distrital_dep_2010<- merge(distrital_dep_2010, distrital_dep_aux_votnom_2010, by=c("idleg",  "SIGLA_UE"), all.x=TRUE)
-distrital_dep_2014<- merge(distrital_dep_2014, distrital_dep_aux_votnom_2014, by=c("idleg",  "SIGLA_UE"), all.x=TRUE)
+distrital_dep_2002 <- merge(distrital_dep_2002, distrital_dep_aux_votnom_2002, by=c("idleg",  "SIGLA_UE"), all.x=TRUE)
+distrital_dep_2006 <- merge(distrital_dep_2006, distrital_dep_aux_votnom_2006, by=c("idleg",  "SIGLA_UE"), all.x=TRUE)
+distrital_dep_2010 <- merge(distrital_dep_2010, distrital_dep_aux_votnom_2010, by=c("idleg",  "SIGLA_UE"), all.x=TRUE)
+distrital_dep_2014 <- merge(distrital_dep_2014, distrital_dep_aux_votnom_2014, by=c("idleg",  "SIGLA_UE"), all.x=TRUE)
 
 
 #ver
-ver_2004<- merge(ver_2004, ver_aux_votnom_2004, by=c("idleg",  "SIGLA_UE"), all.x=TRUE)
-ver_2008<- merge(ver_2008, ver_aux_votnom_2008, by=c("idleg",  "SIGLA_UE"), all.x=TRUE)
-ver_2012<- merge(ver_2012, ver_aux_votnom_2012, by=c("idleg",  "SIGLA_UE"), all.x=TRUE)
-ver_2016<- merge(ver_2016, ver_aux_votnom_2016, by=c("idleg",  "SIGLA_UE"), all.x=TRUE)
+ver_2004 <- merge(ver_2004, ver_aux_votnom_2004, by=c("idleg",  "SIGLA_UE"), all.x=TRUE)
+ver_2008 <- merge(ver_2008, ver_aux_votnom_2008, by=c("idleg",  "SIGLA_UE"), all.x=TRUE)
+ver_2012 <- merge(ver_2012, ver_aux_votnom_2012, by=c("idleg",  "SIGLA_UE"), all.x=TRUE)
+ver_2016 <- merge(ver_2016, ver_aux_votnom_2016, by=c("idleg",  "SIGLA_UE"), all.x=TRUE)
 
 ### VOTOS TOTAIS
 
@@ -2970,31 +2970,31 @@ ver_aux_votuenom_2016 <- ver_2016 %>%
 # merging votos legendas
 
 #fed dep
-fed_dep_2002<- merge(fed_dep_2002, fed_dep_aux_votuenom_2002, by=c("SIGLA_UE"), all.x=TRUE)
-fed_dep_2006<- merge(fed_dep_2006, fed_dep_aux_votuenom_2006, by=c("SIGLA_UE"), all.x=TRUE)
-fed_dep_2010<- merge(fed_dep_2010, fed_dep_aux_votuenom_2010, by=c("SIGLA_UE"), all.x=TRUE)
-fed_dep_2014<- merge(fed_dep_2014, fed_dep_aux_votuenom_2014, by=c("SIGLA_UE"), all.x=TRUE)
+fed_dep_2002 <- merge(fed_dep_2002, fed_dep_aux_votuenom_2002, by=c("SIGLA_UE"), all.x=TRUE)
+fed_dep_2006 <- merge(fed_dep_2006, fed_dep_aux_votuenom_2006, by=c("SIGLA_UE"), all.x=TRUE)
+fed_dep_2010 <- merge(fed_dep_2010, fed_dep_aux_votuenom_2010, by=c("SIGLA_UE"), all.x=TRUE)
+fed_dep_2014 <- merge(fed_dep_2014, fed_dep_aux_votuenom_2014, by=c("SIGLA_UE"), all.x=TRUE)
 
 
 #state dep
-state_dep_2002<- merge(state_dep_2002, state_dep_aux_votuenom_2002, by=c("SIGLA_UE"), all.x=TRUE)
-state_dep_2006<- merge(state_dep_2006, state_dep_aux_votuenom_2006, by=c("SIGLA_UE"), all.x=TRUE)
-state_dep_2010<- merge(state_dep_2010, state_dep_aux_votuenom_2010, by=c("SIGLA_UE"), all.x=TRUE)
-state_dep_2014<- merge(state_dep_2014, state_dep_aux_votuenom_2014, by=c("SIGLA_UE"), all.x=TRUE)
+state_dep_2002 <- merge(state_dep_2002, state_dep_aux_votuenom_2002, by=c("SIGLA_UE"), all.x=TRUE)
+state_dep_2006 <- merge(state_dep_2006, state_dep_aux_votuenom_2006, by=c("SIGLA_UE"), all.x=TRUE)
+state_dep_2010 <- merge(state_dep_2010, state_dep_aux_votuenom_2010, by=c("SIGLA_UE"), all.x=TRUE)
+state_dep_2014 <- merge(state_dep_2014, state_dep_aux_votuenom_2014, by=c("SIGLA_UE"), all.x=TRUE)
 
 
 #distrital dep
-distrital_dep_2002<- merge(distrital_dep_2002, distrital_dep_aux_votuenom_2002, by=c("SIGLA_UE"), all.x=TRUE)
-distrital_dep_2006<- merge(distrital_dep_2006, distrital_dep_aux_votuenom_2006, by=c("SIGLA_UE"), all.x=TRUE)
-distrital_dep_2010<- merge(distrital_dep_2010, distrital_dep_aux_votuenom_2010, by=c("SIGLA_UE"), all.x=TRUE)
-distrital_dep_2014<- merge(distrital_dep_2014, distrital_dep_aux_votuenom_2014, by=c("SIGLA_UE"), all.x=TRUE)
+distrital_dep_2002 <- merge(distrital_dep_2002, distrital_dep_aux_votuenom_2002, by=c("SIGLA_UE"), all.x=TRUE)
+distrital_dep_2006 <- merge(distrital_dep_2006, distrital_dep_aux_votuenom_2006, by=c("SIGLA_UE"), all.x=TRUE)
+distrital_dep_2010 <- merge(distrital_dep_2010, distrital_dep_aux_votuenom_2010, by=c("SIGLA_UE"), all.x=TRUE)
+distrital_dep_2014 <- merge(distrital_dep_2014, distrital_dep_aux_votuenom_2014, by=c("SIGLA_UE"), all.x=TRUE)
 
 
 #ver
-ver_2004<- merge(ver_2004, ver_aux_votuenom_2004, by=c("SIGLA_UE"), all.x=TRUE)
-ver_2008<- merge(ver_2008, ver_aux_votuenom_2008, by=c("SIGLA_UE"), all.x=TRUE)
-ver_2012<- merge(ver_2012, ver_aux_votuenom_2012, by=c("SIGLA_UE"), all.x=TRUE)
-ver_2016<- merge(ver_2016, ver_aux_votuenom_2016, by=c("SIGLA_UE"), all.x=TRUE)
+ver_2004 <- merge(ver_2004, ver_aux_votuenom_2004, by=c("SIGLA_UE"), all.x=TRUE)
+ver_2008 <- merge(ver_2008, ver_aux_votuenom_2008, by=c("SIGLA_UE"), all.x=TRUE)
+ver_2012 <- merge(ver_2012, ver_aux_votuenom_2012, by=c("SIGLA_UE"), all.x=TRUE)
+ver_2016 <- merge(ver_2016, ver_aux_votuenom_2016, by=c("SIGLA_UE"), all.x=TRUE)
 
 
 #### creating total  votes in UE
@@ -3071,137 +3071,137 @@ ver_aux_vottotnom_2016 <- ver_2016 %>%
 # merging VOTOS_TOTAIS legendas
 
 #fed dep
-fed_dep_2002<- merge(fed_dep_2002, fed_dep_aux_vottotnom_2002, by=c("SIGLA_UE"), all.x=TRUE)
-fed_dep_2006<- merge(fed_dep_2006, fed_dep_aux_vottotnom_2006, by=c("SIGLA_UE"), all.x=TRUE)
-fed_dep_2010<- merge(fed_dep_2010, fed_dep_aux_vottotnom_2010, by=c("SIGLA_UE"), all.x=TRUE)
-fed_dep_2014<- merge(fed_dep_2014, fed_dep_aux_vottotnom_2014, by=c("SIGLA_UE"), all.x=TRUE)
+fed_dep_2002 <- merge(fed_dep_2002, fed_dep_aux_vottotnom_2002, by=c("SIGLA_UE"), all.x=TRUE)
+fed_dep_2006 <- merge(fed_dep_2006, fed_dep_aux_vottotnom_2006, by=c("SIGLA_UE"), all.x=TRUE)
+fed_dep_2010 <- merge(fed_dep_2010, fed_dep_aux_vottotnom_2010, by=c("SIGLA_UE"), all.x=TRUE)
+fed_dep_2014 <- merge(fed_dep_2014, fed_dep_aux_vottotnom_2014, by=c("SIGLA_UE"), all.x=TRUE)
 
 
 #state dep
-state_dep_2002<- merge(state_dep_2002, state_dep_aux_vottotnom_2002, by=c("SIGLA_UE"), all.x=TRUE)
-state_dep_2006<- merge(state_dep_2006, state_dep_aux_vottotnom_2006, by=c("SIGLA_UE"), all.x=TRUE)
-state_dep_2010<- merge(state_dep_2010, state_dep_aux_vottotnom_2010, by=c("SIGLA_UE"), all.x=TRUE)
-state_dep_2014<- merge(state_dep_2014, state_dep_aux_vottotnom_2014, by=c("SIGLA_UE"), all.x=TRUE)
+state_dep_2002 <- merge(state_dep_2002, state_dep_aux_vottotnom_2002, by=c("SIGLA_UE"), all.x=TRUE)
+state_dep_2006 <- merge(state_dep_2006, state_dep_aux_vottotnom_2006, by=c("SIGLA_UE"), all.x=TRUE)
+state_dep_2010 <- merge(state_dep_2010, state_dep_aux_vottotnom_2010, by=c("SIGLA_UE"), all.x=TRUE)
+state_dep_2014 <- merge(state_dep_2014, state_dep_aux_vottotnom_2014, by=c("SIGLA_UE"), all.x=TRUE)
 
 
 #distrital dep
-distrital_dep_2002<- merge(distrital_dep_2002, distrital_dep_aux_vottotnom_2002, by=c("SIGLA_UE"), all.x=TRUE)
-distrital_dep_2006<- merge(distrital_dep_2006, distrital_dep_aux_vottotnom_2006, by=c("SIGLA_UE"), all.x=TRUE)
-distrital_dep_2010<- merge(distrital_dep_2010, distrital_dep_aux_vottotnom_2010, by=c("SIGLA_UE"), all.x=TRUE)
-distrital_dep_2014<- merge(distrital_dep_2014, distrital_dep_aux_vottotnom_2014, by=c("SIGLA_UE"), all.x=TRUE)
+distrital_dep_2002 <- merge(distrital_dep_2002, distrital_dep_aux_vottotnom_2002, by=c("SIGLA_UE"), all.x=TRUE)
+distrital_dep_2006 <- merge(distrital_dep_2006, distrital_dep_aux_vottotnom_2006, by=c("SIGLA_UE"), all.x=TRUE)
+distrital_dep_2010 <- merge(distrital_dep_2010, distrital_dep_aux_vottotnom_2010, by=c("SIGLA_UE"), all.x=TRUE)
+distrital_dep_2014 <- merge(distrital_dep_2014, distrital_dep_aux_vottotnom_2014, by=c("SIGLA_UE"), all.x=TRUE)
 
 
 #ver
-ver_2004<- merge(ver_2004, ver_aux_vottotnom_2004, by=c("SIGLA_UE"), all.x=TRUE)
-ver_2008<- merge(ver_2008, ver_aux_vottotnom_2008, by=c("SIGLA_UE"), all.x=TRUE)
-ver_2012<- merge(ver_2012, ver_aux_vottotnom_2012, by=c("SIGLA_UE"), all.x=TRUE)
-ver_2016<- merge(ver_2016, ver_aux_vottotnom_2016, by=c("SIGLA_UE"), all.x=TRUE)
+ver_2004 <- merge(ver_2004, ver_aux_vottotnom_2004, by=c("SIGLA_UE"), all.x=TRUE)
+ver_2008 <- merge(ver_2008, ver_aux_vottotnom_2008, by=c("SIGLA_UE"), all.x=TRUE)
+ver_2012 <- merge(ver_2012, ver_aux_vottotnom_2012, by=c("SIGLA_UE"), all.x=TRUE)
+ver_2016 <- merge(ver_2016, ver_aux_vottotnom_2016, by=c("SIGLA_UE"), all.x=TRUE)
 
 ###### Calculating Shares
 
 ## Nominal Share
 #fed dep
-fed_dep_2002$share_nom<-fed_dep_2002$VOTOS/fed_dep_2002$VOTOS_NOMINAIS
-fed_dep_2006$share_nom<-fed_dep_2006$VOTOS/fed_dep_2006$VOTOS_NOMINAIS
-fed_dep_2010$share_nom<-fed_dep_2010$VOTOS/fed_dep_2010$VOTOS_NOMINAIS
-fed_dep_2014$share_nom<-fed_dep_2014$VOTOS/fed_dep_2014$VOTOS_NOMINAIS
+fed_dep_2002$share_nom <- fed_dep_2002$VOTOS/fed_dep_2002$VOTOS_NOMINAIS
+fed_dep_2006$share_nom <- fed_dep_2006$VOTOS/fed_dep_2006$VOTOS_NOMINAIS
+fed_dep_2010$share_nom <- fed_dep_2010$VOTOS/fed_dep_2010$VOTOS_NOMINAIS
+fed_dep_2014$share_nom <- fed_dep_2014$VOTOS/fed_dep_2014$VOTOS_NOMINAIS
 
 #state dep
-state_dep_2002$share_nom<-state_dep_2002$VOTOS/state_dep_2002$VOTOS_NOMINAIS
-state_dep_2006$share_nom<-state_dep_2006$VOTOS/state_dep_2006$VOTOS_NOMINAIS
-state_dep_2010$share_nom<-state_dep_2010$VOTOS/state_dep_2010$VOTOS_NOMINAIS
-state_dep_2014$share_nom<-state_dep_2014$VOTOS/state_dep_2014$VOTOS_NOMINAIS
+state_dep_2002$share_nom <-state_dep_2002$VOTOS/state_dep_2002$VOTOS_NOMINAIS
+state_dep_2006$share_nom <-state_dep_2006$VOTOS/state_dep_2006$VOTOS_NOMINAIS
+state_dep_2010$share_nom <-state_dep_2010$VOTOS/state_dep_2010$VOTOS_NOMINAIS
+state_dep_2014$share_nom <-state_dep_2014$VOTOS/state_dep_2014$VOTOS_NOMINAIS
 
 #distrital dep
-distrital_dep_2002$share_nom<-distrital_dep_2002$VOTOS/distrital_dep_2002$VOTOS_NOMINAIS
-distrital_dep_2006$share_nom<-distrital_dep_2006$VOTOS/distrital_dep_2006$VOTOS_NOMINAIS
-distrital_dep_2010$share_nom<-distrital_dep_2010$VOTOS/distrital_dep_2010$VOTOS_NOMINAIS
-distrital_dep_2014$share_nom<-distrital_dep_2014$VOTOS/distrital_dep_2014$VOTOS_NOMINAIS
+distrital_dep_2002$share_nom <- distrital_dep_2002$VOTOS/distrital_dep_2002$VOTOS_NOMINAIS
+distrital_dep_2006$share_nom <- distrital_dep_2006$VOTOS/distrital_dep_2006$VOTOS_NOMINAIS
+distrital_dep_2010$share_nom <- distrital_dep_2010$VOTOS/distrital_dep_2010$VOTOS_NOMINAIS
+distrital_dep_2014$share_nom <- distrital_dep_2014$VOTOS/distrital_dep_2014$VOTOS_NOMINAIS
 
 #ver dep
-ver_2004$share_nom<-ver_2004$VOTOS/ver_2004$VOTOS_NOMINAIS
-ver_2008$share_nom<-ver_2008$VOTOS/ver_2008$VOTOS_NOMINAIS
-ver_2012$share_nom<-ver_2012$VOTOS/ver_2012$VOTOS_NOMINAIS
-ver_2016$share_nom<-ver_2016$VOTOS/ver_2016$VOTOS_NOMINAIS
+ver_2004$share_nom <- ver_2004$VOTOS/ver_2004$VOTOS_NOMINAIS
+ver_2008$share_nom <- ver_2008$VOTOS/ver_2008$VOTOS_NOMINAIS
+ver_2012$share_nom <- ver_2012$VOTOS/ver_2012$VOTOS_NOMINAIS
+ver_2016$share_nom <- ver_2016$VOTOS/ver_2016$VOTOS_NOMINAIS
 
 
 ## Total Share
 #fed dep
-fed_dep_2002$share_tot<-fed_dep_2002$VOTOS/fed_dep_2002$VOTOS_TOTAIS
-fed_dep_2006$share_tot<-fed_dep_2006$VOTOS/fed_dep_2006$VOTOS_TOTAIS
-fed_dep_2010$share_tot<-fed_dep_2010$VOTOS/fed_dep_2010$VOTOS_TOTAIS
-fed_dep_2014$share_tot<-fed_dep_2014$VOTOS/fed_dep_2014$VOTOS_TOTAIS
+fed_dep_2002$share_tot <- fed_dep_2002$VOTOS/fed_dep_2002$VOTOS_TOTAIS
+fed_dep_2006$share_tot <- fed_dep_2006$VOTOS/fed_dep_2006$VOTOS_TOTAIS
+fed_dep_2010$share_tot <- fed_dep_2010$VOTOS/fed_dep_2010$VOTOS_TOTAIS
+fed_dep_2014$share_tot <- fed_dep_2014$VOTOS/fed_dep_2014$VOTOS_TOTAIS
 
 #state dep
-state_dep_2002$share_tot<-state_dep_2002$VOTOS/state_dep_2002$VOTOS_TOTAIS
-state_dep_2006$share_tot<-state_dep_2006$VOTOS/state_dep_2006$VOTOS_TOTAIS
-state_dep_2010$share_tot<-state_dep_2010$VOTOS/state_dep_2010$VOTOS_TOTAIS
-state_dep_2014$share_tot<-state_dep_2014$VOTOS/state_dep_2014$VOTOS_TOTAIS
+state_dep_2002$share_tot <- state_dep_2002$VOTOS/state_dep_2002$VOTOS_TOTAIS
+state_dep_2006$share_tot <- state_dep_2006$VOTOS/state_dep_2006$VOTOS_TOTAIS
+state_dep_2010$share_tot <- state_dep_2010$VOTOS/state_dep_2010$VOTOS_TOTAIS
+state_dep_2014$share_tot <- state_dep_2014$VOTOS/state_dep_2014$VOTOS_TOTAIS
 
 #distrital dep
-distrital_dep_2002$share_tot<-distrital_dep_2002$VOTOS/distrital_dep_2002$VOTOS_TOTAIS
-distrital_dep_2006$share_tot<-distrital_dep_2006$VOTOS/distrital_dep_2006$VOTOS_TOTAIS
-distrital_dep_2010$share_tot<-distrital_dep_2010$VOTOS/distrital_dep_2010$VOTOS_TOTAIS
-distrital_dep_2014$share_tot<-distrital_dep_2014$VOTOS/distrital_dep_2014$VOTOS_TOTAIS
+distrital_dep_2002$share_tot <- distrital_dep_2002$VOTOS/distrital_dep_2002$VOTOS_TOTAIS
+distrital_dep_2006$share_tot <- distrital_dep_2006$VOTOS/distrital_dep_2006$VOTOS_TOTAIS
+distrital_dep_2010$share_tot <- distrital_dep_2010$VOTOS/distrital_dep_2010$VOTOS_TOTAIS
+distrital_dep_2014$share_tot <- distrital_dep_2014$VOTOS/distrital_dep_2014$VOTOS_TOTAIS
 
 #ver dep
-ver_2004$share_tot<-ver_2004$VOTOS/ver_2004$VOTOS_TOTAIS
-ver_2008$share_tot<-ver_2008$VOTOS/ver_2008$VOTOS_TOTAIS
-ver_2012$share_tot<-ver_2012$VOTOS/ver_2012$VOTOS_TOTAIS
-ver_2016$share_tot<-ver_2016$VOTOS/ver_2016$VOTOS_TOTAIS
+ver_2004$share_tot <- ver_2004$VOTOS/ver_2004$VOTOS_TOTAIS
+ver_2008$share_tot <- ver_2008$VOTOS/ver_2008$VOTOS_TOTAIS
+ver_2012$share_tot <- ver_2012$VOTOS/ver_2012$VOTOS_TOTAIS
+ver_2016$share_tot <- ver_2016$VOTOS/ver_2016$VOTOS_TOTAIS
 
 
 
 ## Nominal UE Share
 #fed dep
 fed_dep_2002$shareue_nom<-fed_dep_2002$VOTOS/fed_dep_2002$VOT_UE_NOM
-fed_dep_2006$shareue_nom<-fed_dep_2006$VOTOS/fed_dep_2006$VOT_UE_NOM
-fed_dep_2010$shareue_nom<-fed_dep_2010$VOTOS/fed_dep_2010$VOT_UE_NOM
-fed_dep_2014$shareue_nom<-fed_dep_2014$VOTOS/fed_dep_2014$VOT_UE_NOM
+fed_dep_2006$shareue_nom <- fed_dep_2006$VOTOS/fed_dep_2006$VOT_UE_NOM
+fed_dep_2010$shareue_nom <- fed_dep_2010$VOTOS/fed_dep_2010$VOT_UE_NOM
+fed_dep_2014$shareue_nom <- fed_dep_2014$VOTOS/fed_dep_2014$VOT_UE_NOM
 
 #state dep
-state_dep_2002$shareue_nom<-state_dep_2002$VOTOS/state_dep_2002$VOT_UE_NOM
-state_dep_2006$shareue_nom<-state_dep_2006$VOTOS/state_dep_2006$VOT_UE_NOM
-state_dep_2010$shareue_nom<-state_dep_2010$VOTOS/state_dep_2010$VOT_UE_NOM
-state_dep_2014$shareue_nom<-state_dep_2014$VOTOS/state_dep_2014$VOT_UE_NOM
+state_dep_2002$shareue_nom <- state_dep_2002$VOTOS/state_dep_2002$VOT_UE_NOM
+state_dep_2006$shareue_nom <- state_dep_2006$VOTOS/state_dep_2006$VOT_UE_NOM
+state_dep_2010$shareue_nom <- state_dep_2010$VOTOS/state_dep_2010$VOT_UE_NOM
+state_dep_2014$shareue_nom <- state_dep_2014$VOTOS/state_dep_2014$VOT_UE_NOM
 
 #distrital dep
-distrital_dep_2002$shareue_nom<-distrital_dep_2002$VOTOS/distrital_dep_2002$VOT_UE_NOM
-distrital_dep_2006$shareue_nom<-distrital_dep_2006$VOTOS/distrital_dep_2006$VOT_UE_NOM
-distrital_dep_2010$shareue_nom<-distrital_dep_2010$VOTOS/distrital_dep_2010$VOT_UE_NOM
-distrital_dep_2014$shareue_nom<-distrital_dep_2014$VOTOS/distrital_dep_2014$VOT_UE_NOM
+distrital_dep_2002$shareue_nom <- distrital_dep_2002$VOTOS/distrital_dep_2002$VOT_UE_NOM
+distrital_dep_2006$shareue_nom <- distrital_dep_2006$VOTOS/distrital_dep_2006$VOT_UE_NOM
+distrital_dep_2010$shareue_nom <- distrital_dep_2010$VOTOS/distrital_dep_2010$VOT_UE_NOM
+distrital_dep_2014$shareue_nom <- distrital_dep_2014$VOTOS/distrital_dep_2014$VOT_UE_NOM
 
 #ver dep
-ver_2004$shareue_nom<-ver_2004$VOTOS/ver_2004$VOT_UE_NOM
-ver_2008$shareue_nom<-ver_2008$VOTOS/ver_2008$VOT_UE_NOM
-ver_2012$shareue_nom<-ver_2012$VOTOS/ver_2012$VOT_UE_NOM
-ver_2016$shareue_nom<-ver_2016$VOTOS/ver_2016$VOT_UE_NOM
+ver_2004$shareue_nom <- ver_2004$VOTOS/ver_2004$VOT_UE_NOM
+ver_2008$shareue_nom <- ver_2008$VOTOS/ver_2008$VOT_UE_NOM
+ver_2012$shareue_nom <- ver_2012$VOTOS/ver_2012$VOT_UE_NOM
+ver_2016$shareue_nom <- ver_2016$VOTOS/ver_2016$VOT_UE_NOM
 
 
 ## Total UE Share
 #fed dep
-fed_dep_2002$shareue_tot<-fed_dep_2002$VOTOS/fed_dep_2002$VOT_UE_TOT
-fed_dep_2006$shareue_tot<-fed_dep_2006$VOTOS/fed_dep_2006$VOT_UE_TOT
-fed_dep_2010$shareue_tot<-fed_dep_2010$VOTOS/fed_dep_2010$VOT_UE_TOT
-fed_dep_2014$shareue_tot<-fed_dep_2014$VOTOS/fed_dep_2014$VOT_UE_TOT
+fed_dep_2002$shareue_tot <- fed_dep_2002$VOTOS/fed_dep_2002$VOT_UE_TOT
+fed_dep_2006$shareue_tot <- fed_dep_2006$VOTOS/fed_dep_2006$VOT_UE_TOT
+fed_dep_2010$shareue_tot <- fed_dep_2010$VOTOS/fed_dep_2010$VOT_UE_TOT
+fed_dep_2014$shareue_tot <- fed_dep_2014$VOTOS/fed_dep_2014$VOT_UE_TOT
 
 #state dep
-state_dep_2002$shareue_tot<-state_dep_2002$VOTOS/state_dep_2002$VOT_UE_TOT
-state_dep_2006$shareue_tot<-state_dep_2006$VOTOS/state_dep_2006$VOT_UE_TOT
-state_dep_2010$shareue_tot<-state_dep_2010$VOTOS/state_dep_2010$VOT_UE_TOT
-state_dep_2014$shareue_tot<-state_dep_2014$VOTOS/state_dep_2014$VOT_UE_TOT
+state_dep_2002$shareue_tot <- state_dep_2002$VOTOS/state_dep_2002$VOT_UE_TOT
+state_dep_2006$shareue_tot <- state_dep_2006$VOTOS/state_dep_2006$VOT_UE_TOT
+state_dep_2010$shareue_tot <- state_dep_2010$VOTOS/state_dep_2010$VOT_UE_TOT
+state_dep_2014$shareue_tot <- state_dep_2014$VOTOS/state_dep_2014$VOT_UE_TOT
 
 #distrital dep
-distrital_dep_2002$shareue_tot<-distrital_dep_2002$VOTOS/distrital_dep_2002$VOT_UE_TOT
-distrital_dep_2006$shareue_tot<-distrital_dep_2006$VOTOS/distrital_dep_2006$VOT_UE_TOT
-distrital_dep_2010$shareue_tot<-distrital_dep_2010$VOTOS/distrital_dep_2010$VOT_UE_TOT
-distrital_dep_2014$shareue_tot<-distrital_dep_2014$VOTOS/distrital_dep_2014$VOT_UE_TOT
+distrital_dep_2002$shareue_tot <- distrital_dep_2002$VOTOS/distrital_dep_2002$VOT_UE_TOT
+distrital_dep_2006$shareue_tot <- distrital_dep_2006$VOTOS/distrital_dep_2006$VOT_UE_TOT
+distrital_dep_2010$shareue_tot <- distrital_dep_2010$VOTOS/distrital_dep_2010$VOT_UE_TOT
+distrital_dep_2014$shareue_tot <- distrital_dep_2014$VOTOS/distrital_dep_2014$VOT_UE_TOT
 
 #ver dep
-ver_2004$shareue_tot<-ver_2004$VOTOS/ver_2004$VOT_UE_TOT
-ver_2008$shareue_tot<-ver_2008$VOTOS/ver_2008$VOT_UE_TOT
-ver_2012$shareue_tot<-ver_2012$VOTOS/ver_2012$VOT_UE_TOT
-ver_2016$shareue_tot<-ver_2016$VOTOS/ver_2016$VOT_UE_TOT
+ver_2004$shareue_tot <- ver_2004$VOTOS/ver_2004$VOT_UE_TOT
+ver_2008$shareue_tot <- ver_2008$VOTOS/ver_2008$VOT_UE_TOT
+ver_2012$shareue_tot <- ver_2012$VOTOS/ver_2012$VOT_UE_TOT
+ver_2016$shareue_tot <- ver_2016$VOTOS/ver_2016$VOT_UE_TOT
 
 ########### Number of seats
 
@@ -3297,31 +3297,31 @@ ver_nseats_2016 <- ver_2016%>%
 # merging N SEATS
 
 #fed dep
-fed_dep_2002<- merge(fed_dep_2002, fed_dep_nseats_2002, by=c(  "SIGLA_UE", "idleg"), all.x=TRUE)
-fed_dep_2006<- merge(fed_dep_2006, fed_dep_nseats_2006, by=c(  "SIGLA_UE", "idleg"), all.x=TRUE)
-fed_dep_2010<- merge(fed_dep_2010, fed_dep_nseats_2010, by=c(  "SIGLA_UE", "idleg"), all.x=TRUE)
-fed_dep_2014<- merge(fed_dep_2014, fed_dep_nseats_2014, by=c(  "SIGLA_UE", "idleg"), all.x=TRUE)
+fed_dep_2002 <- merge(fed_dep_2002, fed_dep_nseats_2002, by=c(  "SIGLA_UE", "idleg"), all.x=TRUE)
+fed_dep_2006 <- merge(fed_dep_2006, fed_dep_nseats_2006, by=c(  "SIGLA_UE", "idleg"), all.x=TRUE)
+fed_dep_2010 <- merge(fed_dep_2010, fed_dep_nseats_2010, by=c(  "SIGLA_UE", "idleg"), all.x=TRUE)
+fed_dep_2014 <- merge(fed_dep_2014, fed_dep_nseats_2014, by=c(  "SIGLA_UE", "idleg"), all.x=TRUE)
 
 
 #state dep
-state_dep_2002<- merge(state_dep_2002, state_dep_nseats_2002, by=c("SIGLA_UE", "idleg"), all.x=TRUE)
-state_dep_2006<- merge(state_dep_2006, state_dep_nseats_2006, by=c("SIGLA_UE", "idleg"), all.x=TRUE)
-state_dep_2010<- merge(state_dep_2010, state_dep_nseats_2010, by=c("SIGLA_UE", "idleg"), all.x=TRUE)
-state_dep_2014<- merge(state_dep_2014, state_dep_nseats_2014, by=c("SIGLA_UE", "idleg"), all.x=TRUE)
+state_dep_2002 <- merge(state_dep_2002, state_dep_nseats_2002, by=c("SIGLA_UE", "idleg"), all.x=TRUE)
+state_dep_2006 <- merge(state_dep_2006, state_dep_nseats_2006, by=c("SIGLA_UE", "idleg"), all.x=TRUE)
+state_dep_2010 <- merge(state_dep_2010, state_dep_nseats_2010, by=c("SIGLA_UE", "idleg"), all.x=TRUE)
+state_dep_2014 <- merge(state_dep_2014, state_dep_nseats_2014, by=c("SIGLA_UE", "idleg"), all.x=TRUE)
 
 
 #distrital dep
-distrital_dep_2002<- merge(distrital_dep_2002, distrital_dep_nseats_2002, by=c("SIGLA_UE", "idleg"), all.x=TRUE)
-distrital_dep_2006<- merge(distrital_dep_2006, distrital_dep_nseats_2006, by=c("SIGLA_UE", "idleg"), all.x=TRUE)
-distrital_dep_2010<- merge(distrital_dep_2010, distrital_dep_nseats_2010, by=c("SIGLA_UE", "idleg"), all.x=TRUE)
-distrital_dep_2014<- merge(distrital_dep_2014, distrital_dep_nseats_2014, by=c("SIGLA_UE", "idleg"), all.x=TRUE)
+distrital_dep_2002 <- merge(distrital_dep_2002, distrital_dep_nseats_2002, by=c("SIGLA_UE", "idleg"), all.x=TRUE)
+distrital_dep_2006 <- merge(distrital_dep_2006, distrital_dep_nseats_2006, by=c("SIGLA_UE", "idleg"), all.x=TRUE)
+distrital_dep_2010 <- merge(distrital_dep_2010, distrital_dep_nseats_2010, by=c("SIGLA_UE", "idleg"), all.x=TRUE)
+distrital_dep_2014 <- merge(distrital_dep_2014, distrital_dep_nseats_2014, by=c("SIGLA_UE", "idleg"), all.x=TRUE)
 
 
 #ver
-ver_2004<- merge(ver_2004, ver_nseats_2004, by=c("SIGLA_UE", "idleg"), all.x=TRUE)
-ver_2008<- merge(ver_2008, ver_nseats_2008, by=c("SIGLA_UE", "idleg"), all.x=TRUE)
-ver_2012<- merge(ver_2012, ver_nseats_2012, by=c("SIGLA_UE", "idleg"), all.x=TRUE)
-ver_2016<- merge(ver_2016, ver_nseats_2016, by=c("SIGLA_UE", "idleg"), all.x=TRUE)
+ver_2004 <- merge(ver_2004, ver_nseats_2004, by=c("SIGLA_UE", "idleg"), all.x=TRUE)
+ver_2008 <- merge(ver_2008, ver_nseats_2008, by=c("SIGLA_UE", "idleg"), all.x=TRUE)
+ver_2012 <- merge(ver_2012, ver_nseats_2012, by=c("SIGLA_UE", "idleg"), all.x=TRUE)
+ver_2016 <- merge(ver_2016, ver_nseats_2016, by=c("SIGLA_UE", "idleg"), all.x=TRUE)
 
 
 #### calculating rank difference
