@@ -1,5 +1,5 @@
 ###################################################################
-################# Proportional Closed Races #######################
+################# Proportional Close Races #######################
 ###################################################################
 
 # This script clean, combine and rank data of Brazilian candidates in proportional elections. 
