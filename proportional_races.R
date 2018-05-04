@@ -1157,18 +1157,19 @@ vot_1998 <- vot_1998_2014[[1]]
 cand_1998 <- cand_1998_2014v2[[1]]
 
 vot_1998<- vot_1998 %>% rename(SEQUENCIAL_CANDIDATO = SQ_CANDIDATO)
+vot_1998<- vot_1998 %>% rename(NUMERO_CANDIDATO = NUMERO_CAND)
 
 
 #consolidating votes per candidate
 cand_voto_98 <- vot_1998 %>%
   group_by(ANO_ELEICAO, NUM_TURNO, DESCRICAO_CARGO,CODIGO_CARGO, SEQUENCIAL_CANDIDATO,
-           DESCRICAO_ELEICAO, SIGLA_UF,NUMERO_CAND,NOME_CANDIDATO,NOME_URNA_CANDIDATO, 
+           DESCRICAO_ELEICAO, SIGLA_UF,NUMERO_CANDIDATO,NOME_CANDIDATO,NOME_URNA_CANDIDATO, 
            SEQUENCIAL_LEGENDA, SIGLA_PARTIDO)%>%
   summarise(VOTOS = sum(TOTAL_VOTOS))
 
 
 #Merging votes with candidates
-cand_1998v2 <- cand_1998 %>% left_join(cand_voto_98, by=c("SEQUENCIAL_CANDIDATO", "SIGLA_UF", 
+cand_1998v2 <- cand_1998 %>% left_join(cand_voto_98, by=c("NUMERO_CANDIDATO", "SIGLA_UF", 
                                                           "CODIGO_CARGO", "NUM_TURNO"))
 
 #Debugging #which do not merge?
