@@ -1151,6 +1151,44 @@ save(cand_1998_2014v2, file = paste0(dir_d, "original_unzipped/cand_1998_2014v2.
 load(paste0(dir_d, "original_unzipped/vot_1998_2014.RData"))
 load(paste0(dir_d, "original_unzipped/cand_1998_2014v2.RData"))
 
+#######Elections 1998 ###########
+
+vot_1998 <- vot_1998_2014[[1]]
+cand_1998 <- cand_1998_2014v2[[1]]
+
+vot_1998<- vot_1998 %>% rename(SEQUENCIAL_CANDIDATO = SQ_CANDIDATO)
+
+
+#consolidating votes per candidate
+cand_voto_98 <- vot_1998 %>%
+  group_by(ANO_ELEICAO, NUM_TURNO, DESCRICAO_CARGO,CODIGO_CARGO, SEQUENCIAL_CANDIDATO,
+           DESCRICAO_ELEICAO, SIGLA_UF,NUMERO_CAND,NOME_CANDIDATO,NOME_URNA_CANDIDATO, 
+           SEQUENCIAL_LEGENDA, SIGLA_PARTIDO)%>%
+  summarise(VOTOS = sum(TOTAL_VOTOS))
+
+
+#Merging votes with candidates
+cand_1998v2 <- cand_1998 %>% left_join(cand_voto_98, by=c("SEQUENCIAL_CANDIDATO", "SIGLA_UF", 
+                                                          "CODIGO_CARGO", "NUM_TURNO"))
+
+#Debugging #which do not merge?
+bugs <- anti_join(cand_1998, cand_voto_98, by=c( "SEQUENCIAL_CANDIDATO", "SIGLA_UF", "CODIGO_CARGO", "NUM_TURNO"))
+table(bugs$DESC_SIT_TOT_TURNO)
+table(bugs$DESCRICAO_CARGO)
+table(bugs$DESC_SIT_TOT_TURNO, bugs$DESCRICAO_CARGO)
+table(bugs$DES_SITUACAO_CANDIDATURA, bugs$DESCRICAO_CARGO)
+
+#Verifying duplicity in candidates
+
+problems <- cand_1998v2 %>% group_by(NUM_TURNO, NUMERO_CANDIDATO, CODIGO_CARGO, SIGLA_UE) %>%
+  summarise(total = n()) %>% filter(total > 1)
+
+casos <- cand_1998v2 %>% right_join(problems, by = c("NUM_TURNO", 
+                                                     "NUMERO_CANDIDATO", "CODIGO_CARGO", "SIGLA_UE"))
+
+
+
+
 #######Elections 2002 ###########
 
 vot_2002 <- vot_1998_2014[[2]]
