@@ -1252,6 +1252,137 @@ fed_dep_1998 <- fed_dep_1998%>%
   filter(!(is.na(VOTOS)))
 
 
+#### state DEPUTY ####
+
+#filter to only stateeral representatives
+
+state_dep_1998<- cand_1998v2 %>%
+  filter(CODIGO_CARGO==7)
+
+
+##ordering electoral coalitions
+
+#creating new sequential
+state_dep_1998 <- mutate(state_dep_1998, sq_legenda2 = ifelse(SIGLA_LEGENDA=="", 
+                                                          as.character(SIGLA_PARTIDO.x),  as.character(SIGLA_LEGENDA)))
+
+#creating id for electoral coalition
+state_dep_1998$idleg <-paste0(state_dep_1998$SIGLA_UF,state_dep_1998$CODIGO_CARGO, state_dep_1998$sq_legenda2)
+
+#correcting the dates
+state_dep_1998$DATA_NASCIMENTO <- ifelse(nchar(state_dep_1998$DATA_NASCIMENTO,type = "chars")==8,state_dep_1998$DATA_NASCIMENTO, paste0("0",state_dep_1998$DATA_NASCIMENTO))
+
+#using lubridate
+state_dep_1998$DATA_NASCIMENTO <- dmy(state_dep_1998$DATA_NASCIMENTO)
+
+#ranking candidates
+state_dep_1998 <- state_dep_1998 %>%
+  arrange (idleg, desc(VOTOS), DATA_NASCIMENTO) %>%
+  group_by(idleg) %>% 
+  mutate(rank = rank(idleg, ties.method = "first"))
+
+
+#identifying elected candidates
+state_dep_1998 <- mutate(state_dep_1998, resultado2 = ifelse(DESC_SIT_TOT_TURNO=="ELEITO","Eleito",
+                                                         ifelse(DESC_SIT_TOT_TURNO == "MÉDIA","Eleito", 
+                                                                ifelse(DESC_SIT_TOT_TURNO == "SUPLENTE","Suplente","Não eleito"))))
+
+state_dep_1998$idleg2 <-paste0(state_dep_1998$idleg, state_dep_1998$resultado2)
+
+state_dep_1998 <- state_dep_1998 %>%
+  arrange (idleg2, desc(VOTOS), DATA_NASCIMENTO) %>%
+  group_by(idleg2) %>% 
+  mutate(rank2 = rank(c(idleg2), ties.method = "first"))
+
+#identifying first suplente
+state_dep_1998 <-mutate(state_dep_1998, prim_supl = ifelse((rank2==1 & resultado2=="Suplente"),1,0))
+
+#identifying last elected
+state_dep_1998 <- state_dep_1998 %>%
+  arrange (idleg2, desc(VOTOS), DATA_NASCIMENTO) %>%
+  group_by(idleg2) %>% 
+  mutate(flag = ifelse((rank(c(idleg2), ties.method = "last")==1 & resultado2=="Eleito"),1,0))
+
+#selecting valid columns
+state_dep_1998 <- state_dep_1998%>%
+  dplyr::select(DATA_GERACAO, HORA_GERACAO, ANO_ELEICAO.x, NUM_TURNO, DESCRICAO_CARGO.x, SIGLA_UF, SIGLA_UE, DESCRICAO_UE, 
+                CODIGO_CARGO, DESCRICAO_CARGO.x, NOME_CANDIDATO.x, SEQUENCIAL_CANDIDATO.x, NUMERO_CANDIDATO, CPF_CANDIDATO, 
+                NOME_URNA_CANDIDATO.x, COD_SITUACAO_CANDIDATURA, DES_SITUACAO_CANDIDATURA, NUMERO_PARTIDO, SIGLA_PARTIDO.x,
+                NOME_PARTIDO,CODIGO_LEGENDA, SIGLA_LEGENDA, COMPOSICAO_LEGENDA, NOME_COLIGACAO, CODIGO_OCUPACAO, DESCRICAO_OCUPACAO,
+                DATA_NASCIMENTO, NUM_TITULO_ELEITORAL_CANDIDATO, IDADE_DATA_ELEICAO, CODIGO_SEXO, COD_GRAU_INSTRUCAO, CODIGO_ESTADO_CIVIL,
+                DESCRICAO_ESTADO_CIVIL, CODIGO_NACIONALIDADE, DESCRICAO_NACIONALIDADE, SIGLA_UF_NASCIMENTO, CODIGO_MUNICIPIO_NASCIMENTO,
+                NOME_MUNICIPIO_NASCIMENTO, DESPESA_MAX_CAMPANHA, COD_SIT_TOT_TURNO, DESC_SIT_TOT_TURNO,VOTOS,sq_legenda2,idleg, idleg2, rank, rank2, resultado2, prim_supl, flag)
+
+state_dep_1998 <- state_dep_1998%>%
+  filter(!(is.na(VOTOS)))
+
+
+#### distrital DEPUTY ####
+
+#filter to only distritaleral representatives
+
+distrital_dep_1998<- cand_1998v2 %>%
+  filter(CODIGO_CARGO==8)
+
+
+##ordering electoral coalitions
+
+#creating new sequential
+distrital_dep_1998 <- mutate(distrital_dep_1998, sq_legenda2 = ifelse(SIGLA_LEGENDA=="", 
+                                                              as.character(SIGLA_PARTIDO.x),  as.character(SIGLA_LEGENDA)))
+
+#creating id for electoral coalition
+distrital_dep_1998$idleg <-paste0(distrital_dep_1998$SIGLA_UF,distrital_dep_1998$CODIGO_CARGO, distrital_dep_1998$sq_legenda2)
+
+#correcting the dates
+distrital_dep_1998$DATA_NASCIMENTO <- ifelse(nchar(distrital_dep_1998$DATA_NASCIMENTO,type = "chars")==8,distrital_dep_1998$DATA_NASCIMENTO, paste0("0",distrital_dep_1998$DATA_NASCIMENTO))
+
+#using lubridate
+distrital_dep_1998$DATA_NASCIMENTO <- dmy(distrital_dep_1998$DATA_NASCIMENTO)
+
+#ranking candidates
+distrital_dep_1998 <- distrital_dep_1998 %>%
+  arrange (idleg, desc(VOTOS), DATA_NASCIMENTO) %>%
+  group_by(idleg) %>% 
+  mutate(rank = rank(idleg, ties.method = "first"))
+
+
+#identifying elected candidates
+distrital_dep_1998 <- mutate(distrital_dep_1998, resultado2 = ifelse(DESC_SIT_TOT_TURNO=="ELEITO","Eleito",
+                                                             ifelse(DESC_SIT_TOT_TURNO == "MÉDIA","Eleito", 
+                                                                    ifelse(DESC_SIT_TOT_TURNO == "SUPLENTE","Suplente","Não eleito"))))
+
+distrital_dep_1998$idleg2 <-paste0(distrital_dep_1998$idleg, distrital_dep_1998$resultado2)
+
+distrital_dep_1998 <- distrital_dep_1998 %>%
+  arrange (idleg2, desc(VOTOS), DATA_NASCIMENTO) %>%
+  group_by(idleg2) %>% 
+  mutate(rank2 = rank(c(idleg2), ties.method = "first"))
+
+#identifying first suplente
+distrital_dep_1998 <-mutate(distrital_dep_1998, prim_supl = ifelse((rank2==1 & resultado2=="Suplente"),1,0))
+
+#identifying last elected
+distrital_dep_1998 <- distrital_dep_1998 %>%
+  arrange (idleg2, desc(VOTOS), DATA_NASCIMENTO) %>%
+  group_by(idleg2) %>% 
+  mutate(flag = ifelse((rank(c(idleg2), ties.method = "last")==1 & resultado2=="Eleito"),1,0))
+
+#selecting valid columns
+distrital_dep_1998 <- distrital_dep_1998%>%
+  dplyr::select(DATA_GERACAO, HORA_GERACAO, ANO_ELEICAO.x, NUM_TURNO, DESCRICAO_CARGO.x, SIGLA_UF, SIGLA_UE, DESCRICAO_UE, 
+                CODIGO_CARGO, DESCRICAO_CARGO.x, NOME_CANDIDATO.x, SEQUENCIAL_CANDIDATO.x, NUMERO_CANDIDATO, CPF_CANDIDATO, 
+                NOME_URNA_CANDIDATO.x, COD_SITUACAO_CANDIDATURA, DES_SITUACAO_CANDIDATURA, NUMERO_PARTIDO, SIGLA_PARTIDO.x,
+                NOME_PARTIDO,CODIGO_LEGENDA, SIGLA_LEGENDA, COMPOSICAO_LEGENDA, NOME_COLIGACAO, CODIGO_OCUPACAO, DESCRICAO_OCUPACAO,
+                DATA_NASCIMENTO, NUM_TITULO_ELEITORAL_CANDIDATO, IDADE_DATA_ELEICAO, CODIGO_SEXO, COD_GRAU_INSTRUCAO, CODIGO_ESTADO_CIVIL,
+                DESCRICAO_ESTADO_CIVIL, CODIGO_NACIONALIDADE, DESCRICAO_NACIONALIDADE, SIGLA_UF_NASCIMENTO, CODIGO_MUNICIPIO_NASCIMENTO,
+                NOME_MUNICIPIO_NASCIMENTO, DESPESA_MAX_CAMPANHA, COD_SIT_TOT_TURNO, DESC_SIT_TOT_TURNO,VOTOS,sq_legenda2,idleg, idleg2, rank, rank2, resultado2, prim_supl, flag)
+
+distrital_dep_1998 <- distrital_dep_1998%>%
+  filter(!(is.na(VOTOS)))
+
+
+
 
 #######Elections 2002 ###########
 
