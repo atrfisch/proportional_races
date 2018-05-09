@@ -2208,6 +2208,54 @@ distrital_dep_2014 <- distrital_dep_2014%>%
 load(paste0(dir_d, "original_unzipped/vot_2000_2016.RData"))
 load(paste0(dir_d, "original_unzipped/cand_2000_2016v2.RData"))
 
+#######Elections 2000 ###########
+
+vot_2000 <- vot_2000_2016[[1]]
+cand_2000 <- cand_2000_2016v2[[1]]
+
+### filtros nos candidatos para vereador e primeiro turno e exclusão de repeticoes
+
+cand_2000 <- cand_2000 %>% 
+  filter(CODIGO_CARGO==13) %>% 
+  filter(NUM_TURNO==1) %>% 
+  group_by(CPF_CANDIDATO) %>% 
+  mutate(rank_cand = rank(c(CPF_CANDIDATO), ties.method = "first"))%>% 
+  filter(rank_cand == 1) %>% 
+  dplyr::select(-rank_cand)
+
+vot_2000 <- vot_2000 %>% rename(SEQUENCIAL_CANDIDATO = SQ_CANDIDATO)
+
+#consolidating votes per candidate
+cand_voto_00 <- vot_2000 %>%
+  group_by(ANO_ELEICAO, NUM_TURNO, DESCRICAO_CARGO,CODIGO_CARGO, SEQUENCIAL_CANDIDATO,DESCRICAO_ELEICAO, SIGLA_UE,NUMERO_CAND,NOME_CANDIDATO,NOME_URNA_CANDIDATO, SEQUENCIAL_LEGENDA, SIGLA_PARTIDO)%>%
+  summarise(VOTOS = sum(TOTAL_VOTOS))
+
+#correcting sigla ue 
+
+cand_2000$SIGLA_UE <- as.character(cand_2000$SIGLA_UE)
+vot_2000$SIGLA_UE <- as.character(vot_2000$SIGLA_UE)
+
+#Merging
+cand_2000v2 <- cand_2000 %>% left_join(cand_voto_00, by=c("SEQUENCIAL_CANDIDATO", "SIGLA_UE", "CODIGO_CARGO", "NUM_TURNO"))
+
+#Debugging #which do not merge?
+bugs <- anti_join(cand_2000, cand_voto_00, by=c( "SEQUENCIAL_CANDIDATO", "SIGLA_UE", "CODIGO_CARGO", "NUM_TURNO"))
+table(bugs$DESC_SIT_TOT_TURNO)
+table(bugs$DESCRICAO_CARGO)
+table(bugs$DESC_SIT_TOT_TURNO, bugs$DESCRICAO_CARGO)
+table(bugs$DES_SITUACAO_CANDIDATURA, bugs$DESCRICAO_CARGO)
+
+#Verifying duplicity in candidates
+
+problems <- cand_2000v2 %>% group_by(NUM_TURNO, NUMERO_CANDIDATO, CODIGO_CARGO, SIGLA_UE) %>%
+  summarise(total = n()) %>% filter(total > 1)
+
+casos <- cand_2000v2 %>% right_join(problems, by = c("NUM_TURNO", 
+                                                     "NUMERO_CANDIDATO", "CODIGO_CARGO", "SIGLA_UE"))
+
+
+
+
 #######Elections 2004 ###########
 
 vot_2004 <- vot_2000_2016[[2]]
