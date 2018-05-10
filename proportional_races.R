@@ -2223,23 +2223,59 @@ cand_2000 <- cand_2000 %>%
   filter(rank_cand == 1) %>% 
   dplyr::select(-rank_cand)
 
+# treatment 2000
+problems <- cand_2000 %>% group_by(NUM_TURNO, NUMERO_CANDIDATO, CODIGO_CARGO, SIGLA_UE) %>%
+  summarise(total = n()) %>% filter(total > 1)
+
+casos <- cand_2000 %>% right_join(problems, by = c("NUM_TURNO", 
+                                                   "NUMERO_CANDIDATO", "CODIGO_CARGO", "SIGLA_UE"))
+
+repeated_casos <- casos[duplicated(casos),] #save
+repeated_casos <- repeated_casos %>% mutate(key = paste0(SIGLA_UE, NUM_TURNO, NOME_URNA_CANDIDATO, 
+                                                         NUMERO_CANDIDATO, DESCRICAO_ELEICAO, 
+                                                         NUM_TITULO_ELEITORAL_CANDIDATO, CODIGO_CARGO, SEQUENCIAL_CANDIDATO)) #save
+
+#But keeping only unique
+casos <- unique(casos)
+casos_notvalid <- casos %>% filter(!(  COD_SITUACAO_CANDIDATURA == 1 |
+                                       COD_SITUACAO_CANDIDATURA == 2 | 
+                                       COD_SITUACAO_CANDIDATURA == 4))
+casos_notvalid <- casos_notvalid %>% mutate(key = paste0(SIGLA_UE, NUM_TURNO, NOME_URNA_CANDIDATO, 
+                                                         NUMERO_CANDIDATO, DESCRICAO_ELEICAO, 
+                                                         NUM_TITULO_ELEITORAL_CANDIDATO, CODIGO_CARGO, SEQUENCIAL_CANDIDATO)) #save
+
+exclude <- c(repeated_casos$key, casos_notvalid$key)
+
+cand_2000 <- cand_2000 %>% mutate(key = paste0(SIGLA_UE, NUM_TURNO, NOME_URNA_CANDIDATO, 
+                                               NUMERO_CANDIDATO, DESCRICAO_ELEICAO, 
+                                               NUM_TITULO_ELEITORAL_CANDIDATO, CODIGO_CARGO, SEQUENCIAL_CANDIDATO))
+
+cand_2000 <- cand_2000 %>% filter(!(key %in% exclude))
+cand_2000 <- cand_2000[,-ncol(cand_2000)]
+
+
+# correcting name of variables
 vot_2000 <- vot_2000 %>% rename(SEQUENCIAL_CANDIDATO = SQ_CANDIDATO)
+vot_2000 <- vot_2000 %>% rename(NUMERO_CANDIDATO = NUMERO_CAND)
 
 #consolidating votes per candidate
 cand_voto_00 <- vot_2000 %>%
-  group_by(ANO_ELEICAO, NUM_TURNO, DESCRICAO_CARGO,CODIGO_CARGO, SEQUENCIAL_CANDIDATO,DESCRICAO_ELEICAO, SIGLA_UE,NUMERO_CAND,NOME_CANDIDATO,NOME_URNA_CANDIDATO, SEQUENCIAL_LEGENDA, SIGLA_PARTIDO)%>%
+  group_by(ANO_ELEICAO, NUM_TURNO, DESCRICAO_CARGO,CODIGO_CARGO, SEQUENCIAL_CANDIDATO,DESCRICAO_ELEICAO, SIGLA_UE,NUMERO_CANDIDATO,NOME_CANDIDATO,NOME_URNA_CANDIDATO, SEQUENCIAL_LEGENDA, SIGLA_PARTIDO)%>%
   summarise(VOTOS = sum(TOTAL_VOTOS))
 
-#correcting sigla ue 
+#cleaning problems with sigla_ue in cand_voto
+cand_voto_00 <- cand_voto_00 %>% 
+  filter(CODIGO_CARGO==13)
 
-cand_2000$SIGLA_UE <- as.character(cand_2000$SIGLA_UE)
-vot_2000$SIGLA_UE <- as.character(vot_2000$SIGLA_UE)
+#setting numero candidato  e sigla_ue as numeric
+cand_2000$NUMERO_CANDIDATO <- as.numeric(cand_2000$NUMERO_CANDIDATO)
+cand_voto_00$SIGLA_UE <- as.numeric(cand_voto_00$SIGLA_UE)
 
 #Merging
-cand_2000v2 <- cand_2000 %>% left_join(cand_voto_00, by=c("SEQUENCIAL_CANDIDATO", "SIGLA_UE", "CODIGO_CARGO", "NUM_TURNO"))
+cand_2000v2 <- cand_2000 %>% left_join(cand_voto_00, by=c( "NUMERO_CANDIDATO","SIGLA_UE" ,"CODIGO_CARGO", "NUM_TURNO"))
 
 #Debugging #which do not merge?
-bugs <- anti_join(cand_2000, cand_voto_00, by=c( "SEQUENCIAL_CANDIDATO", "SIGLA_UE", "CODIGO_CARGO", "NUM_TURNO"))
+bugs <- anti_join(cand_2000, cand_voto_00, by=c( "NUMERO_CANDIDATO", "SIGLA_UE", "CODIGO_CARGO", "NUM_TURNO"))
 table(bugs$DESC_SIT_TOT_TURNO)
 table(bugs$DESCRICAO_CARGO)
 table(bugs$DESC_SIT_TOT_TURNO, bugs$DESCRICAO_CARGO)
@@ -2253,6 +2289,62 @@ problems <- cand_2000v2 %>% group_by(NUM_TURNO, NUMERO_CANDIDATO, CODIGO_CARGO, 
 casos <- cand_2000v2 %>% right_join(problems, by = c("NUM_TURNO", 
                                                      "NUMERO_CANDIDATO", "CODIGO_CARGO", "SIGLA_UE"))
 
+
+#### VEREADOR ####
+
+#filter to only Federal representatives
+
+ver_2000 <- cand_2000v2 %>%
+  filter(CODIGO_CARGO==13)
+
+
+#ordering electoral coalitions
+
+ver_2000 <- mutate(ver_2000, sq_legenda2 = ifelse(SEQUENCIAL_LEGENDA==-3, as.character(SIGLA_PARTIDO.x), ifelse(SEQUENCIAL_LEGENDA==-1, as.character(SIGLA_PARTIDO.x),as.character(SEQUENCIAL_LEGENDA))))
+
+ver_2000$idleg <-paste0(ver_2000$SIGLA_UE,ver_2000$CODIGO_CARGO, ver_2000$sq_legenda2)
+
+
+#correcting the dates
+ver_2000$DATA_NASCIMENTO <- ifelse(nchar(ver_2000$DATA_NASCIMENTO,type = "chars")==8,ver_2000$DATA_NASCIMENTO, paste0("0",ver_2000$DATA_NASCIMENTO))
+
+#using lubridate
+ver_2000$DATA_NASCIMENTO <- dmy(ver_2000$DATA_NASCIMENTO)
+
+
+ver_2000 <- ver_2000 %>%
+  arrange (idleg, desc(VOTOS), DATA_NASCIMENTO) %>%
+  group_by(idleg) %>% 
+  mutate(rank = rank(idleg, ties.method = "first"))
+
+ver_2000 <-mutate(ver_2000, resultado2 = ifelse(DESC_SIT_TOT_TURNO=="ELEITO","Eleito",ifelse(DESC_SIT_TOT_TURNO=="ELEITO POR MÉDIA","Eleito", ifelse(DESC_SIT_TOT_TURNO=="SUPLENTE","Suplente","Não eleito"))))
+
+ver_2000$idleg2 <-paste0(ver_2000$idleg, ver_2000$resultado2)
+
+ver_2000 <- ver_2000 %>%
+  arrange (idleg2, desc(VOTOS), DATA_NASCIMENTO) %>%
+  group_by(idleg2) %>% 
+  mutate(rank2 = rank(c(idleg2), ties.method = "first"))
+
+ver_2000 <-mutate(ver_2000, prim_supl = ifelse((rank2==1 & resultado2=="Suplente"),1,0))
+
+ver_2000 <- ver_2000 %>%
+  arrange (idleg2, desc(VOTOS), DATA_NASCIMENTO) %>%
+  group_by(idleg2) %>% 
+  mutate(flag = ifelse( (rank(c(idleg2), ties.method = "last")==1 & resultado2=="Eleito"),1,0))
+
+
+ver_2000<-ver_2000%>%
+  dplyr::select(DATA_GERACAO, HORA_GERACAO, ANO_ELEICAO.x, NUM_TURNO, DESCRICAO_CARGO.x, SIGLA_UF, SIGLA_UE, DESCRICAO_UE, 
+                CODIGO_CARGO, DESCRICAO_CARGO.x, NOME_CANDIDATO.x, SEQUENCIAL_CANDIDATO.x, NUMERO_CANDIDATO, CPF_CANDIDATO, 
+                NOME_URNA_CANDIDATO.x, COD_SITUACAO_CANDIDATURA, DES_SITUACAO_CANDIDATURA, NUMERO_PARTIDO, SIGLA_PARTIDO.x,
+                NOME_PARTIDO,CODIGO_LEGENDA, SIGLA_LEGENDA, COMPOSICAO_LEGENDA, NOME_COLIGACAO, CODIGO_OCUPACAO, DESCRICAO_OCUPACAO,
+                DATA_NASCIMENTO, NUM_TITULO_ELEITORAL_CANDIDATO, IDADE_DATA_ELEICAO, CODIGO_SEXO, COD_GRAU_INSTRUCAO, CODIGO_ESTADO_CIVIL,
+                DESCRICAO_ESTADO_CIVIL, CODIGO_NACIONALIDADE, DESCRICAO_NACIONALIDADE, SIGLA_UF_NASCIMENTO, CODIGO_MUNICIPIO_NASCIMENTO,
+                NOME_MUNICIPIO_NASCIMENTO, DESPESA_MAX_CAMPANHA, COD_SIT_TOT_TURNO, DESC_SIT_TOT_TURNO,VOTOS,sq_legenda2,idleg, idleg2, rank, rank2, resultado2, prim_supl, flag)
+
+ver_2000 <- ver_2000%>%
+  filter(!(is.na(VOTOS)))
 
 
 
@@ -2602,17 +2694,17 @@ ver_2016 <- ver_2016 %>%
 
 #saving data from all elections
 
-distrital_dep_2002_2014 <- list(distrital_dep_2002, distrital_dep_2006, distrital_dep_2010, distrital_dep_2014)
-save(distrital_dep_2002_2014, file = paste0(dir_d, "original_unzipped/distrital_dep_2002_2014.RData"))
+distrital_dep_1998_2014 <- list(distrital_dep_1998, distrital_dep_2002, distrital_dep_2006, distrital_dep_2010, distrital_dep_2014)
+save(distrital_dep_1998_2014, file = paste0(dir_d, "original_unzipped/distrital_dep_1998_2014.RData"))
   
-state_dep_2002_2014 <- list(state_dep_2002, state_dep_2006, state_dep_2010, state_dep_2014)
-save(state_dep_2002_2014, file = paste0(dir_d, "original_unzipped/state_dep_2002_2014.RData"))
+state_dep_1998_2014 <- list(state_dep_1998, state_dep_2002, state_dep_2006, state_dep_2010, state_dep_2014)
+save(state_dep_1998_2014, file = paste0(dir_d, "original_unzipped/state_dep_1998_2014.RData"))
        
-fed_dep_2002_2014 <- list(fed_dep_2002, fed_dep_2006, fed_dep_2010, fed_dep_2014)
-save(fed_dep_2002_2014, file = paste0(dir_d, "original_unzipped/fed_dep_2002_2014.RData"))
+fed_dep_1998_2014 <- list(fed_dep_1998, fed_dep_2002, fed_dep_2006, fed_dep_2010, fed_dep_2014)
+save(fed_dep_1998_2014, file = paste0(dir_d, "original_unzipped/fed_dep_1998_2014.RData"))
 
-ver_2004_2016 <- list(ver_2004, ver_2008, ver_2012, ver_2016)
-save(ver_2004_2016, file = paste0(dir_d, "original_unzipped/ver_2004_2016.RData"))
+ver_2000_2016 <- list(ver_2000, ver_2004, ver_2008, ver_2012, ver_2016)
+save(ver_2000_2016, file = paste0(dir_d, "original_unzipped/ver_2000_2016.RData"))
 
 ################################################################################
 ################################################################################
@@ -2805,7 +2897,32 @@ save(votpar_2000_2016, file =paste0(dir_d, "original_unzipped/votpar_2000_2016.R
 
 #3. Organizing partisan Voting
 
+#loading data
+load(paste0(dir_d, "original_unzipped/votpar_1998_2014.RData"))
+load(paste0(dir_d, "original_unzipped/votpar_2000_2016.RData"))
+
+#Opening archives
+votpar_1998 <- votpar_1998_2014[[1]]
+votpar_2002 <- votpar_1998_2014[[2]]
+votpar_2006 <- votpar_1998_2014[[3]]
+votpar_2010 <- votpar_1998_2014[[4]]
+votpar_2014 <- votpar_1998_2014[[5]]
+
+votpar_2000 <- votpar_2000_2016[[1]]
+votpar_2004 <- votpar_2000_2016[[2]]
+votpar_2008 <- votpar_2000_2016[[3]]
+votpar_2012 <- votpar_2000_2016[[4]]
+votpar_2016 <- votpar_2000_2016[[5]]
+
 # consolidanting  votes per party
+
+votpar_ue_1998 <- votpar_1998  %>%
+  group_by(NUMERO_PARTIDO, SIGLA_UF, CODIGO_CARGO) %>%
+  summarise(VOTOS= sum(QTDE_VOTOS_LEGENDA))
+
+votpar_ue_2000 <- votpar_2000  %>%
+  group_by(NUMERO_PARTIDO, SIGLA_UE, CODIGO_CARGO) %>%
+  summarise(VOTOS= sum(QTDE_VOTOS_LEGENDA))
 
 votpar_ue_2002 <- votpar_2002  %>%
   group_by(NUMERO_PARTIDO, SIGLA_UF, CODIGO_CARGO) %>%
@@ -2842,6 +2959,9 @@ votpar_ue_2016 <- votpar_2016  %>%
 ### auxilia data set from parties in order to get the right idleg
 
 #federal dep
+aux_fed_dep_part_1998 <- fed_dep_1998 %>%
+  group_by(NUMERO_PARTIDO, SIGLA_UF, idleg)%>%
+  summarise(total=n())
 aux_fed_dep_part_2002 <- fed_dep_2002 %>%
   group_by(NUMERO_PARTIDO, SIGLA_UF, idleg)%>%
   summarise(total=n())
@@ -2856,6 +2976,9 @@ aux_fed_dep_part_2014 <- fed_dep_2014 %>%
   summarise(total=n())
 
 #state dep
+aux_state_dep_part_1998 <- state_dep_1998 %>%
+  group_by(NUMERO_PARTIDO, SIGLA_UF, idleg)%>%
+  summarise(total=n())
 aux_state_dep_part_2002 <- state_dep_2002 %>%
   group_by(NUMERO_PARTIDO, SIGLA_UF, idleg)%>%
   summarise(total=n())
@@ -2870,6 +2993,9 @@ aux_state_dep_part_2014 <- state_dep_2014 %>%
   summarise(total=n())
 
 #distrital
+aux_distrital_dep_part_1998 <- distrital_dep_1998 %>%
+  group_by(NUMERO_PARTIDO, SIGLA_UF, idleg)%>%
+  summarise(total=n())
 aux_distrital_dep_part_2002 <- distrital_dep_2002 %>%
   group_by(NUMERO_PARTIDO, SIGLA_UF, idleg)%>%
   summarise(total=n())
@@ -2884,6 +3010,9 @@ aux_distrital_dep_part_2014 <- distrital_dep_2014 %>%
   summarise(total=n())
 
 #vereador
+aux_ver_part_2000 <- ver_2000 %>%
+  group_by(NUMERO_PARTIDO, SIGLA_UE, idleg)%>%
+  summarise(total=n())
 aux_ver_part_2004 <- ver_2004 %>%
   group_by(NUMERO_PARTIDO, SIGLA_UE, idleg)%>%
   summarise(total=n())
@@ -2901,6 +3030,12 @@ aux_ver_part_2016 <- ver_2016 %>%
 # merging information of partisan votes and idleg by type of office
 
 #federal deputy
+fed_dep_votpar_ue_1998 <- merge(votpar_ue_1998, aux_fed_dep_part_1998, by=c("NUMERO_PARTIDO","SIGLA_UF"))
+fed_dep_votpar_ue_1998 <- fed_dep_votpar_ue_1998 %>%
+  filter(CODIGO_CARGO==6)%>%
+  group_by(SIGLA_UF, CODIGO_CARGO, idleg)%>%
+  summarise(VOTOS_LEGENDA = sum(VOTOS))
+
 fed_dep_votpar_ue_2002 <- merge(votpar_ue_2002, aux_fed_dep_part_2002, by=c("NUMERO_PARTIDO","SIGLA_UF"))
 fed_dep_votpar_ue_2002 <- fed_dep_votpar_ue_2002 %>%
   filter(CODIGO_CARGO==6)%>%
@@ -2931,6 +3066,12 @@ fed_dep_votpar_ue_2014 <- fed_dep_votpar_ue_2014 %>%
 # merging information of partisan votes and idleg by type of office
 
 #state deputy
+state_dep_votpar_ue_1998 <- merge(votpar_ue_1998, aux_state_dep_part_1998, by=c("NUMERO_PARTIDO","SIGLA_UF"))
+state_dep_votpar_ue_1998 <- state_dep_votpar_ue_1998 %>%
+  filter(CODIGO_CARGO==7)%>%
+  group_by(SIGLA_UF, CODIGO_CARGO, idleg)%>%
+  summarise(VOTOS_LEGENDA = sum(VOTOS))
+
 
 state_dep_votpar_ue_2002 <- merge(votpar_ue_2002, aux_state_dep_part_2002, by=c("NUMERO_PARTIDO","SIGLA_UF"))
 state_dep_votpar_ue_2002 <- state_dep_votpar_ue_2002 %>%
@@ -2964,6 +3105,11 @@ state_dep_votpar_ue_2014 <- state_dep_votpar_ue_2014 %>%
 # merging information of partisan votes and idleg by type of office
 
 #distrital deputy
+distrital_dep_votpar_ue_1998 <- merge(votpar_ue_1998, aux_distrital_dep_part_1998, by=c("NUMERO_PARTIDO","SIGLA_UF"))
+distrital_dep_votpar_ue_1998 <- distrital_dep_votpar_ue_1998 %>%
+  filter(CODIGO_CARGO==8)%>%
+  group_by(SIGLA_UF, CODIGO_CARGO, idleg)%>%
+  summarise(VOTOS_LEGENDA = sum(VOTOS))
 
 distrital_dep_votpar_ue_2002 <- merge(votpar_ue_2002, aux_distrital_dep_part_2002, by=c("NUMERO_PARTIDO","SIGLA_UF"))
 distrital_dep_votpar_ue_2002 <- distrital_dep_votpar_ue_2002 %>%
@@ -2996,6 +3142,11 @@ distrital_dep_votpar_ue_2014 <- distrital_dep_votpar_ue_2014 %>%
 # merging information of partisan votes and idleg by type of office
 
 # vereador
+ver_votpar_ue_2000 <- merge(votpar_ue_2000, aux_ver_part_2000, by=c("NUMERO_PARTIDO","SIGLA_UE"))
+ver_votpar_ue_2000 <- ver_votpar_ue_2000 %>%
+  filter(CODIGO_CARGO==13)%>%
+  group_by(SIGLA_UE, CODIGO_CARGO, idleg)%>%
+  summarise(VOTOS_LEGENDA = sum(VOTOS))
 
 ver_votpar_ue_2004 <- merge(votpar_ue_2004, aux_ver_part_2004, by=c("NUMERO_PARTIDO","SIGLA_UE"))
 ver_votpar_ue_2004 <- ver_votpar_ue_2004 %>%
@@ -3027,6 +3178,7 @@ ver_votpar_ue_2016 <- ver_votpar_ue_2016 %>%
 # merging votos legendas
 
 #fed dep
+fed_dep_1998 <- merge(fed_dep_1998, fed_dep_votpar_ue_1998, by=c("idleg", "CODIGO_CARGO", "SIGLA_UF"), all.x=TRUE)
 fed_dep_2002 <- merge(fed_dep_2002, fed_dep_votpar_ue_2002, by=c("idleg", "CODIGO_CARGO", "SIGLA_UF"), all.x=TRUE)
 fed_dep_2006 <- merge(fed_dep_2006, fed_dep_votpar_ue_2006, by=c("idleg", "CODIGO_CARGO", "SIGLA_UF"), all.x=TRUE)
 fed_dep_2010 <- merge(fed_dep_2010, fed_dep_votpar_ue_2010, by=c("idleg", "CODIGO_CARGO", "SIGLA_UF"), all.x=TRUE)
@@ -3034,6 +3186,7 @@ fed_dep_2014 <- merge(fed_dep_2014, fed_dep_votpar_ue_2014, by=c("idleg", "CODIG
 
 
 #state dep
+state_dep_1998 <- merge(state_dep_1998, state_dep_votpar_ue_1998, by=c("idleg", "CODIGO_CARGO", "SIGLA_UF"), all.x=TRUE)
 state_dep_2002 <- merge(state_dep_2002, state_dep_votpar_ue_2002, by=c("idleg", "CODIGO_CARGO", "SIGLA_UF"), all.x=TRUE)
 state_dep_2006 <- merge(state_dep_2006, state_dep_votpar_ue_2006, by=c("idleg", "CODIGO_CARGO", "SIGLA_UF"), all.x=TRUE)
 state_dep_2010 <- merge(state_dep_2010, state_dep_votpar_ue_2010, by=c("idleg", "CODIGO_CARGO", "SIGLA_UF"), all.x=TRUE)
@@ -3041,6 +3194,7 @@ state_dep_2014 <- merge(state_dep_2014, state_dep_votpar_ue_2014, by=c("idleg", 
 
 
 #distrital dep
+distrital_dep_1998 <- merge(distrital_dep_1998, distrital_dep_votpar_ue_1998, by=c("idleg", "CODIGO_CARGO", "SIGLA_UF"), all.x=TRUE)
 distrital_dep_2002 <- merge(distrital_dep_2002, distrital_dep_votpar_ue_2002, by=c("idleg", "CODIGO_CARGO", "SIGLA_UF"), all.x=TRUE)
 distrital_dep_2006 <- merge(distrital_dep_2006, distrital_dep_votpar_ue_2006, by=c("idleg", "CODIGO_CARGO", "SIGLA_UF"), all.x=TRUE)
 distrital_dep_2010 <- merge(distrital_dep_2010, distrital_dep_votpar_ue_2010, by=c("idleg", "CODIGO_CARGO", "SIGLA_UF"), all.x=TRUE)
@@ -3048,6 +3202,7 @@ distrital_dep_2014 <- merge(distrital_dep_2014, distrital_dep_votpar_ue_2014, by
 
 
 #ver
+ver_2000 <- merge(ver_2000, ver_votpar_ue_2000, by=c("idleg", "CODIGO_CARGO", "SIGLA_UE"), all.x=TRUE)
 ver_2004 <- merge(ver_2004, ver_votpar_ue_2004, by=c("idleg", "CODIGO_CARGO", "SIGLA_UE"), all.x=TRUE)
 ver_2008 <- merge(ver_2008, ver_votpar_ue_2008, by=c("idleg", "CODIGO_CARGO", "SIGLA_UE"), all.x=TRUE)
 ver_2012 <- merge(ver_2012, ver_votpar_ue_2012, by=c("idleg", "CODIGO_CARGO", "SIGLA_UE"), all.x=TRUE)
@@ -3057,6 +3212,10 @@ ver_2016 <- merge(ver_2016, ver_votpar_ue_2016, by=c("idleg", "CODIGO_CARGO", "S
 #### Creating columns of total nominal votes
 
 #fed dep
+fed_dep_aux_votnom_1998 <- fed_dep_1998 %>%
+  group_by(SIGLA_UE, idleg)%>%
+  summarise(VOTOS_NOMINAIS = sum(VOTOS))
+
 fed_dep_aux_votnom_2002 <- fed_dep_2002 %>%
   group_by(SIGLA_UE, idleg)%>%
   summarise(VOTOS_NOMINAIS = sum(VOTOS))
@@ -3074,6 +3233,10 @@ fed_dep_aux_votnom_2014 <- fed_dep_2014 %>%
   summarise(VOTOS_NOMINAIS = sum(VOTOS))
 
 #state dep
+state_dep_aux_votnom_1998 <- state_dep_1998 %>%
+  group_by(SIGLA_UE, idleg)%>%
+  summarise(VOTOS_NOMINAIS = sum(VOTOS))
+
 state_dep_aux_votnom_2002 <- state_dep_2002 %>%
   group_by(SIGLA_UE, idleg)%>%
   summarise(VOTOS_NOMINAIS = sum(VOTOS))
@@ -3091,6 +3254,10 @@ state_dep_aux_votnom_2014 <- state_dep_2014 %>%
   summarise(VOTOS_NOMINAIS = sum(VOTOS))
 
 #distrital dep
+distrital_dep_aux_votnom_1998 <- distrital_dep_1998 %>%
+  group_by(SIGLA_UE, idleg)%>%
+  summarise(VOTOS_NOMINAIS = sum(VOTOS))
+
 distrital_dep_aux_votnom_2002 <- distrital_dep_2002 %>%
   group_by(SIGLA_UE, idleg)%>%
   summarise(VOTOS_NOMINAIS = sum(VOTOS))
@@ -3108,6 +3275,10 @@ distrital_dep_aux_votnom_2014 <- distrital_dep_2014 %>%
   summarise(VOTOS_NOMINAIS = sum(VOTOS))
 
 #ver
+ver_aux_votnom_2000 <- ver_2000 %>%
+  group_by(SIGLA_UE, idleg)%>%
+  summarise(VOTOS_NOMINAIS = sum(VOTOS))
+
 ver_aux_votnom_2004 <- ver_2004 %>%
   group_by(SIGLA_UE, idleg)%>%
   summarise(VOTOS_NOMINAIS = sum(VOTOS))
@@ -3128,6 +3299,7 @@ ver_aux_votnom_2016 <- ver_2016 %>%
 # merging votos legendas
 
 #fed dep
+fed_dep_1998<- merge(fed_dep_1998, fed_dep_aux_votnom_1998, by=c("idleg",  "SIGLA_UE"), all.x=TRUE)
 fed_dep_2002<- merge(fed_dep_2002, fed_dep_aux_votnom_2002, by=c("idleg",  "SIGLA_UE"), all.x=TRUE)
 fed_dep_2006<- merge(fed_dep_2006, fed_dep_aux_votnom_2006, by=c("idleg",  "SIGLA_UE"), all.x=TRUE)
 fed_dep_2010<- merge(fed_dep_2010, fed_dep_aux_votnom_2010, by=c("idleg",  "SIGLA_UE"), all.x=TRUE)
@@ -3135,6 +3307,7 @@ fed_dep_2014<- merge(fed_dep_2014, fed_dep_aux_votnom_2014, by=c("idleg",  "SIGL
 
 
 #state dep
+state_dep_1998 <- merge(state_dep_1998, state_dep_aux_votnom_1998, by=c("idleg",  "SIGLA_UE"), all.x=TRUE)
 state_dep_2002 <- merge(state_dep_2002, state_dep_aux_votnom_2002, by=c("idleg",  "SIGLA_UE"), all.x=TRUE)
 state_dep_2006 <- merge(state_dep_2006, state_dep_aux_votnom_2006, by=c("idleg",  "SIGLA_UE"), all.x=TRUE)
 state_dep_2010 <- merge(state_dep_2010, state_dep_aux_votnom_2010, by=c("idleg",  "SIGLA_UE"), all.x=TRUE)
@@ -3142,6 +3315,7 @@ state_dep_2014 <- merge(state_dep_2014, state_dep_aux_votnom_2014, by=c("idleg",
 
 
 #distrital dep
+distrital_dep_1998 <- merge(distrital_dep_1998, distrital_dep_aux_votnom_1998, by=c("idleg",  "SIGLA_UE"), all.x=TRUE)
 distrital_dep_2002 <- merge(distrital_dep_2002, distrital_dep_aux_votnom_2002, by=c("idleg",  "SIGLA_UE"), all.x=TRUE)
 distrital_dep_2006 <- merge(distrital_dep_2006, distrital_dep_aux_votnom_2006, by=c("idleg",  "SIGLA_UE"), all.x=TRUE)
 distrital_dep_2010 <- merge(distrital_dep_2010, distrital_dep_aux_votnom_2010, by=c("idleg",  "SIGLA_UE"), all.x=TRUE)
@@ -3149,28 +3323,32 @@ distrital_dep_2014 <- merge(distrital_dep_2014, distrital_dep_aux_votnom_2014, b
 
 
 #ver
+ver_2000 <- merge(ver_2000, ver_aux_votnom_2000, by=c("idleg",  "SIGLA_UE"), all.x=TRUE)
 ver_2004 <- merge(ver_2004, ver_aux_votnom_2004, by=c("idleg",  "SIGLA_UE"), all.x=TRUE)
 ver_2008 <- merge(ver_2008, ver_aux_votnom_2008, by=c("idleg",  "SIGLA_UE"), all.x=TRUE)
 ver_2012 <- merge(ver_2012, ver_aux_votnom_2012, by=c("idleg",  "SIGLA_UE"), all.x=TRUE)
 ver_2016 <- merge(ver_2016, ver_aux_votnom_2016, by=c("idleg",  "SIGLA_UE"), all.x=TRUE)
 
 ### VOTOS TOTAIS
-
+fed_dep_1998$VOTOS_TOTAIS <-fed_dep_1998$VOTOS_LEGENDA + fed_dep_1998$VOTOS_NOMINAIS
 fed_dep_2002$VOTOS_TOTAIS <-fed_dep_2002$VOTOS_LEGENDA + fed_dep_2002$VOTOS_NOMINAIS
 fed_dep_2006$VOTOS_TOTAIS <-fed_dep_2006$VOTOS_LEGENDA + fed_dep_2006$VOTOS_NOMINAIS
 fed_dep_2010$VOTOS_TOTAIS <-fed_dep_2010$VOTOS_LEGENDA + fed_dep_2010$VOTOS_NOMINAIS
 fed_dep_2014$VOTOS_TOTAIS <-fed_dep_2014$VOTOS_LEGENDA + fed_dep_2014$VOTOS_NOMINAIS
 
+state_dep_1998$VOTOS_TOTAIS <-state_dep_1998$VOTOS_LEGENDA + state_dep_1998$VOTOS_NOMINAIS
 state_dep_2002$VOTOS_TOTAIS <-state_dep_2002$VOTOS_LEGENDA + state_dep_2002$VOTOS_NOMINAIS
 state_dep_2006$VOTOS_TOTAIS <-state_dep_2006$VOTOS_LEGENDA + state_dep_2006$VOTOS_NOMINAIS
 state_dep_2010$VOTOS_TOTAIS <-state_dep_2010$VOTOS_LEGENDA + state_dep_2010$VOTOS_NOMINAIS
 state_dep_2014$VOTOS_TOTAIS <-state_dep_2014$VOTOS_LEGENDA + state_dep_2014$VOTOS_NOMINAIS
 
+distrital_dep_1998$VOTOS_TOTAIS <-distrital_dep_1998$VOTOS_LEGENDA + distrital_dep_1998$VOTOS_NOMINAIS
 distrital_dep_2002$VOTOS_TOTAIS <-distrital_dep_2002$VOTOS_LEGENDA + distrital_dep_2002$VOTOS_NOMINAIS
 distrital_dep_2006$VOTOS_TOTAIS <-distrital_dep_2006$VOTOS_LEGENDA + distrital_dep_2006$VOTOS_NOMINAIS
 distrital_dep_2010$VOTOS_TOTAIS <-distrital_dep_2010$VOTOS_LEGENDA + distrital_dep_2010$VOTOS_NOMINAIS
 distrital_dep_2014$VOTOS_TOTAIS <-distrital_dep_2014$VOTOS_LEGENDA + distrital_dep_2014$VOTOS_NOMINAIS
 
+ver_2000$VOTOS_TOTAIS <-ver_2000$VOTOS_LEGENDA + ver_2000$VOTOS_NOMINAIS
 ver_2004$VOTOS_TOTAIS <-ver_2004$VOTOS_LEGENDA + ver_2004$VOTOS_NOMINAIS
 ver_2008$VOTOS_TOTAIS <-ver_2008$VOTOS_LEGENDA + ver_2008$VOTOS_NOMINAIS
 ver_2012$VOTOS_TOTAIS <-ver_2012$VOTOS_LEGENDA + ver_2012$VOTOS_NOMINAIS
@@ -3180,6 +3358,10 @@ ver_2016$VOTOS_TOTAIS <-ver_2016$VOTOS_LEGENDA + ver_2016$VOTOS_NOMINAIS
 #### creating total nominal votes in UE
 
 #fed dep
+fed_dep_aux_votuenom_1998 <- fed_dep_1998 %>%
+  group_by(SIGLA_UE)%>%
+  summarise(VOT_UE_NOM = sum(VOTOS))
+
 fed_dep_aux_votuenom_2002 <- fed_dep_2002 %>%
   group_by(SIGLA_UE)%>%
   summarise(VOT_UE_NOM = sum(VOTOS))
@@ -3197,6 +3379,11 @@ fed_dep_aux_votuenom_2014 <- fed_dep_2014 %>%
   summarise(VOT_UE_NOM = sum(VOTOS))
 
 #state dep
+state_dep_aux_votuenom_1998 <- state_dep_1998 %>%
+  group_by(SIGLA_UE)%>%
+  summarise(VOT_UE_NOM = sum(VOTOS))
+
+
 state_dep_aux_votuenom_2002 <- state_dep_2002 %>%
   group_by(SIGLA_UE)%>%
   summarise(VOT_UE_NOM = sum(VOTOS))
@@ -3214,6 +3401,11 @@ state_dep_aux_votuenom_2014 <- state_dep_2014 %>%
   summarise(VOT_UE_NOM = sum(VOTOS))
 
 #distrital dep
+distrital_dep_aux_votuenom_1998 <- distrital_dep_1998 %>%
+  group_by(SIGLA_UE)%>%
+  summarise(VOT_UE_NOM = sum(VOTOS))
+
+
 distrital_dep_aux_votuenom_2002 <- distrital_dep_2002 %>%
   group_by(SIGLA_UE)%>%
   summarise(VOT_UE_NOM = sum(VOTOS))
@@ -3231,6 +3423,10 @@ distrital_dep_aux_votuenom_2014 <- distrital_dep_2014 %>%
   summarise(VOT_UE_NOM = sum(VOTOS))
 
 #ver
+ver_aux_votuenom_2000 <- ver_2000 %>%
+  group_by(SIGLA_UE)%>%
+  summarise(VOT_UE_NOM = sum(VOTOS))
+
 ver_aux_votuenom_2004 <- ver_2004 %>%
   group_by(SIGLA_UE)%>%
   summarise(VOT_UE_NOM = sum(VOTOS))
@@ -3251,6 +3447,7 @@ ver_aux_votuenom_2016 <- ver_2016 %>%
 # merging votos legendas
 
 #fed dep
+fed_dep_1998 <- merge(fed_dep_1998, fed_dep_aux_votuenom_1998, by=c("SIGLA_UE"), all.x=TRUE)
 fed_dep_2002 <- merge(fed_dep_2002, fed_dep_aux_votuenom_2002, by=c("SIGLA_UE"), all.x=TRUE)
 fed_dep_2006 <- merge(fed_dep_2006, fed_dep_aux_votuenom_2006, by=c("SIGLA_UE"), all.x=TRUE)
 fed_dep_2010 <- merge(fed_dep_2010, fed_dep_aux_votuenom_2010, by=c("SIGLA_UE"), all.x=TRUE)
@@ -3258,6 +3455,7 @@ fed_dep_2014 <- merge(fed_dep_2014, fed_dep_aux_votuenom_2014, by=c("SIGLA_UE"),
 
 
 #state dep
+state_dep_1998 <- merge(state_dep_1998, state_dep_aux_votuenom_1998, by=c("SIGLA_UE"), all.x=TRUE)
 state_dep_2002 <- merge(state_dep_2002, state_dep_aux_votuenom_2002, by=c("SIGLA_UE"), all.x=TRUE)
 state_dep_2006 <- merge(state_dep_2006, state_dep_aux_votuenom_2006, by=c("SIGLA_UE"), all.x=TRUE)
 state_dep_2010 <- merge(state_dep_2010, state_dep_aux_votuenom_2010, by=c("SIGLA_UE"), all.x=TRUE)
@@ -3265,6 +3463,7 @@ state_dep_2014 <- merge(state_dep_2014, state_dep_aux_votuenom_2014, by=c("SIGLA
 
 
 #distrital dep
+distrital_dep_1998 <- merge(distrital_dep_1998, distrital_dep_aux_votuenom_1998, by=c("SIGLA_UE"), all.x=TRUE)
 distrital_dep_2002 <- merge(distrital_dep_2002, distrital_dep_aux_votuenom_2002, by=c("SIGLA_UE"), all.x=TRUE)
 distrital_dep_2006 <- merge(distrital_dep_2006, distrital_dep_aux_votuenom_2006, by=c("SIGLA_UE"), all.x=TRUE)
 distrital_dep_2010 <- merge(distrital_dep_2010, distrital_dep_aux_votuenom_2010, by=c("SIGLA_UE"), all.x=TRUE)
@@ -3272,6 +3471,7 @@ distrital_dep_2014 <- merge(distrital_dep_2014, distrital_dep_aux_votuenom_2014,
 
 
 #ver
+ver_2000 <- merge(ver_2000, ver_aux_votuenom_2000, by=c("SIGLA_UE"), all.x=TRUE)
 ver_2004 <- merge(ver_2004, ver_aux_votuenom_2004, by=c("SIGLA_UE"), all.x=TRUE)
 ver_2008 <- merge(ver_2008, ver_aux_votuenom_2008, by=c("SIGLA_UE"), all.x=TRUE)
 ver_2012 <- merge(ver_2012, ver_aux_votuenom_2012, by=c("SIGLA_UE"), all.x=TRUE)
@@ -3281,6 +3481,10 @@ ver_2016 <- merge(ver_2016, ver_aux_votuenom_2016, by=c("SIGLA_UE"), all.x=TRUE)
 #### creating total  votes in UE
 
 #fed dep
+fed_dep_aux_vottotnom_1998 <- fed_dep_1998 %>%
+  group_by(SIGLA_UE)%>%
+  summarise(VOT_UE_TOT = sum(VOTOS_TOTAIS))
+
 fed_dep_aux_vottotnom_2002 <- fed_dep_2002 %>%
   group_by(SIGLA_UE)%>%
   summarise(VOT_UE_TOT = sum(VOTOS_TOTAIS))
@@ -3298,6 +3502,10 @@ fed_dep_aux_vottotnom_2014 <- fed_dep_2014 %>%
   summarise(VOT_UE_TOT = sum(VOTOS_TOTAIS))
 
 #state dep
+state_dep_aux_vottotnom_1998 <- state_dep_1998 %>%
+  group_by(SIGLA_UE)%>%
+  summarise(VOT_UE_TOT = sum(VOTOS_TOTAIS))
+
 state_dep_aux_vottotnom_2002 <- state_dep_2002 %>%
   group_by(SIGLA_UE)%>%
   summarise(VOT_UE_TOT = sum(VOTOS_TOTAIS))
@@ -3315,6 +3523,10 @@ state_dep_aux_vottotnom_2014 <- state_dep_2014 %>%
   summarise(VOT_UE_TOT = sum(VOTOS_TOTAIS))
 
 #distrital dep
+distrital_dep_aux_vottotnom_1998 <- distrital_dep_1998 %>%
+  group_by(SIGLA_UE)%>%
+  summarise(VOT_UE_TOT = sum(VOTOS_TOTAIS))
+
 distrital_dep_aux_vottotnom_2002 <- distrital_dep_2002 %>%
   group_by(SIGLA_UE)%>%
   summarise(VOT_UE_TOT = sum(VOTOS_TOTAIS))
@@ -3332,6 +3544,11 @@ distrital_dep_aux_vottotnom_2014 <- distrital_dep_2014 %>%
   summarise(VOT_UE_TOT = sum(VOTOS_TOTAIS))
 
 #ver
+ver_aux_vottotnom_2000 <- ver_2000 %>%
+  group_by(SIGLA_UE)%>%
+  summarise(VOT_UE_TOT = sum(VOTOS_TOTAIS))
+
+
 ver_aux_vottotnom_2004 <- ver_2004 %>%
   group_by(SIGLA_UE)%>%
   summarise(VOT_UE_TOT = sum(VOTOS_TOTAIS))
@@ -3352,6 +3569,7 @@ ver_aux_vottotnom_2016 <- ver_2016 %>%
 # merging VOTOS_TOTAIS legendas
 
 #fed dep
+fed_dep_1998 <- merge(fed_dep_1998, fed_dep_aux_vottotnom_1998, by=c("SIGLA_UE"), all.x=TRUE)
 fed_dep_2002 <- merge(fed_dep_2002, fed_dep_aux_vottotnom_2002, by=c("SIGLA_UE"), all.x=TRUE)
 fed_dep_2006 <- merge(fed_dep_2006, fed_dep_aux_vottotnom_2006, by=c("SIGLA_UE"), all.x=TRUE)
 fed_dep_2010 <- merge(fed_dep_2010, fed_dep_aux_vottotnom_2010, by=c("SIGLA_UE"), all.x=TRUE)
@@ -3359,6 +3577,7 @@ fed_dep_2014 <- merge(fed_dep_2014, fed_dep_aux_vottotnom_2014, by=c("SIGLA_UE")
 
 
 #state dep
+state_dep_1998 <- merge(state_dep_1998, state_dep_aux_vottotnom_1998, by=c("SIGLA_UE"), all.x=TRUE)
 state_dep_2002 <- merge(state_dep_2002, state_dep_aux_vottotnom_2002, by=c("SIGLA_UE"), all.x=TRUE)
 state_dep_2006 <- merge(state_dep_2006, state_dep_aux_vottotnom_2006, by=c("SIGLA_UE"), all.x=TRUE)
 state_dep_2010 <- merge(state_dep_2010, state_dep_aux_vottotnom_2010, by=c("SIGLA_UE"), all.x=TRUE)
@@ -3366,6 +3585,7 @@ state_dep_2014 <- merge(state_dep_2014, state_dep_aux_vottotnom_2014, by=c("SIGL
 
 
 #distrital dep
+distrital_dep_1998 <- merge(distrital_dep_1998, distrital_dep_aux_vottotnom_1998, by=c("SIGLA_UE"), all.x=TRUE)
 distrital_dep_2002 <- merge(distrital_dep_2002, distrital_dep_aux_vottotnom_2002, by=c("SIGLA_UE"), all.x=TRUE)
 distrital_dep_2006 <- merge(distrital_dep_2006, distrital_dep_aux_vottotnom_2006, by=c("SIGLA_UE"), all.x=TRUE)
 distrital_dep_2010 <- merge(distrital_dep_2010, distrital_dep_aux_vottotnom_2010, by=c("SIGLA_UE"), all.x=TRUE)
@@ -3373,6 +3593,7 @@ distrital_dep_2014 <- merge(distrital_dep_2014, distrital_dep_aux_vottotnom_2014
 
 
 #ver
+ver_2000 <- merge(ver_2000, ver_aux_vottotnom_2000, by=c("SIGLA_UE"), all.x=TRUE)
 ver_2004 <- merge(ver_2004, ver_aux_vottotnom_2004, by=c("SIGLA_UE"), all.x=TRUE)
 ver_2008 <- merge(ver_2008, ver_aux_vottotnom_2008, by=c("SIGLA_UE"), all.x=TRUE)
 ver_2012 <- merge(ver_2012, ver_aux_vottotnom_2012, by=c("SIGLA_UE"), all.x=TRUE)
@@ -3382,24 +3603,28 @@ ver_2016 <- merge(ver_2016, ver_aux_vottotnom_2016, by=c("SIGLA_UE"), all.x=TRUE
 
 ## Nominal Share
 #fed dep
+fed_dep_1998$share_nom <- fed_dep_1998$VOTOS/fed_dep_1998$VOTOS_NOMINAIS
 fed_dep_2002$share_nom <- fed_dep_2002$VOTOS/fed_dep_2002$VOTOS_NOMINAIS
 fed_dep_2006$share_nom <- fed_dep_2006$VOTOS/fed_dep_2006$VOTOS_NOMINAIS
 fed_dep_2010$share_nom <- fed_dep_2010$VOTOS/fed_dep_2010$VOTOS_NOMINAIS
 fed_dep_2014$share_nom <- fed_dep_2014$VOTOS/fed_dep_2014$VOTOS_NOMINAIS
 
 #state dep
+state_dep_1998$share_nom <-state_dep_1998$VOTOS/state_dep_1998$VOTOS_NOMINAIS
 state_dep_2002$share_nom <-state_dep_2002$VOTOS/state_dep_2002$VOTOS_NOMINAIS
 state_dep_2006$share_nom <-state_dep_2006$VOTOS/state_dep_2006$VOTOS_NOMINAIS
 state_dep_2010$share_nom <-state_dep_2010$VOTOS/state_dep_2010$VOTOS_NOMINAIS
 state_dep_2014$share_nom <-state_dep_2014$VOTOS/state_dep_2014$VOTOS_NOMINAIS
 
 #distrital dep
+distrital_dep_1998$share_nom <- distrital_dep_1998$VOTOS/distrital_dep_1998$VOTOS_NOMINAIS
 distrital_dep_2002$share_nom <- distrital_dep_2002$VOTOS/distrital_dep_2002$VOTOS_NOMINAIS
 distrital_dep_2006$share_nom <- distrital_dep_2006$VOTOS/distrital_dep_2006$VOTOS_NOMINAIS
 distrital_dep_2010$share_nom <- distrital_dep_2010$VOTOS/distrital_dep_2010$VOTOS_NOMINAIS
 distrital_dep_2014$share_nom <- distrital_dep_2014$VOTOS/distrital_dep_2014$VOTOS_NOMINAIS
 
 #ver dep
+ver_2000$share_nom <- ver_2000$VOTOS/ver_2000$VOTOS_NOMINAIS
 ver_2004$share_nom <- ver_2004$VOTOS/ver_2004$VOTOS_NOMINAIS
 ver_2008$share_nom <- ver_2008$VOTOS/ver_2008$VOTOS_NOMINAIS
 ver_2012$share_nom <- ver_2012$VOTOS/ver_2012$VOTOS_NOMINAIS
@@ -3408,24 +3633,28 @@ ver_2016$share_nom <- ver_2016$VOTOS/ver_2016$VOTOS_NOMINAIS
 
 ## Total Share
 #fed dep
+fed_dep_1998$share_tot <- fed_dep_1998$VOTOS/fed_dep_1998$VOTOS_TOTAIS
 fed_dep_2002$share_tot <- fed_dep_2002$VOTOS/fed_dep_2002$VOTOS_TOTAIS
 fed_dep_2006$share_tot <- fed_dep_2006$VOTOS/fed_dep_2006$VOTOS_TOTAIS
 fed_dep_2010$share_tot <- fed_dep_2010$VOTOS/fed_dep_2010$VOTOS_TOTAIS
 fed_dep_2014$share_tot <- fed_dep_2014$VOTOS/fed_dep_2014$VOTOS_TOTAIS
 
 #state dep
+state_dep_1998$share_tot <- state_dep_1998$VOTOS/state_dep_1998$VOTOS_TOTAIS
 state_dep_2002$share_tot <- state_dep_2002$VOTOS/state_dep_2002$VOTOS_TOTAIS
 state_dep_2006$share_tot <- state_dep_2006$VOTOS/state_dep_2006$VOTOS_TOTAIS
 state_dep_2010$share_tot <- state_dep_2010$VOTOS/state_dep_2010$VOTOS_TOTAIS
 state_dep_2014$share_tot <- state_dep_2014$VOTOS/state_dep_2014$VOTOS_TOTAIS
 
 #distrital dep
+distrital_dep_1998$share_tot <- distrital_dep_1998$VOTOS/distrital_dep_1998$VOTOS_TOTAIS
 distrital_dep_2002$share_tot <- distrital_dep_2002$VOTOS/distrital_dep_2002$VOTOS_TOTAIS
 distrital_dep_2006$share_tot <- distrital_dep_2006$VOTOS/distrital_dep_2006$VOTOS_TOTAIS
 distrital_dep_2010$share_tot <- distrital_dep_2010$VOTOS/distrital_dep_2010$VOTOS_TOTAIS
 distrital_dep_2014$share_tot <- distrital_dep_2014$VOTOS/distrital_dep_2014$VOTOS_TOTAIS
 
 #ver dep
+ver_2000$share_tot <- ver_2000$VOTOS/ver_2000$VOTOS_TOTAIS
 ver_2004$share_tot <- ver_2004$VOTOS/ver_2004$VOTOS_TOTAIS
 ver_2008$share_tot <- ver_2008$VOTOS/ver_2008$VOTOS_TOTAIS
 ver_2012$share_tot <- ver_2012$VOTOS/ver_2012$VOTOS_TOTAIS
@@ -3435,24 +3664,29 @@ ver_2016$share_tot <- ver_2016$VOTOS/ver_2016$VOTOS_TOTAIS
 
 ## Nominal UE Share
 #fed dep
+fed_dep_1998$shareue_nom<-fed_dep_1998$VOTOS/fed_dep_1998$VOT_UE_NOM
+fed_dep_2002$shareue_nom<-fed_dep_2002$VOTOS/fed_dep_2002$VOT_UE_NOM
 fed_dep_2002$shareue_nom<-fed_dep_2002$VOTOS/fed_dep_2002$VOT_UE_NOM
 fed_dep_2006$shareue_nom <- fed_dep_2006$VOTOS/fed_dep_2006$VOT_UE_NOM
 fed_dep_2010$shareue_nom <- fed_dep_2010$VOTOS/fed_dep_2010$VOT_UE_NOM
 fed_dep_2014$shareue_nom <- fed_dep_2014$VOTOS/fed_dep_2014$VOT_UE_NOM
 
 #state dep
+state_dep_1998$shareue_nom <- state_dep_1998$VOTOS/state_dep_1998$VOT_UE_NOM
 state_dep_2002$shareue_nom <- state_dep_2002$VOTOS/state_dep_2002$VOT_UE_NOM
 state_dep_2006$shareue_nom <- state_dep_2006$VOTOS/state_dep_2006$VOT_UE_NOM
 state_dep_2010$shareue_nom <- state_dep_2010$VOTOS/state_dep_2010$VOT_UE_NOM
 state_dep_2014$shareue_nom <- state_dep_2014$VOTOS/state_dep_2014$VOT_UE_NOM
 
 #distrital dep
+distrital_dep_1998$shareue_nom <- distrital_dep_1998$VOTOS/distrital_dep_1998$VOT_UE_NOM
 distrital_dep_2002$shareue_nom <- distrital_dep_2002$VOTOS/distrital_dep_2002$VOT_UE_NOM
 distrital_dep_2006$shareue_nom <- distrital_dep_2006$VOTOS/distrital_dep_2006$VOT_UE_NOM
 distrital_dep_2010$shareue_nom <- distrital_dep_2010$VOTOS/distrital_dep_2010$VOT_UE_NOM
 distrital_dep_2014$shareue_nom <- distrital_dep_2014$VOTOS/distrital_dep_2014$VOT_UE_NOM
 
 #ver dep
+ver_2000$shareue_nom <- ver_2000$VOTOS/ver_2000$VOT_UE_NOM
 ver_2004$shareue_nom <- ver_2004$VOTOS/ver_2004$VOT_UE_NOM
 ver_2008$shareue_nom <- ver_2008$VOTOS/ver_2008$VOT_UE_NOM
 ver_2012$shareue_nom <- ver_2012$VOTOS/ver_2012$VOT_UE_NOM
@@ -3461,24 +3695,28 @@ ver_2016$shareue_nom <- ver_2016$VOTOS/ver_2016$VOT_UE_NOM
 
 ## Total UE Share
 #fed dep
+fed_dep_1998$shareue_tot <- fed_dep_1998$VOTOS/fed_dep_1998$VOT_UE_TOT
 fed_dep_2002$shareue_tot <- fed_dep_2002$VOTOS/fed_dep_2002$VOT_UE_TOT
 fed_dep_2006$shareue_tot <- fed_dep_2006$VOTOS/fed_dep_2006$VOT_UE_TOT
 fed_dep_2010$shareue_tot <- fed_dep_2010$VOTOS/fed_dep_2010$VOT_UE_TOT
 fed_dep_2014$shareue_tot <- fed_dep_2014$VOTOS/fed_dep_2014$VOT_UE_TOT
 
 #state dep
+state_dep_1998$shareue_tot <- state_dep_1998$VOTOS/state_dep_1998$VOT_UE_TOT
 state_dep_2002$shareue_tot <- state_dep_2002$VOTOS/state_dep_2002$VOT_UE_TOT
 state_dep_2006$shareue_tot <- state_dep_2006$VOTOS/state_dep_2006$VOT_UE_TOT
 state_dep_2010$shareue_tot <- state_dep_2010$VOTOS/state_dep_2010$VOT_UE_TOT
 state_dep_2014$shareue_tot <- state_dep_2014$VOTOS/state_dep_2014$VOT_UE_TOT
 
 #distrital dep
+distrital_dep_1998$shareue_tot <- distrital_dep_1998$VOTOS/distrital_dep_1998$VOT_UE_TOT
 distrital_dep_2002$shareue_tot <- distrital_dep_2002$VOTOS/distrital_dep_2002$VOT_UE_TOT
 distrital_dep_2006$shareue_tot <- distrital_dep_2006$VOTOS/distrital_dep_2006$VOT_UE_TOT
 distrital_dep_2010$shareue_tot <- distrital_dep_2010$VOTOS/distrital_dep_2010$VOT_UE_TOT
 distrital_dep_2014$shareue_tot <- distrital_dep_2014$VOTOS/distrital_dep_2014$VOT_UE_TOT
 
 #ver dep
+ver_2000$shareue_tot <- ver_2000$VOTOS/ver_2000$VOT_UE_TOT
 ver_2004$shareue_tot <- ver_2004$VOTOS/ver_2004$VOT_UE_TOT
 ver_2008$shareue_tot <- ver_2008$VOTOS/ver_2008$VOT_UE_TOT
 ver_2012$shareue_tot <- ver_2012$VOTOS/ver_2012$VOT_UE_TOT
@@ -3487,6 +3725,10 @@ ver_2016$shareue_tot <- ver_2016$VOTOS/ver_2016$VOT_UE_TOT
 ########### Number of seats
 
 ### fed dep
+fed_dep_nseats_1998 <- fed_dep_1998%>%
+  filter(flag==1)%>%
+  dplyr::select(SIGLA_UE, idleg, rank)%>%
+  rename(n_seat = rank)
 
 fed_dep_nseats_2002 <- fed_dep_2002%>%
   filter(flag==1)%>%
@@ -3509,6 +3751,10 @@ fed_dep_nseats_2014 <- fed_dep_2014%>%
   rename(n_seat = rank)
 
 ### state dep
+state_dep_nseats_1998 <- state_dep_1998%>%
+  filter(flag==1)%>%
+  dplyr::select(SIGLA_UE, idleg, rank)%>%
+  rename(n_seat = rank)
 
 state_dep_nseats_2002 <- state_dep_2002%>%
   filter(flag==1)%>%
@@ -3533,6 +3779,11 @@ state_dep_nseats_2014 <- state_dep_2014%>%
 
 ### distrital dep
 
+distrital_dep_nseats_1998 <- distrital_dep_1998%>%
+  filter(flag==1)%>%
+  dplyr::select(SIGLA_UE, idleg, rank)%>%
+  rename(n_seat = rank)
+
 distrital_dep_nseats_2002 <- distrital_dep_2002%>%
   filter(flag==1)%>%
   dplyr::select(SIGLA_UE, idleg, rank)%>%
@@ -3554,6 +3805,10 @@ distrital_dep_nseats_2014 <- distrital_dep_2014%>%
   rename(n_seat = rank)
 
 ### ver
+ver_nseats_2000 <- ver_2000%>%
+  filter(flag==1)%>%
+  dplyr::select(SIGLA_UE, idleg, rank)%>%
+  rename(n_seat = rank)
 
 ver_nseats_2004 <- ver_2004%>%
   filter(flag==1)%>%
@@ -3578,6 +3833,7 @@ ver_nseats_2016 <- ver_2016%>%
 # merging N SEATS
 
 #fed dep
+fed_dep_1998 <- merge(fed_dep_1998, fed_dep_nseats_1998, by=c(  "SIGLA_UE", "idleg"), all.x=TRUE)
 fed_dep_2002 <- merge(fed_dep_2002, fed_dep_nseats_2002, by=c(  "SIGLA_UE", "idleg"), all.x=TRUE)
 fed_dep_2006 <- merge(fed_dep_2006, fed_dep_nseats_2006, by=c(  "SIGLA_UE", "idleg"), all.x=TRUE)
 fed_dep_2010 <- merge(fed_dep_2010, fed_dep_nseats_2010, by=c(  "SIGLA_UE", "idleg"), all.x=TRUE)
@@ -3585,6 +3841,7 @@ fed_dep_2014 <- merge(fed_dep_2014, fed_dep_nseats_2014, by=c(  "SIGLA_UE", "idl
 
 
 #state dep
+state_dep_1998 <- merge(state_dep_1998, state_dep_nseats_1998, by=c("SIGLA_UE", "idleg"), all.x=TRUE)
 state_dep_2002 <- merge(state_dep_2002, state_dep_nseats_2002, by=c("SIGLA_UE", "idleg"), all.x=TRUE)
 state_dep_2006 <- merge(state_dep_2006, state_dep_nseats_2006, by=c("SIGLA_UE", "idleg"), all.x=TRUE)
 state_dep_2010 <- merge(state_dep_2010, state_dep_nseats_2010, by=c("SIGLA_UE", "idleg"), all.x=TRUE)
@@ -3592,6 +3849,7 @@ state_dep_2014 <- merge(state_dep_2014, state_dep_nseats_2014, by=c("SIGLA_UE", 
 
 
 #distrital dep
+distrital_dep_1998 <- merge(distrital_dep_1998, distrital_dep_nseats_1998, by=c("SIGLA_UE", "idleg"), all.x=TRUE)
 distrital_dep_2002 <- merge(distrital_dep_2002, distrital_dep_nseats_2002, by=c("SIGLA_UE", "idleg"), all.x=TRUE)
 distrital_dep_2006 <- merge(distrital_dep_2006, distrital_dep_nseats_2006, by=c("SIGLA_UE", "idleg"), all.x=TRUE)
 distrital_dep_2010 <- merge(distrital_dep_2010, distrital_dep_nseats_2010, by=c("SIGLA_UE", "idleg"), all.x=TRUE)
@@ -3599,15 +3857,20 @@ distrital_dep_2014 <- merge(distrital_dep_2014, distrital_dep_nseats_2014, by=c(
 
 
 #ver
+ver_2000 <- merge(ver_2000, ver_nseats_2000, by=c("SIGLA_UE", "idleg"), all.x=TRUE)
 ver_2004 <- merge(ver_2004, ver_nseats_2004, by=c("SIGLA_UE", "idleg"), all.x=TRUE)
 ver_2008 <- merge(ver_2008, ver_nseats_2008, by=c("SIGLA_UE", "idleg"), all.x=TRUE)
 ver_2012 <- merge(ver_2012, ver_nseats_2012, by=c("SIGLA_UE", "idleg"), all.x=TRUE)
 ver_2016 <- merge(ver_2016, ver_nseats_2016, by=c("SIGLA_UE", "idleg"), all.x=TRUE)
 
-
 #### calculating rank difference
 
 #fed dep
+fed_dep_1998<-fed_dep_1998%>%
+  arrange(idleg, -VOTOS, DATA_NASCIMENTO)
+fed_dep_1998$dist_pos <- fed_dep_1998$n_seat - fed_dep_1998$rank
+
+
 fed_dep_2002<-fed_dep_2002%>%
   arrange(idleg, -VOTOS, DATA_NASCIMENTO)
 fed_dep_2002$dist_pos <- fed_dep_2002$n_seat - fed_dep_2002$rank
@@ -3625,6 +3888,10 @@ fed_dep_2014<-fed_dep_2014%>%
 fed_dep_2014$dist_pos <- fed_dep_2014$n_seat - fed_dep_2014$rank
 
 #state dep
+state_dep_1998<-state_dep_1998%>%
+  arrange(idleg, -VOTOS, DATA_NASCIMENTO)
+state_dep_1998$dist_pos <- state_dep_1998$n_seat - state_dep_1998$rank
+
 state_dep_2002<-state_dep_2002%>%
   arrange(idleg, -VOTOS, DATA_NASCIMENTO)
 state_dep_2002$dist_pos <- state_dep_2002$n_seat - state_dep_2002$rank
@@ -3643,6 +3910,10 @@ state_dep_2014$dist_pos <- state_dep_2014$n_seat - state_dep_2014$rank
 
 
 #distrital dep
+distrital_dep_1998<-distrital_dep_1998%>%
+  arrange(idleg, -VOTOS, DATA_NASCIMENTO)
+distrital_dep_1998$dist_pos <- distrital_dep_1998$n_seat - distrital_dep_1998$rank
+
 distrital_dep_2002<-distrital_dep_2002%>%
   arrange(idleg, -VOTOS, DATA_NASCIMENTO)
 distrital_dep_2002$dist_pos <- distrital_dep_2002$n_seat - distrital_dep_2002$rank
@@ -3660,6 +3931,10 @@ distrital_dep_2014<-distrital_dep_2014%>%
 distrital_dep_2014$dist_pos <- distrital_dep_2014$n_seat - distrital_dep_2014$rank
 
 #ver
+ver_2000<-ver_2000%>%
+  arrange(idleg, -VOTOS, DATA_NASCIMENTO)
+ver_2000$dist_pos <- ver_2000$n_seat - ver_2000$rank
+
 ver_2004<-ver_2004%>%
   arrange(idleg, -VOTOS, DATA_NASCIMENTO)
 ver_2004$dist_pos <- ver_2004$n_seat - ver_2004$rank
@@ -3681,6 +3956,10 @@ ver_2016$dist_pos <- ver_2016$n_seat - ver_2016$rank
 
 
 ### fed dep
+fed_dep_votmarg_1998 <- fed_dep_1998%>%
+  filter(flag==1)%>%
+  dplyr::select(SIGLA_UE, idleg, VOTOS, share_nom, share_tot, shareue_nom, shareue_tot)%>%
+  rename(last_elected = VOTOS, last_sh_nom=share_nom, last_sh_tot = share_tot, last_shue_nom=shareue_nom, last_shue_tot = shareue_tot)
 
 fed_dep_votmarg_2002 <- fed_dep_2002%>%
   filter(flag==1)%>%
@@ -3703,6 +3982,10 @@ fed_dep_votmarg_2014 <- fed_dep_2014%>%
   rename(last_elected = VOTOS, last_sh_nom=share_nom, last_sh_tot = share_tot, last_shue_nom=shareue_nom, last_shue_tot =shareue_tot )
 
 ### state dep
+state_dep_votmarg_1998 <- state_dep_1998%>%
+  filter(flag==1)%>%
+  dplyr::select(SIGLA_UE, idleg, VOTOS, share_nom, share_tot, shareue_nom, shareue_tot)%>%
+  rename(last_elected = VOTOS, last_sh_nom=share_nom, last_sh_tot = share_tot, last_shue_nom=shareue_nom, last_shue_tot = shareue_tot)
 
 state_dep_votmarg_2002 <- state_dep_2002%>%
   filter(flag==1)%>%
@@ -3726,6 +4009,10 @@ state_dep_votmarg_2014 <- state_dep_2014%>%
 
 
 ### distrital dep
+distrital_dep_votmarg_1998 <- distrital_dep_1998%>%
+  filter(flag==1)%>%
+  dplyr::select(SIGLA_UE, idleg, VOTOS, share_nom, share_tot, shareue_nom, shareue_tot)%>%
+  rename(last_elected = VOTOS, last_sh_nom=share_nom, last_sh_tot = share_tot, last_shue_nom=shareue_nom, last_shue_tot = shareue_tot)
 
 distrital_dep_votmarg_2002 <- distrital_dep_2002%>%
   filter(flag==1)%>%
@@ -3748,6 +4035,10 @@ distrital_dep_votmarg_2014 <- distrital_dep_2014%>%
   rename(last_elected = VOTOS, last_sh_nom=share_nom, last_sh_tot = share_tot, last_shue_nom=shareue_nom, last_shue_tot = shareue_tot)
 
 ### ver
+ver_votmarg_2000 <- ver_2000%>%
+  filter(flag==1)%>%
+  dplyr::select(SIGLA_UE, idleg, VOTOS, share_nom, share_tot, shareue_nom, shareue_tot)%>%
+  rename(last_elected = VOTOS, last_sh_nom=share_nom, last_sh_tot = share_tot, last_shue_nom=shareue_nom, last_shue_tot = shareue_tot)
 
 ver_votmarg_2004 <- ver_2004%>%
   filter(flag==1)%>%
@@ -3772,13 +4063,14 @@ ver_votmarg_2016 <- ver_2016%>%
 # merging N SEATS
 
 #fed dep
+fed_dep_1998<- merge(fed_dep_1998, fed_dep_votmarg_1998, by=c("SIGLA_UE", "idleg"), all.x=TRUE)
 fed_dep_2002<- merge(fed_dep_2002, fed_dep_votmarg_2002, by=c("SIGLA_UE", "idleg"), all.x=TRUE)
 fed_dep_2006<- merge(fed_dep_2006, fed_dep_votmarg_2006, by=c("SIGLA_UE", "idleg"), all.x=TRUE)
 fed_dep_2010<- merge(fed_dep_2010, fed_dep_votmarg_2010, by=c("SIGLA_UE", "idleg"), all.x=TRUE)
 fed_dep_2014<- merge(fed_dep_2014, fed_dep_votmarg_2014, by=c("SIGLA_UE", "idleg"), all.x=TRUE)
 
-
 #state dep
+state_dep_1998<- merge(state_dep_1998, state_dep_votmarg_1998, by=c("SIGLA_UE", "idleg"), all.x=TRUE)
 state_dep_2002<- merge(state_dep_2002, state_dep_votmarg_2002, by=c("SIGLA_UE", "idleg"), all.x=TRUE)
 state_dep_2006<- merge(state_dep_2006, state_dep_votmarg_2006, by=c("SIGLA_UE", "idleg"), all.x=TRUE)
 state_dep_2010<- merge(state_dep_2010, state_dep_votmarg_2010, by=c("SIGLA_UE", "idleg"), all.x=TRUE)
@@ -3786,6 +4078,7 @@ state_dep_2014<- merge(state_dep_2014, state_dep_votmarg_2014, by=c("SIGLA_UE", 
 
 
 #distrital dep
+distrital_dep_1998<- merge(distrital_dep_1998, distrital_dep_votmarg_1998, by=c("SIGLA_UE", "idleg"), all.x=TRUE)
 distrital_dep_2002<- merge(distrital_dep_2002, distrital_dep_votmarg_2002, by=c("SIGLA_UE", "idleg"), all.x=TRUE)
 distrital_dep_2006<- merge(distrital_dep_2006, distrital_dep_votmarg_2006, by=c("SIGLA_UE", "idleg"), all.x=TRUE)
 distrital_dep_2010<- merge(distrital_dep_2010, distrital_dep_votmarg_2010, by=c("SIGLA_UE", "idleg"), all.x=TRUE)
@@ -3793,6 +4086,7 @@ distrital_dep_2014<- merge(distrital_dep_2014, distrital_dep_votmarg_2014, by=c(
 
 
 #ver
+ver_2000<- merge(ver_2000, ver_votmarg_2000, by=c("SIGLA_UE", "idleg"), all.x=TRUE)
 ver_2004<- merge(ver_2004, ver_votmarg_2004, by=c("SIGLA_UE", "idleg"), all.x=TRUE)
 ver_2008<- merge(ver_2008, ver_votmarg_2008, by=c("SIGLA_UE", "idleg"), all.x=TRUE)
 ver_2012<- merge(ver_2012, ver_votmarg_2012, by=c("SIGLA_UE", "idleg"), all.x=TRUE)
@@ -3802,6 +4096,10 @@ ver_2016<- merge(ver_2016, ver_votmarg_2016, by=c("SIGLA_UE", "idleg"), all.x=TR
 #### calculating vote difference
 
 #fed dep
+fed_dep_1998<-fed_dep_1998%>%
+  arrange(idleg, -VOTOS, DATA_NASCIMENTO)
+fed_dep_1998$dist_vot <- fed_dep_1998$VOTOS - fed_dep_1998$last_elected
+
 fed_dep_2002<-fed_dep_2002%>%
   arrange(idleg, -VOTOS, DATA_NASCIMENTO)
 fed_dep_2002$dist_vot <- fed_dep_2002$VOTOS - fed_dep_2002$last_elected
@@ -3819,6 +4117,10 @@ fed_dep_2014<-fed_dep_2014%>%
 fed_dep_2014$dist_vot <- fed_dep_2014$VOTOS - fed_dep_2014$last_elected
 
 #state dep
+state_dep_1998<-state_dep_1998%>%
+  arrange(idleg, -VOTOS, DATA_NASCIMENTO)
+state_dep_1998$dist_vot <- state_dep_1998$VOTOS - state_dep_1998$last_elected
+
 state_dep_2002<-state_dep_2002%>%
   arrange(idleg, -VOTOS, DATA_NASCIMENTO)
 state_dep_2002$dist_vot <- state_dep_2002$VOTOS - state_dep_2002$last_elected
@@ -3836,6 +4138,10 @@ state_dep_2014<-state_dep_2014%>%
 state_dep_2014$dist_vot <- state_dep_2014$VOTOS - state_dep_2014$last_elected
 
 #distrital dep
+distrital_dep_1998<-distrital_dep_1998%>%
+  arrange(idleg, -VOTOS, DATA_NASCIMENTO)
+distrital_dep_1998$dist_vot <- distrital_dep_1998$VOTOS - distrital_dep_1998$last_elected
+
 distrital_dep_2002<-distrital_dep_2002%>%
   arrange(idleg, -VOTOS, DATA_NASCIMENTO)
 distrital_dep_2002$dist_vot <- distrital_dep_2002$VOTOS - distrital_dep_2002$last_elected
@@ -3854,6 +4160,10 @@ distrital_dep_2014<-distrital_dep_2014%>%
 distrital_dep_2014$dist_vot <- distrital_dep_2014$VOTOS - distrital_dep_2014$last_elected
 
 #ver
+ver_2000<-ver_2000%>%
+  arrange(idleg, -VOTOS, DATA_NASCIMENTO)
+ver_2000$dist_vot <- ver_2000$VOTOS - ver_2000$last_elected
+
 ver_2004<-ver_2004%>%
   arrange(idleg, -VOTOS, DATA_NASCIMENTO)
 ver_2004$dist_vot <- ver_2004$VOTOS - ver_2004$last_elected
@@ -3874,97 +4184,117 @@ ver_2016$dist_vot <- ver_2016$VOTOS - ver_2016$last_elected
 
 
 ### fed dep
+fed_dep_prisupl_1998 <- fed_dep_1998%>%
+  filter(prim_supl==1)%>%
+  dplyr::select(SIGLA_UE, idleg, VOTOS, share_nom, share_tot, shareue_nom, shareue_tot)%>%
+  rename(first_supl = VOTOS, first_sh_nom=share_nom, first_sh_tot = share_tot, first_shue_nom=shareue_nom, first_shue_tot = shareue_tot)
+
 
 fed_dep_prisupl_2002 <- fed_dep_2002%>%
   filter(prim_supl==1)%>%
   dplyr::select(SIGLA_UE, idleg, VOTOS, share_nom, share_tot, shareue_nom, shareue_tot)%>%
-  rename(first_elected = VOTOS, first_sh_nom=share_nom, first_sh_tot = share_tot, first_shue_nom=shareue_nom, first_shue_tot = shareue_tot)
+  rename(first_supl = VOTOS, first_sh_nom=share_nom, first_sh_tot = share_tot, first_shue_nom=shareue_nom, first_shue_tot = shareue_tot)
 
 fed_dep_prisupl_2006 <- fed_dep_2006%>%
   filter(prim_supl==1)%>%
   dplyr::select(SIGLA_UE, idleg, VOTOS, share_nom, share_tot, shareue_nom, shareue_tot)%>%
-  rename(first_elected = VOTOS, first_sh_nom=share_nom, first_sh_tot = share_tot, first_shue_nom=shareue_nom, first_shue_tot =shareue_tot )
+  rename(first_supl = VOTOS, first_sh_nom=share_nom, first_sh_tot = share_tot, first_shue_nom=shareue_nom, first_shue_tot =shareue_tot )
 
 fed_dep_prisupl_2010 <- fed_dep_2010%>%
   filter(prim_supl==1)%>%
   dplyr::select(SIGLA_UE, idleg, VOTOS, share_nom, share_tot, shareue_nom, shareue_tot)%>%
-  rename(first_elected = VOTOS, first_sh_nom=share_nom, first_sh_tot = share_tot, first_shue_nom=shareue_nom, first_shue_tot = shareue_tot)
+  rename(first_supl = VOTOS, first_sh_nom=share_nom, first_sh_tot = share_tot, first_shue_nom=shareue_nom, first_shue_tot = shareue_tot)
 
 fed_dep_prisupl_2014 <- fed_dep_2014%>%
   filter(prim_supl==1)%>%
   dplyr::select(SIGLA_UE, idleg, VOTOS, share_nom, share_tot, shareue_nom, shareue_tot)%>%
-  rename(first_elected = VOTOS, first_sh_nom=share_nom, first_sh_tot = share_tot, first_shue_nom=shareue_nom, first_shue_tot = shareue_tot)
+  rename(first_supl = VOTOS, first_sh_nom=share_nom, first_sh_tot = share_tot, first_shue_nom=shareue_nom, first_shue_tot = shareue_tot)
 
 ### state dep
+state_dep_prisupl_1998 <- state_dep_1998%>%
+  filter(prim_supl==1)%>%
+  dplyr::select(SIGLA_UE, idleg, VOTOS, share_nom, share_tot, shareue_nom, shareue_tot)%>%
+  rename(first_supl = VOTOS, first_sh_nom=share_nom, first_sh_tot = share_tot, first_shue_nom=shareue_nom, first_shue_tot = shareue_tot)
 
 state_dep_prisupl_2002 <- state_dep_2002%>%
   filter(prim_supl==1)%>%
   dplyr::select(SIGLA_UE, idleg, VOTOS, share_nom, share_tot, shareue_nom, shareue_tot)%>%
-  rename(first_elected = VOTOS, first_sh_nom=share_nom, first_sh_tot = share_tot, first_shue_nom=shareue_nom, first_shue_tot = shareue_tot)
+  rename(first_supl = VOTOS, first_sh_nom=share_nom, first_sh_tot = share_tot, first_shue_nom=shareue_nom, first_shue_tot = shareue_tot)
 
 state_dep_prisupl_2006 <- state_dep_2006%>%
   filter(prim_supl==1)%>%
   dplyr::select(SIGLA_UE, idleg, VOTOS, share_nom, share_tot, shareue_nom, shareue_tot)%>%
-  rename(first_elected = VOTOS, first_sh_nom=share_nom, first_sh_tot = share_tot, first_shue_nom=shareue_nom, first_shue_tot = shareue_tot)
+  rename(first_supl = VOTOS, first_sh_nom=share_nom, first_sh_tot = share_tot, first_shue_nom=shareue_nom, first_shue_tot = shareue_tot)
 
 state_dep_prisupl_2010 <- state_dep_2010%>%
   filter(prim_supl==1)%>%
   dplyr::select(SIGLA_UE, idleg, VOTOS, share_nom, share_tot, shareue_nom, shareue_tot)%>%
-  rename(first_elected = VOTOS, first_sh_nom=share_nom, first_sh_tot = share_tot, first_shue_nom=shareue_nom, first_shue_tot = shareue_tot)
+  rename(first_supl = VOTOS, first_sh_nom=share_nom, first_sh_tot = share_tot, first_shue_nom=shareue_nom, first_shue_tot = shareue_tot)
 
 state_dep_prisupl_2014 <- state_dep_2014%>%
   filter(prim_supl==1)%>%
   dplyr::select(SIGLA_UE, idleg, VOTOS, share_nom, share_tot, shareue_nom, shareue_tot)%>%
-  rename(first_elected = VOTOS, first_sh_nom=share_nom, first_sh_tot = share_tot, first_shue_nom=shareue_nom, first_shue_tot = shareue_tot)
+  rename(first_supl = VOTOS, first_sh_nom=share_nom, first_sh_tot = share_tot, first_shue_nom=shareue_nom, first_shue_tot = shareue_tot)
 
 
 ### distrital dep
+distrital_dep_prisupl_1998 <- distrital_dep_1998%>%
+  filter(prim_supl==1)%>%
+  dplyr::select(SIGLA_UE, idleg, VOTOS, share_nom, share_tot, shareue_nom, shareue_tot)%>%
+  rename(first_supl = VOTOS, first_sh_nom=share_nom, first_sh_tot = share_tot, first_shue_nom=shareue_nom, first_shue_tot = shareue_tot)
+
 
 distrital_dep_prisupl_2002 <- distrital_dep_2002%>%
   filter(prim_supl==1)%>%
   dplyr::select(SIGLA_UE, idleg, VOTOS, share_nom, share_tot, shareue_nom, shareue_tot)%>%
-  rename(first_elected = VOTOS, first_sh_nom=share_nom, first_sh_tot = share_tot, first_shue_nom=shareue_nom, first_shue_tot = shareue_tot)
+  rename(first_supl = VOTOS, first_sh_nom=share_nom, first_sh_tot = share_tot, first_shue_nom=shareue_nom, first_shue_tot = shareue_tot)
 
 distrital_dep_prisupl_2006 <- distrital_dep_2006%>%
   filter(prim_supl==1)%>%
   dplyr::select(SIGLA_UE, idleg, VOTOS, share_nom, share_tot, shareue_nom, shareue_tot)%>%
-  rename(first_elected = VOTOS, first_sh_nom=share_nom, first_sh_tot = share_tot, first_shue_nom=shareue_nom, first_shue_tot = shareue_tot)
+  rename(first_supl = VOTOS, first_sh_nom=share_nom, first_sh_tot = share_tot, first_shue_nom=shareue_nom, first_shue_tot = shareue_tot)
 
 distrital_dep_prisupl_2010 <- distrital_dep_2010%>%
   filter(prim_supl==1)%>%
   dplyr::select(SIGLA_UE, idleg, VOTOS, share_nom, share_tot, shareue_nom, shareue_tot)%>%
-  rename(first_elected = VOTOS, first_sh_nom=share_nom, first_sh_tot = share_tot, first_shue_nom=shareue_nom, first_shue_tot = shareue_tot)
+  rename(first_supl = VOTOS, first_sh_nom=share_nom, first_sh_tot = share_tot, first_shue_nom=shareue_nom, first_shue_tot = shareue_tot)
 
 distrital_dep_prisupl_2014 <- distrital_dep_2014%>%
   filter(prim_supl==1)%>%
   dplyr::select(SIGLA_UE, idleg, VOTOS, share_nom, share_tot, shareue_nom, shareue_tot)%>%
-  rename(first_elected = VOTOS, first_sh_nom=share_nom, first_sh_tot = share_tot, first_shue_nom=shareue_nom, first_shue_tot = shareue_tot)
+  rename(first_supl = VOTOS, first_sh_nom=share_nom, first_sh_tot = share_tot, first_shue_nom=shareue_nom, first_shue_tot = shareue_tot)
 
 ### ver
+ver_prisupl_2000 <- ver_2000%>%
+  filter(prim_supl==1)%>%
+  dplyr::select(SIGLA_UE, idleg, VOTOS, share_nom, share_tot, shareue_nom, shareue_tot)%>%
+  rename(first_supl = VOTOS, first_sh_nom=share_nom, first_sh_tot = share_tot, first_shue_nom=shareue_nom, first_shue_tot = shareue_tot)
+
 
 ver_prisupl_2004 <- ver_2004%>%
   filter(prim_supl==1)%>%
   dplyr::select(SIGLA_UE, idleg, VOTOS, share_nom, share_tot, shareue_nom, shareue_tot)%>%
-  rename(first_elected = VOTOS, first_sh_nom=share_nom, first_sh_tot = share_tot, first_shue_nom=shareue_nom, first_shue_tot = shareue_tot)
+  rename(first_supl = VOTOS, first_sh_nom=share_nom, first_sh_tot = share_tot, first_shue_nom=shareue_nom, first_shue_tot = shareue_tot)
 
 ver_prisupl_2008 <- ver_2008%>%
   filter(prim_supl==1)%>%
   dplyr::select(SIGLA_UE, idleg, VOTOS, share_nom, share_tot, shareue_nom, shareue_tot)%>%
-  rename(first_elected = VOTOS, first_sh_nom=share_nom, first_sh_tot = share_tot, first_shue_nom=shareue_nom, first_shue_tot = shareue_tot)
+  rename(first_supl = VOTOS, first_sh_nom=share_nom, first_sh_tot = share_tot, first_shue_nom=shareue_nom, first_shue_tot = shareue_tot)
 
 ver_prisupl_2012 <- ver_2012%>%
   filter(prim_supl==1)%>%
   dplyr::select(SIGLA_UE, idleg, VOTOS, share_nom, share_tot, shareue_nom, shareue_tot)%>%
-  rename(first_elected = VOTOS, first_sh_nom=share_nom, first_sh_tot = share_tot, first_shue_nom=shareue_nom, first_shue_tot = shareue_tot)
+  rename(first_supl = VOTOS, first_sh_nom=share_nom, first_sh_tot = share_tot, first_shue_nom=shareue_nom, first_shue_tot = shareue_tot)
 
 ver_prisupl_2016 <- ver_2016%>%
   filter(prim_supl==1)%>%
   dplyr::select(SIGLA_UE, idleg, VOTOS, share_nom, share_tot, shareue_nom, shareue_tot)%>%
-  rename(first_elected = VOTOS, first_sh_nom=share_nom, first_sh_tot = share_tot, first_shue_nom=shareue_nom, first_shue_tot = shareue_tot)
+  rename(first_supl = VOTOS, first_sh_nom=share_nom, first_sh_tot = share_tot, first_shue_nom=shareue_nom, first_shue_tot = shareue_tot)
 
 # merging N SEATS
 
 #fed dep
+fed_dep_1998<- merge(fed_dep_1998, fed_dep_prisupl_1998, by=c("SIGLA_UE", "idleg"), all.x=TRUE)
 fed_dep_2002<- merge(fed_dep_2002, fed_dep_prisupl_2002, by=c("SIGLA_UE", "idleg"), all.x=TRUE)
 fed_dep_2006<- merge(fed_dep_2006, fed_dep_prisupl_2006, by=c("SIGLA_UE", "idleg"), all.x=TRUE)
 fed_dep_2010<- merge(fed_dep_2010, fed_dep_prisupl_2010, by=c("SIGLA_UE", "idleg"), all.x=TRUE)
@@ -3972,6 +4302,7 @@ fed_dep_2014<- merge(fed_dep_2014, fed_dep_prisupl_2014, by=c("SIGLA_UE", "idleg
 
 
 #state dep
+state_dep_1998<- merge(state_dep_1998, state_dep_prisupl_1998, by=c("SIGLA_UE", "idleg"), all.x=TRUE)
 state_dep_2002<- merge(state_dep_2002, state_dep_prisupl_2002, by=c("SIGLA_UE", "idleg"), all.x=TRUE)
 state_dep_2006<- merge(state_dep_2006, state_dep_prisupl_2006, by=c("SIGLA_UE", "idleg"), all.x=TRUE)
 state_dep_2010<- merge(state_dep_2010, state_dep_prisupl_2010, by=c("SIGLA_UE", "idleg"), all.x=TRUE)
@@ -3979,6 +4310,7 @@ state_dep_2014<- merge(state_dep_2014, state_dep_prisupl_2014, by=c("SIGLA_UE", 
 
 
 #distrital dep
+distrital_dep_1998<- merge(distrital_dep_1998, distrital_dep_prisupl_1998, by=c("SIGLA_UE", "idleg"), all.x=TRUE)
 distrital_dep_2002<- merge(distrital_dep_2002, distrital_dep_prisupl_2002, by=c("SIGLA_UE", "idleg"), all.x=TRUE)
 distrital_dep_2006<- merge(distrital_dep_2006, distrital_dep_prisupl_2006, by=c("SIGLA_UE", "idleg"), all.x=TRUE)
 distrital_dep_2010<- merge(distrital_dep_2010, distrital_dep_prisupl_2010, by=c("SIGLA_UE", "idleg"), all.x=TRUE)
@@ -3986,6 +4318,7 @@ distrital_dep_2014<- merge(distrital_dep_2014, distrital_dep_prisupl_2014, by=c(
 
 
 #ver
+ver_2000<- merge(ver_2000, ver_prisupl_2000, by=c("SIGLA_UE", "idleg"), all.x=TRUE)
 ver_2004<- merge(ver_2004, ver_prisupl_2004, by=c("SIGLA_UE", "idleg"), all.x=TRUE)
 ver_2008<- merge(ver_2008, ver_prisupl_2008, by=c("SIGLA_UE", "idleg"), all.x=TRUE)
 ver_2012<- merge(ver_2012, ver_prisupl_2012, by=c("SIGLA_UE", "idleg"), all.x=TRUE)
@@ -3994,6 +4327,10 @@ ver_2016<- merge(ver_2016, ver_prisupl_2016, by=c("SIGLA_UE", "idleg"), all.x=TR
 #### calculating distance bh 
 
 #fed dep
+fed_dep_1998<-fed_dep_1998 %>% 
+  arrange(idleg, -VOTOS, DATA_NASCIMENTO) %>% 
+  mutate(dist_vot_bh = ifelse(dist_pos>0, (VOTOS - first_supl), (last_elected - VOTOS)))
+
 fed_dep_2002<-fed_dep_2002 %>% 
   arrange(idleg, -VOTOS, DATA_NASCIMENTO) %>% 
   mutate(dist_vot_bh = ifelse(dist_pos>0, (VOTOS - first_supl), (last_elected - VOTOS)))
@@ -4011,6 +4348,10 @@ fed_dep_2014<-fed_dep_2014 %>%
   mutate(dist_vot_bh = ifelse(dist_pos>0, (VOTOS - first_supl), (last_elected - VOTOS)))
 
 #state dep
+state_dep_1998<-state_dep_1998 %>% 
+  arrange(idleg, -VOTOS, DATA_NASCIMENTO) %>% 
+  mutate(dist_vot_bh = ifelse(dist_pos>0, (VOTOS - first_supl), (last_elected - VOTOS)))
+
 state_dep_2002<-state_dep_2002 %>% 
   arrange(idleg, -VOTOS, DATA_NASCIMENTO) %>% 
   mutate(dist_vot_bh = ifelse(dist_pos>0, (VOTOS - first_supl), (last_elected - VOTOS)))
@@ -4029,6 +4370,10 @@ state_dep_2014<-state_dep_2014 %>%
 
 
 #distrital dep
+distrital_dep_1998<-distrital_dep_1998 %>% 
+  arrange(idleg, -VOTOS, DATA_NASCIMENTO) %>% 
+  mutate(dist_vot_bh = ifelse(dist_pos>0, (VOTOS - first_supl), (last_elected - VOTOS)))
+
 distrital_dep_2002<-distrital_dep_2002 %>% 
   arrange(idleg, -VOTOS, DATA_NASCIMENTO) %>% 
   mutate(dist_vot_bh = ifelse(dist_pos>0, (VOTOS - first_supl), (last_elected - VOTOS)))
@@ -4046,6 +4391,9 @@ distrital_dep_2014<-distrital_dep_2014 %>%
   mutate(dist_vot_bh = ifelse(dist_pos>0, (VOTOS - first_supl), (last_elected - VOTOS)))
 
 # vereador
+ver_2000<-ver_2000 %>% 
+  arrange(idleg, -VOTOS, DATA_NASCIMENTO) %>% 
+  mutate(dist_vot_bh = ifelse(dist_pos>0, (VOTOS - first_supl), (last_elected - VOTOS)))
 
 ver_2004<-ver_2004 %>% 
   arrange(idleg, -VOTOS, DATA_NASCIMENTO) %>% 
@@ -4066,6 +4414,10 @@ ver_2016<-ver_2016 %>%
 ########### distance shares nom
 
 #fed dep
+fed_dep_1998<-fed_dep_1998 %>% 
+  arrange(idleg, -share_nom, DATA_NASCIMENTO) %>% 
+  mutate(dist_share_nom_bh = ifelse(dist_pos>0, (share_nom - first_sh_nom), (last_sh_nom - share_nom)))
+
 fed_dep_2002<-fed_dep_2002 %>% 
   arrange(idleg, -share_nom, DATA_NASCIMENTO) %>% 
   mutate(dist_share_nom_bh = ifelse(dist_pos>0, (share_nom - first_sh_nom), (last_sh_nom - share_nom)))
@@ -4083,6 +4435,10 @@ fed_dep_2014<-fed_dep_2014 %>%
   mutate(dist_share_nom_bh = ifelse(dist_pos>0, (share_nom - first_sh_nom), (last_sh_nom - share_nom)))
 
 #state dep
+state_dep_1998<-state_dep_1998 %>% 
+  arrange(idleg, -share_nom, DATA_NASCIMENTO) %>% 
+  mutate(dist_share_nom_bh = ifelse(dist_pos>0, (share_nom - first_sh_nom), (last_sh_nom - share_nom)))
+
 state_dep_2002<-state_dep_2002 %>% 
   arrange(idleg, -share_nom, DATA_NASCIMENTO) %>% 
   mutate(dist_share_nom_bh = ifelse(dist_pos>0, (share_nom - first_sh_nom), (last_sh_nom - share_nom)))
@@ -4101,6 +4457,10 @@ state_dep_2014<-state_dep_2014 %>%
 
 
 #distrital dep
+distrital_dep_1998<-distrital_dep_1998 %>% 
+  arrange(idleg, -share_nom, DATA_NASCIMENTO) %>% 
+  mutate(dist_share_nom_bh = ifelse(dist_pos>0, (share_nom - first_sh_nom), (last_sh_nom - share_nom)))
+
 distrital_dep_2002<-distrital_dep_2002 %>% 
   arrange(idleg, -share_nom, DATA_NASCIMENTO) %>% 
   mutate(dist_share_nom_bh = ifelse(dist_pos>0, (share_nom - first_sh_nom), (last_sh_nom - share_nom)))
@@ -4118,6 +4478,9 @@ distrital_dep_2014<-distrital_dep_2014 %>%
   mutate(dist_share_nom_bh = ifelse(dist_pos>0, (share_nom - first_sh_nom), (last_sh_nom - share_nom)))
 
 # vereador
+ver_2000<-ver_2000 %>% 
+  arrange(idleg, -share_nom, DATA_NASCIMENTO) %>% 
+  mutate(dist_share_nom_bh = ifelse(dist_pos>0, (share_nom - first_sh_nom), (last_sh_nom - share_nom)))
 
 ver_2004<-ver_2004 %>% 
   arrange(idleg, -share_nom, DATA_NASCIMENTO) %>% 
@@ -4137,6 +4500,10 @@ ver_2016<-ver_2016 %>%
 
 ########## SHARE TOT
 #fed dep
+fed_dep_1998<-fed_dep_1998 %>% 
+  arrange(idleg, -share_tot, DATA_NASCIMENTO) %>% 
+  mutate(dist_share_tot_bh = ifelse(dist_pos>0, (share_tot - first_sh_tot), (last_sh_tot - share_tot)))
+
 fed_dep_2002<-fed_dep_2002 %>% 
   arrange(idleg, -share_tot, DATA_NASCIMENTO) %>% 
   mutate(dist_share_tot_bh = ifelse(dist_pos>0, (share_tot - first_sh_tot), (last_sh_tot - share_tot)))
@@ -4154,6 +4521,10 @@ fed_dep_2014<-fed_dep_2014 %>%
   mutate(dist_share_tot_bh = ifelse(dist_pos>0, (share_tot - first_sh_tot), (last_sh_tot - share_tot)))
 
 #state dep
+state_dep_1998<-state_dep_1998 %>% 
+  arrange(idleg, -share_tot, DATA_NASCIMENTO) %>% 
+  mutate(dist_share_tot_bh = ifelse(dist_pos>0, (share_tot - first_sh_tot), (last_sh_tot - share_tot)))
+
 state_dep_2002<-state_dep_2002 %>% 
   arrange(idleg, -share_tot, DATA_NASCIMENTO) %>% 
   mutate(dist_share_tot_bh = ifelse(dist_pos>0, (share_tot - first_sh_tot), (last_sh_tot - share_tot)))
@@ -4172,6 +4543,10 @@ state_dep_2014<-state_dep_2014 %>%
 
 
 #distrital dep
+distrital_dep_1998<-distrital_dep_1998 %>% 
+  arrange(idleg, -share_tot, DATA_NASCIMENTO) %>% 
+  mutate(dist_share_tot_bh = ifelse(dist_pos>0, (share_tot - first_sh_tot), (last_sh_tot - share_tot)))
+
 distrital_dep_2002<-distrital_dep_2002 %>% 
   arrange(idleg, -share_tot, DATA_NASCIMENTO) %>% 
   mutate(dist_share_tot_bh = ifelse(dist_pos>0, (share_tot - first_sh_tot), (last_sh_tot - share_tot)))
@@ -4189,6 +4564,9 @@ distrital_dep_2014<-distrital_dep_2014 %>%
   mutate(dist_share_tot_bh = ifelse(dist_pos>0, (share_tot - first_sh_tot), (last_sh_tot - share_tot)))
 
 # vereador
+ver_2000<-ver_2000 %>% 
+  arrange(idleg, -share_tot, DATA_NASCIMENTO) %>% 
+  mutate(dist_share_tot_bh = ifelse(dist_pos>0, (share_tot - first_sh_tot), (last_sh_tot - share_tot)))
 
 ver_2004<-ver_2004 %>% 
   arrange(idleg, -share_tot, DATA_NASCIMENTO) %>% 
@@ -4209,6 +4587,10 @@ ver_2016<-ver_2016 %>%
 ########## share ue nom
 
 #fed dep
+fed_dep_1998<-fed_dep_1998 %>% 
+  arrange(idleg, -shareue_nom, DATA_NASCIMENTO) %>% 
+  mutate(dist_shareue_nom_bh = ifelse(dist_pos>0, (shareue_nom - first_shue_nom), (last_shue_nom - shareue_nom)))
+
 fed_dep_2002<-fed_dep_2002 %>% 
   arrange(idleg, -shareue_nom, DATA_NASCIMENTO) %>% 
   mutate(dist_shareue_nom_bh = ifelse(dist_pos>0, (shareue_nom - first_shue_nom), (last_shue_nom - shareue_nom)))
@@ -4226,6 +4608,10 @@ fed_dep_2014<-fed_dep_2014 %>%
   mutate(dist_shareue_nom_bh = ifelse(dist_pos>0, (shareue_nom - first_shue_nom), (last_shue_nom - shareue_nom)))
 
 #state dep
+state_dep_1998<-state_dep_1998 %>% 
+  arrange(idleg, -shareue_nom, DATA_NASCIMENTO) %>% 
+  mutate(dist_shareue_nom_bh = ifelse(dist_pos>0, (shareue_nom - first_shue_nom), (last_shue_nom - shareue_nom)))
+
 state_dep_2002<-state_dep_2002 %>% 
   arrange(idleg, -shareue_nom, DATA_NASCIMENTO) %>% 
   mutate(dist_shareue_nom_bh = ifelse(dist_pos>0, (shareue_nom - first_shue_nom), (last_shue_nom - shareue_nom)))
@@ -4244,6 +4630,10 @@ state_dep_2014<-state_dep_2014 %>%
 
 
 #distrital dep
+distrital_dep_1998<-distrital_dep_1998 %>% 
+  arrange(idleg, -shareue_nom, DATA_NASCIMENTO) %>% 
+  mutate(dist_shareue_nom_bh = ifelse(dist_pos>0, (shareue_nom - first_shue_nom), (last_shue_nom - shareue_nom)))
+
 distrital_dep_2002<-distrital_dep_2002 %>% 
   arrange(idleg, -shareue_nom, DATA_NASCIMENTO) %>% 
   mutate(dist_shareue_nom_bh = ifelse(dist_pos>0, (shareue_nom - first_shue_nom), (last_shue_nom - shareue_nom)))
@@ -4261,6 +4651,9 @@ distrital_dep_2014<-distrital_dep_2014 %>%
   mutate(dist_shareue_nom_bh = ifelse(dist_pos>0, (shareue_nom - first_shue_nom), (last_shue_nom - shareue_nom)))
 
 # vereador
+ver_2000<-ver_2000 %>% 
+  arrange(idleg, -shareue_nom, DATA_NASCIMENTO) %>% 
+  mutate(dist_shareue_nom_bh = ifelse(dist_pos>0, (shareue_nom - first_shue_nom), (last_shue_nom - shareue_nom)))
 
 ver_2004<-ver_2004 %>% 
   arrange(idleg, -shareue_nom, DATA_NASCIMENTO) %>% 
@@ -4279,6 +4672,10 @@ ver_2016<-ver_2016 %>%
   mutate(dist_shareue_nom_bh = ifelse(dist_pos>0, (shareue_nom - first_shue_nom), (last_shue_nom - shareue_nom)))
 
 #### Share ue TOT
+fed_dep_1998<-fed_dep_1998 %>% 
+  arrange(idleg, -shareue_tot, DATA_NASCIMENTO) %>% 
+  mutate(dist_shareue_tot_bh = ifelse(dist_pos>0, (shareue_tot - first_shue_tot), (last_shue_tot - shareue_tot)))
+
 fed_dep_2002<-fed_dep_2002 %>% 
   arrange(idleg, -shareue_tot, DATA_NASCIMENTO) %>% 
   mutate(dist_shareue_tot_bh = ifelse(dist_pos>0, (shareue_tot - first_shue_tot), (last_shue_tot - shareue_tot)))
@@ -4296,6 +4693,10 @@ fed_dep_2014<-fed_dep_2014 %>%
   mutate(dist_shareue_tot_bh = ifelse(dist_pos>0, (shareue_tot - first_shue_tot), (last_shue_tot - shareue_tot)))
 
 #state dep
+state_dep_1998<-state_dep_1998 %>% 
+  arrange(idleg, -shareue_tot, DATA_NASCIMENTO) %>% 
+  mutate(dist_shareue_tot_bh = ifelse(dist_pos>0, (shareue_tot - first_shue_tot), (last_shue_tot - shareue_tot)))
+
 state_dep_2002<-state_dep_2002 %>% 
   arrange(idleg, -shareue_tot, DATA_NASCIMENTO) %>% 
   mutate(dist_shareue_tot_bh = ifelse(dist_pos>0, (shareue_tot - first_shue_tot), (last_shue_tot - shareue_tot)))
@@ -4314,6 +4715,10 @@ state_dep_2014<-state_dep_2014 %>%
 
 
 #distrital dep
+distrital_dep_1998<-distrital_dep_1998 %>% 
+  arrange(idleg, -shareue_tot, DATA_NASCIMENTO) %>% 
+  mutate(dist_shareue_tot_bh = ifelse(dist_pos>0, (shareue_tot - first_shue_tot), (last_shue_tot - shareue_tot)))
+
 distrital_dep_2002<-distrital_dep_2002 %>% 
   arrange(idleg, -shareue_tot, DATA_NASCIMENTO) %>% 
   mutate(dist_shareue_tot_bh = ifelse(dist_pos>0, (shareue_tot - first_shue_tot), (last_shue_tot - shareue_tot)))
@@ -4331,6 +4736,9 @@ distrital_dep_2014<-distrital_dep_2014 %>%
   mutate(dist_shareue_tot_bh = ifelse(dist_pos>0, (shareue_tot - first_shue_tot), (last_shue_tot - shareue_tot)))
 
 # vereador
+ver_2000<-ver_2000 %>% 
+  arrange(idleg, -shareue_tot, DATA_NASCIMENTO) %>% 
+  mutate(dist_shareue_tot_bh = ifelse(dist_pos>0, (shareue_tot - first_shue_tot), (last_shue_tot - shareue_tot)))
 
 ver_2004<-ver_2004 %>% 
   arrange(idleg, -shareue_tot, DATA_NASCIMENTO) %>% 
@@ -4355,55 +4763,51 @@ ver_2016<-ver_2016 %>%
 ######################################## 
 
 #fed dep
+fed_dep_1998 <-fed_dep_1998%>%
+  rename(ANO_ELEICAO = ANO_ELEICAO.x, DESCRICAO_CARGO =DESCRICAO_CARGO.x, 
+         NOME_CANDIDATO = NOME_CANDIDATO.x, NOME_URNA_CANDIDATO = NOME_URNA_CANDIDATO.x,  
+         SIGLA_PARTIDO = SIGLA_PARTIDO.x,SEQUENCIAL_CANDIDATO= SEQUENCIAL_CANDIDATO.x) 
+
 fed_dep_2002 <-fed_dep_2002%>%
   rename(ANO_ELEICAO = ANO_ELEICAO.x, DESCRICAO_CARGO =DESCRICAO_CARGO.x, 
          NOME_CANDIDATO = NOME_CANDIDATO.x, NOME_URNA_CANDIDATO = NOME_URNA_CANDIDATO.x,  
-         SIGLA_PARTIDO = SIGLA_PARTIDO.x,
-         n_seat = n_seat.x) %>%
-  dplyr::select(-n_seat.y)
+         SIGLA_PARTIDO = SIGLA_PARTIDO.x) 
 
 fed_dep_2006 <-fed_dep_2006%>%
   rename(ANO_ELEICAO = ANO_ELEICAO.x, DESCRICAO_CARGO =DESCRICAO_CARGO.x, 
          NOME_CANDIDATO = NOME_CANDIDATO.x, NOME_URNA_CANDIDATO = NOME_URNA_CANDIDATO.x,  
-         SIGLA_PARTIDO = SIGLA_PARTIDO.x,
-         n_seat = n_seat.x) %>%
-  dplyr::select(-n_seat.y)
+         SIGLA_PARTIDO = SIGLA_PARTIDO.x) 
 
 fed_dep_2010 <-fed_dep_2010%>%
   rename(ANO_ELEICAO = ANO_ELEICAO.x, DESCRICAO_CARGO =DESCRICAO_CARGO.x, 
          NOME_CANDIDATO = NOME_CANDIDATO.x, NOME_URNA_CANDIDATO = NOME_URNA_CANDIDATO.x,  
-         SIGLA_PARTIDO = SIGLA_PARTIDO.x,
-         n_seat = n_seat.x) %>%
-  dplyr::select(-n_seat.y)
+         SIGLA_PARTIDO = SIGLA_PARTIDO.x) 
 
 fed_dep_2014 <-fed_dep_2014%>%
   rename(ANO_ELEICAO = ANO_ELEICAO.x, DESCRICAO_CARGO =DESCRICAO_CARGO.x, 
          NOME_CANDIDATO = NOME_CANDIDATO.x, NOME_URNA_CANDIDATO = NOME_URNA_CANDIDATO.x,  
-         SIGLA_PARTIDO = SIGLA_PARTIDO.x,
-         n_seat = n_seat.x) %>%
-  dplyr::select(-n_seat.y)
+         SIGLA_PARTIDO = SIGLA_PARTIDO.x) 
 
 #state dep
+state_dep_1998 <-state_dep_1998%>%
+  rename(ANO_ELEICAO = ANO_ELEICAO.x, DESCRICAO_CARGO =DESCRICAO_CARGO.x, 
+         NOME_CANDIDATO = NOME_CANDIDATO.x, NOME_URNA_CANDIDATO = NOME_URNA_CANDIDATO.x,  
+         SIGLA_PARTIDO = SIGLA_PARTIDO.x,SEQUENCIAL_CANDIDATO= SEQUENCIAL_CANDIDATO.x) 
+
 state_dep_2002 <-state_dep_2002%>%
   rename(ANO_ELEICAO = ANO_ELEICAO.x, DESCRICAO_CARGO =DESCRICAO_CARGO.x, 
          NOME_CANDIDATO = NOME_CANDIDATO.x, NOME_URNA_CANDIDATO = NOME_URNA_CANDIDATO.x,  
-         SIGLA_PARTIDO = SIGLA_PARTIDO.x,
-         n_seat = n_seat.x) %>%
-  dplyr::select(-n_seat.y)
+         SIGLA_PARTIDO = SIGLA_PARTIDO.x) 
 
 state_dep_2006 <-state_dep_2006%>%
   rename(ANO_ELEICAO = ANO_ELEICAO.x, DESCRICAO_CARGO =DESCRICAO_CARGO.x, 
          NOME_CANDIDATO = NOME_CANDIDATO.x, NOME_URNA_CANDIDATO = NOME_URNA_CANDIDATO.x,  
-         SIGLA_PARTIDO = SIGLA_PARTIDO.x,
-         n_seat = n_seat.x) %>%
-  dplyr::select(-n_seat.y)
+         SIGLA_PARTIDO = SIGLA_PARTIDO.x) 
 
 state_dep_2010 <-state_dep_2010%>%
   rename(ANO_ELEICAO = ANO_ELEICAO.x, DESCRICAO_CARGO =DESCRICAO_CARGO.x, 
          NOME_CANDIDATO = NOME_CANDIDATO.x, NOME_URNA_CANDIDATO = NOME_URNA_CANDIDATO.x,  
-         SIGLA_PARTIDO = SIGLA_PARTIDO.x,
-         n_seat = n_seat.x) %>%
-  dplyr::select(-n_seat.y)
+         SIGLA_PARTIDO = SIGLA_PARTIDO.x) 
 
 state_dep_2014 <-state_dep_2014%>%
   rename(ANO_ELEICAO = ANO_ELEICAO.x, DESCRICAO_CARGO =DESCRICAO_CARGO.x, 
@@ -4411,78 +4815,72 @@ state_dep_2014 <-state_dep_2014%>%
          SIGLA_PARTIDO = SIGLA_PARTIDO.x)
 
 #distrital dep
+distrital_dep_1998 <-distrital_dep_1998%>%
+  rename(ANO_ELEICAO = ANO_ELEICAO.x, DESCRICAO_CARGO =DESCRICAO_CARGO.x, 
+         NOME_CANDIDATO = NOME_CANDIDATO.x, NOME_URNA_CANDIDATO = NOME_URNA_CANDIDATO.x,  
+         SIGLA_PARTIDO = SIGLA_PARTIDO.x,SEQUENCIAL_CANDIDATO= SEQUENCIAL_CANDIDATO.x) 
+
 distrital_dep_2002 <-distrital_dep_2002%>%
   rename(ANO_ELEICAO = ANO_ELEICAO.x, DESCRICAO_CARGO =DESCRICAO_CARGO.x, 
          NOME_CANDIDATO = NOME_CANDIDATO.x, NOME_URNA_CANDIDATO = NOME_URNA_CANDIDATO.x,  
-         SIGLA_PARTIDO = SIGLA_PARTIDO.x,
-         n_seat = n_seat.x) %>%
-  dplyr::select(-n_seat.y)
+         SIGLA_PARTIDO = SIGLA_PARTIDO.x) 
 
 distrital_dep_2006 <-distrital_dep_2006%>%
   rename(ANO_ELEICAO = ANO_ELEICAO.x, DESCRICAO_CARGO =DESCRICAO_CARGO.x, 
          NOME_CANDIDATO = NOME_CANDIDATO.x, NOME_URNA_CANDIDATO = NOME_URNA_CANDIDATO.x,  
-         SIGLA_PARTIDO = SIGLA_PARTIDO.x,
-         n_seat = n_seat.x) %>%
-  dplyr::select(-n_seat.y)
+         SIGLA_PARTIDO = SIGLA_PARTIDO.x)
 
 distrital_dep_2010 <-distrital_dep_2010%>%
   rename(ANO_ELEICAO = ANO_ELEICAO.x, DESCRICAO_CARGO =DESCRICAO_CARGO.x, 
          NOME_CANDIDATO = NOME_CANDIDATO.x, NOME_URNA_CANDIDATO = NOME_URNA_CANDIDATO.x,  
-         SIGLA_PARTIDO = SIGLA_PARTIDO.x,
-         n_seat = n_seat.x) %>%
-  dplyr::select(-n_seat.y)
+         SIGLA_PARTIDO = SIGLA_PARTIDO.x)
 
 distrital_dep_2014 <-distrital_dep_2014%>%
   rename(ANO_ELEICAO = ANO_ELEICAO.x, DESCRICAO_CARGO =DESCRICAO_CARGO.x, 
          NOME_CANDIDATO = NOME_CANDIDATO.x, NOME_URNA_CANDIDATO = NOME_URNA_CANDIDATO.x,  
-         SIGLA_PARTIDO = SIGLA_PARTIDO.x,
-         n_seat = n_seat.x) %>%
-  dplyr::select(-n_seat.y)
+         SIGLA_PARTIDO = SIGLA_PARTIDO.x)
 
 #ver
+ver_2000 <-ver_2000%>%
+  rename(ANO_ELEICAO = ANO_ELEICAO.x, DESCRICAO_CARGO =DESCRICAO_CARGO.x, 
+         NOME_CANDIDATO = NOME_CANDIDATO.x, NOME_URNA_CANDIDATO = NOME_URNA_CANDIDATO.x,  
+         SIGLA_PARTIDO = SIGLA_PARTIDO.x,SEQUENCIAL_CANDIDATO= SEQUENCIAL_CANDIDATO.x)
+
 ver_2004 <-ver_2004%>%
   rename(ANO_ELEICAO = ANO_ELEICAO.x, DESCRICAO_CARGO =DESCRICAO_CARGO.x, 
          NOME_CANDIDATO = NOME_CANDIDATO.x, NOME_URNA_CANDIDATO = NOME_URNA_CANDIDATO.x,  
-         SIGLA_PARTIDO = SIGLA_PARTIDO.x,
-         n_seat = n_seat.x) %>%
-  dplyr::select(-n_seat.y)
+         SIGLA_PARTIDO = SIGLA_PARTIDO.x) 
 
 ver_2008 <-ver_2008%>%
   rename(ANO_ELEICAO = ANO_ELEICAO.x, DESCRICAO_CARGO =DESCRICAO_CARGO.x, 
          NOME_CANDIDATO = NOME_CANDIDATO.x, NOME_URNA_CANDIDATO = NOME_URNA_CANDIDATO.x,  
-         SIGLA_PARTIDO = SIGLA_PARTIDO.x,
-         n_seat = n_seat.x) %>%
-  dplyr::select(-n_seat.y)
+         SIGLA_PARTIDO = SIGLA_PARTIDO.x) 
 
 ver_2012 <-ver_2012%>%
   rename(ANO_ELEICAO = ANO_ELEICAO.x, DESCRICAO_CARGO =DESCRICAO_CARGO.x, 
          NOME_CANDIDATO = NOME_CANDIDATO.x, NOME_URNA_CANDIDATO = NOME_URNA_CANDIDATO.x,  
-         SIGLA_PARTIDO = SIGLA_PARTIDO.x,
-         n_seat = n_seat.x) %>%
-  dplyr::select(-n_seat.y)
+         SIGLA_PARTIDO = SIGLA_PARTIDO.x) 
 
 ver_2016 <-ver_2016%>%
   rename(ANO_ELEICAO = ANO_ELEICAO.x, DESCRICAO_CARGO =DESCRICAO_CARGO.x, 
          NOME_CANDIDATO = NOME_CANDIDATO.x, NOME_URNA_CANDIDATO = NOME_URNA_CANDIDATO.x,  
-         SIGLA_PARTIDO = SIGLA_PARTIDO.x,
-         n_seat = n_seat.x) %>%
-  dplyr::select(-n_seat.y)
+         SIGLA_PARTIDO = SIGLA_PARTIDO.x) 
 
 
 # Saving datasets with partisan votes
 
+distrital_dep_1998_2014 <- list(distrital_dep_1998, distrital_dep_2002, distrital_dep_2006, distrital_dep_2010, distrital_dep_2014)
+save(distrital_dep_1998_2014, file = paste0(dir_d, "original_unzipped/distrital_dep_1998_2014.RData"))
 
-distrital_dep_2002_2014 <- list(distrital_dep_2002, distrital_dep_2006, distrital_dep_2010, distrital_dep_2014)
-save(distrital_dep_2002_2014, file = paste0(dir_d, "original_unzipped/distrital_dep_2002_2014.RData"))
+state_dep_1998_2014 <- list(state_dep_1998, state_dep_2002, state_dep_2006, state_dep_2010, state_dep_2014)
+save(state_dep_1998_2014, file = paste0(dir_d, "original_unzipped/state_dep_1998_2014.RData"))
 
-state_dep_2002_2014 <- list(state_dep_2002, state_dep_2006, state_dep_2010, state_dep_2014)
-save(state_dep_2002_2014, file = paste0(dir_d, "original_unzipped/state_dep_2002_2014.RData"))
+fed_dep_1998_2014 <- list(fed_dep_1998, fed_dep_2002, fed_dep_2006, fed_dep_2010, fed_dep_2014)
+save(fed_dep_1998_2014, file = paste0(dir_d, "original_unzipped/fed_dep_1998_2014.RData"))
 
-fed_dep_2002_2014 <- list(fed_dep_2002, fed_dep_2006, fed_dep_2010, fed_dep_2014)
-save(fed_dep_2002_2014, file = paste0(dir_d, "original_unzipped/fed_dep_2002_2014.RData"))
+ver_2000_2016 <- list(ver_2000, ver_2004, ver_2008, ver_2012, ver_2016)
+save(ver_2000_2016, file = paste0(dir_d, "original_unzipped/ver_2000_2016.RData"))
 
-ver_2004_2016 <- list(ver_2004, ver_2008, ver_2012, ver_2016)
-save(ver_2004_2016, file = paste0(dir_d, "original_unzipped/ver_2004_2016.RData"))
 
 ###################################################################
 ###################################################################
@@ -4496,72 +4894,58 @@ save(ver_2004_2016, file = paste0(dir_d, "original_unzipped/ver_2004_2016.RData"
 #1. Loading Data
 rm(list=ls())
 
-load(paste0(dir_d, "original_unzipped/distrital_dep_2002_2014.RData"))
-load(paste0(dir_d, "original_unzipped/state_dep_2002_2014.RData"))
-load(paste0(dir_d, "original_unzipped/fed_dep_2002_2014.RData"))
-load(paste0(dir_d, "original_unzipped/ver_2004_2016.RData"))
+load(paste0(dir_d, "original_unzipped/distrital_dep_1998_2014.RData"))
+load(paste0(dir_d, "original_unzipped/state_dep_1998_2014.RData"))
+load(paste0(dir_d, "original_unzipped/fed_dep_1998_2014.RData"))
+load(paste0(dir_d, "original_unzipped/ver_2000_2016.RData"))
 
 
-load(paste0(dir_d, "original_unzipped/distrital_dep_part_2002_2014.RData"))
-load(paste0(dir_d, "original_unzipped/state_dep_part_2002_2014.RData"))
-load(paste0(dir_d, "original_unzipped/fed_dep_part_2002_2014.RData"))
-load(paste0(dir_d, "original_unzipped/ver_part_2004_2016.RData"))
+load(paste0(dir_d, "original_unzipped/distrital_dep_part_1998_2014.RData"))
+load(paste0(dir_d, "original_unzipped/state_dep_part_1998_2014.RData"))
+load(paste0(dir_d, "original_unzipped/fed_dep_part_1998_2014.RData"))
+load(paste0(dir_d, "original_unzipped/ver_part_2000_2016.RData"))
 
 #######################################
 #fed dep
-
-fed_dep_2002 <- fed_dep_2002_2014[[1]]
-fed_dep_2006 <- fed_dep_2002_2014[[2]]
-fed_dep_2010 <- fed_dep_2002_2014[[3]]
-fed_dep_2014 <- fed_dep_2002_2014[[4]]
+fed_dep_1998 <- fed_dep_1998_2014[[1]]
+fed_dep_2002 <- fed_dep_1998_2014[[2]]
+fed_dep_2006 <- fed_dep_1998_2014[[3]]
+fed_dep_2010 <- fed_dep_1998_2014[[4]]
+fed_dep_2014 <- fed_dep_1998_2014[[5]]
 
 
 #state dep
-
-state_dep_2002 <- state_dep_2002_2014[[1]]
-state_dep_2006 <- state_dep_2002_2014[[2]]
-state_dep_2010 <- state_dep_2002_2014[[3]]
-state_dep_2014 <- state_dep_2002_2014[[4]]
+state_dep_1998 <- state_dep_1998_2014[[1]]
+state_dep_2002 <- state_dep_1998_2014[[2]]
+state_dep_2006 <- state_dep_1998_2014[[3]]
+state_dep_2010 <- state_dep_1998_2014[[4]]
+state_dep_2014 <- state_dep_1998_2014[[5]]
 
 #distrital dep
 
-distrital_dep_2002 <- distrital_dep_2002_2014[[1]]
-distrital_dep_2006 <- distrital_dep_2002_2014[[2]]
-distrital_dep_2010 <- distrital_dep_2002_2014[[3]]
-distrital_dep_2014 <- distrital_dep_2002_2014[[4]]
+distrital_dep_1998 <- distrital_dep_1998_2014[[1]]
+distrital_dep_2002 <- distrital_dep_1998_2014[[2]]
+distrital_dep_2006 <- distrital_dep_1998_2014[[3]]
+distrital_dep_2010 <- distrital_dep_1998_2014[[4]]
+distrital_dep_2014 <- distrital_dep_1998_2014[[5]]
 
-fed_dep_part_2002 <- fed_dep_part_2002_2014[[1]]
-fed_dep_part_2006 <- fed_dep_part_2002_2014[[2]]
-fed_dep_part_2010 <- fed_dep_part_2002_2014[[3]]
-fed_dep_part_2014 <- fed_dep_part_2002_2014[[4]]
+#vereador
+
+ver_2000 <- ver_2000_2016[[1]]
+ver_2004 <- ver_2000_2016[[2]]
+ver_2008 <- ver_2000_2016[[3]]
+ver_2012 <- ver_2000_2016[[4]]
+ver_2016 <- ver_2000_2016[[5]]
 
 
-#state dep_part
 
-state_dep_part_2002 <- state_dep_part_2002_2014[[1]]
-state_dep_part_2006 <- state_dep_part_2002_2014[[2]]
-state_dep_part_2010 <- state_dep_part_2002_2014[[3]]
-state_dep_part_2014 <- state_dep_part_2002_2014[[4]]
-
-#distrital dep_part
-
-distrital_dep_part_2002 <- distrital_dep_part_2002_2014[[1]]
-distrital_dep_part_2006 <- distrital_dep_part_2002_2014[[2]]
-distrital_dep_part_2010 <- distrital_dep_part_2002_2014[[3]]
-distrital_dep_part_2014 <- distrital_dep_part_2002_2014[[4]]
-
-# vereadores
-
-ver_2004 <- ver_2004_2016[[1]]
-ver_2008 <- ver_2004_2016[[2]]
-ver_2012 <- ver_2004_2016[[3]]
-ver_2016 <- ver_2004_2016[[4]]
 
 #2. Number of elected candidates test
 ##### Smell checks
 
 # elected
-
+electe_fed_dep_98 <- fed_dep_1998 %>%
+  filter(resultado2=="Eleito")
 electe_fed_dep_02 <- fed_dep_2002 %>%
   filter(resultado2=="Eleito")
 electe_fed_dep_06 <- fed_dep_2006 %>%
@@ -4571,6 +4955,8 @@ electe_fed_dep_10 <- fed_dep_2010 %>%
 electe_fed_dep_14 <- fed_dep_2014 %>%
   filter(resultado2=="Eleito")
 
+electe_state_dep_98 <- state_dep_1998 %>%
+  filter(resultado2=="Eleito")
 electe_state_dep_02 <- state_dep_2002 %>%
   filter(resultado2=="Eleito")
 electe_state_dep_06 <- state_dep_2006 %>%
@@ -4580,6 +4966,8 @@ electe_state_dep_10 <- state_dep_2010 %>%
 electe_state_dep_14 <- state_dep_2014 %>%
   filter(resultado2=="Eleito")
 
+electe_distrital_dep_98 <- distrital_dep_1998 %>%
+  filter(resultado2=="Eleito")
 electe_distrital_dep_02 <- distrital_dep_2002 %>%
   filter(resultado2=="Eleito")
 electe_distrital_dep_06 <- distrital_dep_2006 %>%
@@ -4589,6 +4977,8 @@ electe_distrital_dep_10 <- distrital_dep_2010 %>%
 electe_distrital_dep_14 <- distrital_dep_2014 %>%
   filter(resultado2=="Eleito")
 
+electe_ver_00 <- ver_2000 %>%
+  filter(resultado2=="Eleito")
 electe_ver_04 <- ver_2004 %>%
   filter(resultado2=="Eleito")
 electe_ver_08 <- ver_2008 %>%
@@ -4636,46 +5026,6 @@ vot_ver_12 <- ver_2012 %>%
   filter(VOTOS<0)
 vot_ver_16 <- ver_2016 %>%
   filter(VOTOS<0)
-
-
-#0. Loading Data
-rm(list=ls())
-
-load(paste0(dir_d, "original_unzipped/distrital_dep_2002_2014.RData"))
-load(paste0(dir_d, "original_unzipped/state_dep_2002_2014.RData"))
-load(paste0(dir_d, "original_unzipped/fed_dep_2002_2014.RData"))
-load(paste0(dir_d, "original_unzipped/ver_2004_2016.RData"))
-
-#######################################
-
-#fed dep
-
-fed_dep_2002 <- fed_dep_2002_2014[[1]]
-fed_dep_2006 <- fed_dep_2002_2014[[2]]
-fed_dep_2010 <- fed_dep_2002_2014[[3]]
-fed_dep_2014 <- fed_dep_2002_2014[[4]]
-
-
-#state dep
-
-state_dep_2002 <- state_dep_2002_2014[[1]]
-state_dep_2006 <- state_dep_2002_2014[[2]]
-state_dep_2010 <- state_dep_2002_2014[[3]]
-state_dep_2014 <- state_dep_2002_2014[[4]]
-
-#distrital dep
-
-distrital_dep_2002 <- distrital_dep_2002_2014[[1]]
-distrital_dep_2006 <- distrital_dep_2002_2014[[2]]
-distrital_dep_2010 <- distrital_dep_2002_2014[[3]]
-distrital_dep_2014 <- distrital_dep_2002_2014[[4]]
-
-# vereadores
-
-ver_2004 <- ver_2004_2016[[1]]
-ver_2008 <- ver_2004_2016[[2]]
-ver_2012 <- ver_2004_2016[[3]]
-ver_2016 <- ver_2004_2016[[4]]
 
 # TESTS
 x4 <- threshold_rank(data=distrital_dep_2014, y=4)
