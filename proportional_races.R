@@ -4329,432 +4329,432 @@ ver_2016<- merge(ver_2016, ver_prisupl_2016, by=c("SIGLA_UE", "idleg"), all.x=TR
 #fed dep
 fed_dep_1998<-fed_dep_1998 %>% 
   arrange(idleg, -VOTOS, DATA_NASCIMENTO) %>% 
-  mutate(dist_vot_bh = ifelse(dist_pos>0, (VOTOS - first_supl), (last_elected - VOTOS)))
+  mutate(dist_vot_bh_r = ifelse(dist_pos>0, (VOTOS - first_supl), (VOTOS - last_elected)))
 
 fed_dep_2002<-fed_dep_2002 %>% 
   arrange(idleg, -VOTOS, DATA_NASCIMENTO) %>% 
-  mutate(dist_vot_bh = ifelse(dist_pos>0, (VOTOS - first_supl), (last_elected - VOTOS)))
+  mutate(dist_vot_bh_r = ifelse(dist_pos>0, (VOTOS - first_supl), (VOTOS - last_elected)))
 
 fed_dep_2006<-fed_dep_2006 %>% 
   arrange(idleg, -VOTOS, DATA_NASCIMENTO) %>% 
-  mutate(dist_vot_bh = ifelse(dist_pos>0, (VOTOS - first_supl), (last_elected - VOTOS)))
+  mutate(dist_vot_bh_r = ifelse(dist_pos>0, (VOTOS - first_supl), (VOTOS - last_elected)))
 
 fed_dep_2010<-fed_dep_2010 %>% 
   arrange(idleg, -VOTOS, DATA_NASCIMENTO) %>% 
-  mutate(dist_vot_bh = ifelse(dist_pos>0, (VOTOS - first_supl), (last_elected - VOTOS)))
+  mutate(dist_vot_bh_r = ifelse(dist_pos>0, (VOTOS - first_supl), (VOTOS - last_elected)))
 
 fed_dep_2014<-fed_dep_2014 %>% 
   arrange(idleg, -VOTOS, DATA_NASCIMENTO) %>% 
-  mutate(dist_vot_bh = ifelse(dist_pos>0, (VOTOS - first_supl), (last_elected - VOTOS)))
+  mutate(dist_vot_bh_r = ifelse(dist_pos>0, (VOTOS - first_supl), (VOTOS - last_elected)))
 
 #state dep
 state_dep_1998<-state_dep_1998 %>% 
   arrange(idleg, -VOTOS, DATA_NASCIMENTO) %>% 
-  mutate(dist_vot_bh = ifelse(dist_pos>0, (VOTOS - first_supl), (last_elected - VOTOS)))
+  mutate(dist_vot_bh_r = ifelse(dist_pos>0, (VOTOS - first_supl), (VOTOS - last_elected)))
 
 state_dep_2002<-state_dep_2002 %>% 
   arrange(idleg, -VOTOS, DATA_NASCIMENTO) %>% 
-  mutate(dist_vot_bh = ifelse(dist_pos>0, (VOTOS - first_supl), (last_elected - VOTOS)))
+  mutate(dist_vot_bh_r = ifelse(dist_pos>0, (VOTOS - first_supl), (VOTOS - last_elected)))
 
 state_dep_2006<-state_dep_2006 %>% 
   arrange(idleg, -VOTOS, DATA_NASCIMENTO) %>% 
-  mutate(dist_vot_bh = ifelse(dist_pos>0, (VOTOS - first_supl), (last_elected - VOTOS)))
+  mutate(dist_vot_bh_r = ifelse(dist_pos>0, (VOTOS - first_supl), (VOTOS - last_elected)))
 
 state_dep_2010<-state_dep_2010 %>% 
   arrange(idleg, -VOTOS, DATA_NASCIMENTO) %>% 
-  mutate(dist_vot_bh = ifelse(dist_pos>0, (VOTOS - first_supl), (last_elected - VOTOS)))
+  mutate(dist_vot_bh_r = ifelse(dist_pos>0, (VOTOS - first_supl), (VOTOS - last_elected)))
 
 state_dep_2014<-state_dep_2014 %>% 
   arrange(idleg, -VOTOS, DATA_NASCIMENTO) %>% 
-  mutate(dist_vot_bh = ifelse(dist_pos>0, (VOTOS - first_supl), (last_elected - VOTOS)))
+  mutate(dist_vot_bh_r = ifelse(dist_pos>0, (VOTOS - first_supl), (VOTOS - last_elected)))
 
 
 #distrital dep
 distrital_dep_1998<-distrital_dep_1998 %>% 
   arrange(idleg, -VOTOS, DATA_NASCIMENTO) %>% 
-  mutate(dist_vot_bh = ifelse(dist_pos>0, (VOTOS - first_supl), (last_elected - VOTOS)))
+  mutate(dist_vot_bh_r = ifelse(dist_pos>0, (VOTOS - first_supl), (VOTOS - last_elected)))
 
 distrital_dep_2002<-distrital_dep_2002 %>% 
   arrange(idleg, -VOTOS, DATA_NASCIMENTO) %>% 
-  mutate(dist_vot_bh = ifelse(dist_pos>0, (VOTOS - first_supl), (last_elected - VOTOS)))
+  mutate(dist_vot_bh_r = ifelse(dist_pos>0, (VOTOS - first_supl), (VOTOS - last_elected)))
 
 distrital_dep_2006<-distrital_dep_2006 %>% 
   arrange(idleg, -VOTOS, DATA_NASCIMENTO) %>% 
-  mutate(dist_vot_bh = ifelse(dist_pos>0, (VOTOS - first_supl), (last_elected - VOTOS)))
+  mutate(dist_vot_bh_r = ifelse(dist_pos>0, (VOTOS - first_supl), (VOTOS - last_elected)))
 
 distrital_dep_2010<-distrital_dep_2010 %>% 
   arrange(idleg, -VOTOS, DATA_NASCIMENTO) %>% 
-  mutate(dist_vot_bh = ifelse(dist_pos>0, (VOTOS - first_supl), (last_elected - VOTOS)))
+  mutate(dist_vot_bh_r = ifelse(dist_pos>0, (VOTOS - first_supl), (VOTOS - last_elected)))
 
 distrital_dep_2014<-distrital_dep_2014 %>% 
   arrange(idleg, -VOTOS, DATA_NASCIMENTO) %>% 
-  mutate(dist_vot_bh = ifelse(dist_pos>0, (VOTOS - first_supl), (last_elected - VOTOS)))
+  mutate(dist_vot_bh_r = ifelse(dist_pos>0, (VOTOS - first_supl), (VOTOS - last_elected)))
 
 # vereador
 ver_2000<-ver_2000 %>% 
   arrange(idleg, -VOTOS, DATA_NASCIMENTO) %>% 
-  mutate(dist_vot_bh = ifelse(dist_pos>0, (VOTOS - first_supl), (last_elected - VOTOS)))
+  mutate(dist_vot_bh_r = ifelse(dist_pos>0, (VOTOS - first_supl), (VOTOS - last_elected)))
 
 ver_2004<-ver_2004 %>% 
   arrange(idleg, -VOTOS, DATA_NASCIMENTO) %>% 
-  mutate(dist_vot_bh = ifelse(dist_pos>0, (VOTOS - first_supl), (last_elected - VOTOS)))
+  mutate(dist_vot_bh_r = ifelse(dist_pos>0, (VOTOS - first_supl), (VOTOS - last_elected)))
 
 ver_2008<-ver_2008 %>% 
   arrange(idleg, -VOTOS, DATA_NASCIMENTO) %>% 
-  mutate(dist_vot_bh = ifelse(dist_pos>0, (VOTOS - first_supl), (last_elected - VOTOS)))
+  mutate(dist_vot_bh_r = ifelse(dist_pos>0, (VOTOS - first_supl), (VOTOS - last_elected)))
 
 ver_2012<-ver_2012 %>% 
   arrange(idleg, -VOTOS, DATA_NASCIMENTO) %>% 
-  mutate(dist_vot_bh = ifelse(dist_pos>0, (VOTOS - first_supl), (last_elected - VOTOS)))
+  mutate(dist_vot_bh_r = ifelse(dist_pos>0, (VOTOS - first_supl), (VOTOS - last_elected)))
 
 ver_2016<-ver_2016 %>% 
   arrange(idleg, -VOTOS, DATA_NASCIMENTO) %>% 
-  mutate(dist_vot_bh = ifelse(dist_pos>0, (VOTOS - first_supl), (last_elected - VOTOS)))
+  mutate(dist_vot_bh_r = ifelse(dist_pos>0, (VOTOS - first_supl), (VOTOS - last_elected)))
 
 ########### distance shares nom
 
 #fed dep
 fed_dep_1998<-fed_dep_1998 %>% 
   arrange(idleg, -share_nom, DATA_NASCIMENTO) %>% 
-  mutate(dist_share_nom_bh = ifelse(dist_pos>0, (share_nom - first_sh_nom), (last_sh_nom - share_nom)))
+  mutate(dist_share_nom_bh_r = ifelse(dist_pos>0, (share_nom - first_sh_nom), (share_nom - last_sh_nom)))
 
 fed_dep_2002<-fed_dep_2002 %>% 
   arrange(idleg, -share_nom, DATA_NASCIMENTO) %>% 
-  mutate(dist_share_nom_bh = ifelse(dist_pos>0, (share_nom - first_sh_nom), (last_sh_nom - share_nom)))
+  mutate(dist_share_nom_bh_r = ifelse(dist_pos>0, (share_nom - first_sh_nom), (share_nom - last_sh_nom)))
 
 fed_dep_2006<-fed_dep_2006 %>% 
   arrange(idleg, -share_nom, DATA_NASCIMENTO) %>% 
-  mutate(dist_share_nom_bh = ifelse(dist_pos>0, (share_nom - first_sh_nom), (last_sh_nom - share_nom)))
+  mutate(dist_share_nom_bh_r = ifelse(dist_pos>0, (share_nom - first_sh_nom), (share_nom - last_sh_nom)))
 
 fed_dep_2010<-fed_dep_2010 %>% 
   arrange(idleg, -share_nom, DATA_NASCIMENTO) %>% 
-  mutate(dist_share_nom_bh = ifelse(dist_pos>0, (share_nom - first_sh_nom), (last_sh_nom - share_nom)))
+  mutate(dist_share_nom_bh_r = ifelse(dist_pos>0, (share_nom - first_sh_nom), (share_nom - last_sh_nom)))
 
 fed_dep_2014<-fed_dep_2014 %>% 
   arrange(idleg, -share_nom, DATA_NASCIMENTO) %>% 
-  mutate(dist_share_nom_bh = ifelse(dist_pos>0, (share_nom - first_sh_nom), (last_sh_nom - share_nom)))
+  mutate(dist_share_nom_bh_r = ifelse(dist_pos>0, (share_nom - first_sh_nom), (share_nom - last_sh_nom)))
 
 #state dep
 state_dep_1998<-state_dep_1998 %>% 
   arrange(idleg, -share_nom, DATA_NASCIMENTO) %>% 
-  mutate(dist_share_nom_bh = ifelse(dist_pos>0, (share_nom - first_sh_nom), (last_sh_nom - share_nom)))
+  mutate(dist_share_nom_bh_r = ifelse(dist_pos>0, (share_nom - first_sh_nom), (share_nom - last_sh_nom)))
 
 state_dep_2002<-state_dep_2002 %>% 
   arrange(idleg, -share_nom, DATA_NASCIMENTO) %>% 
-  mutate(dist_share_nom_bh = ifelse(dist_pos>0, (share_nom - first_sh_nom), (last_sh_nom - share_nom)))
+  mutate(dist_share_nom_bh_r = ifelse(dist_pos>0, (share_nom - first_sh_nom), (share_nom - last_sh_nom)))
 
 state_dep_2006<-state_dep_2006 %>% 
   arrange(idleg, -share_nom, DATA_NASCIMENTO) %>% 
-  mutate(dist_share_nom_bh = ifelse(dist_pos>0, (share_nom - first_sh_nom), (last_sh_nom - share_nom)))
+  mutate(dist_share_nom_bh_r = ifelse(dist_pos>0, (share_nom - first_sh_nom), (share_nom - last_sh_nom)))
 
 state_dep_2010<-state_dep_2010 %>% 
   arrange(idleg, -share_nom, DATA_NASCIMENTO) %>% 
-  mutate(dist_share_nom_bh = ifelse(dist_pos>0, (share_nom - first_sh_nom), (last_sh_nom - share_nom)))
+  mutate(dist_share_nom_bh_r = ifelse(dist_pos>0, (share_nom - first_sh_nom), (share_nom - last_sh_nom)))
 
 state_dep_2014<-state_dep_2014 %>% 
   arrange(idleg, -share_nom, DATA_NASCIMENTO) %>% 
-  mutate(dist_share_nom_bh = ifelse(dist_pos>0, (share_nom - first_sh_nom), (last_sh_nom - share_nom)))
+  mutate(dist_share_nom_bh_r = ifelse(dist_pos>0, (share_nom - first_sh_nom), (share_nom - last_sh_nom)))
 
 
 #distrital dep
 distrital_dep_1998<-distrital_dep_1998 %>% 
   arrange(idleg, -share_nom, DATA_NASCIMENTO) %>% 
-  mutate(dist_share_nom_bh = ifelse(dist_pos>0, (share_nom - first_sh_nom), (last_sh_nom - share_nom)))
+  mutate(dist_share_nom_bh_r = ifelse(dist_pos>0, (share_nom - first_sh_nom), (share_nom - last_sh_nom)))
 
 distrital_dep_2002<-distrital_dep_2002 %>% 
   arrange(idleg, -share_nom, DATA_NASCIMENTO) %>% 
-  mutate(dist_share_nom_bh = ifelse(dist_pos>0, (share_nom - first_sh_nom), (last_sh_nom - share_nom)))
+  mutate(dist_share_nom_bh_r = ifelse(dist_pos>0, (share_nom - first_sh_nom), (share_nom - last_sh_nom)))
 
 distrital_dep_2006<-distrital_dep_2006 %>% 
   arrange(idleg, -share_nom, DATA_NASCIMENTO) %>% 
-  mutate(dist_share_nom_bh = ifelse(dist_pos>0, (share_nom - first_sh_nom), (last_sh_nom - share_nom)))
+  mutate(dist_share_nom_bh_r = ifelse(dist_pos>0, (share_nom - first_sh_nom), (share_nom - last_sh_nom)))
 
 distrital_dep_2010<-distrital_dep_2010 %>% 
   arrange(idleg, -share_nom, DATA_NASCIMENTO) %>% 
-  mutate(dist_share_nom_bh = ifelse(dist_pos>0, (share_nom - first_sh_nom), (last_sh_nom - share_nom)))
+  mutate(dist_share_nom_bh_r = ifelse(dist_pos>0, (share_nom - first_sh_nom), (share_nom - last_sh_nom)))
 
 distrital_dep_2014<-distrital_dep_2014 %>% 
   arrange(idleg, -share_nom, DATA_NASCIMENTO) %>% 
-  mutate(dist_share_nom_bh = ifelse(dist_pos>0, (share_nom - first_sh_nom), (last_sh_nom - share_nom)))
+  mutate(dist_share_nom_bh_r = ifelse(dist_pos>0, (share_nom - first_sh_nom), (share_nom - last_sh_nom)))
 
 # vereador
 ver_2000<-ver_2000 %>% 
   arrange(idleg, -share_nom, DATA_NASCIMENTO) %>% 
-  mutate(dist_share_nom_bh = ifelse(dist_pos>0, (share_nom - first_sh_nom), (last_sh_nom - share_nom)))
+  mutate(dist_share_nom_bh_r = ifelse(dist_pos>0, (share_nom - first_sh_nom), (share_nom - last_sh_nom)))
 
 ver_2004<-ver_2004 %>% 
   arrange(idleg, -share_nom, DATA_NASCIMENTO) %>% 
-  mutate(dist_share_nom_bh = ifelse(dist_pos>0, (share_nom - first_sh_nom), (last_sh_nom - share_nom)))
+  mutate(dist_share_nom_bh_r = ifelse(dist_pos>0, (share_nom - first_sh_nom), (share_nom - last_sh_nom)))
 
 ver_2008<-ver_2008 %>% 
   arrange(idleg, -share_nom, DATA_NASCIMENTO) %>% 
-  mutate(dist_share_nom_bh = ifelse(dist_pos>0, (share_nom - first_sh_nom), (last_sh_nom - share_nom)))
+  mutate(dist_share_nom_bh_r = ifelse(dist_pos>0, (share_nom - first_sh_nom), (share_nom - last_sh_nom)))
 
 ver_2012<-ver_2012 %>% 
   arrange(idleg, -share_nom, DATA_NASCIMENTO) %>% 
-  mutate(dist_share_nom_bh = ifelse(dist_pos>0, (share_nom - first_sh_nom), (last_sh_nom - share_nom)))
+  mutate(dist_share_nom_bh_r = ifelse(dist_pos>0, (share_nom - first_sh_nom), (share_nom - last_sh_nom)))
 
 ver_2016<-ver_2016 %>% 
   arrange(idleg, -share_nom, DATA_NASCIMENTO) %>% 
-  mutate(dist_share_nom_bh = ifelse(dist_pos>0, (share_nom - first_sh_nom), (last_sh_nom - share_nom)))
+  mutate(dist_share_nom_bh_r = ifelse(dist_pos>0, (share_nom - first_sh_nom), (share_nom - last_sh_nom)))
 
 ########## SHARE TOT
 #fed dep
 fed_dep_1998<-fed_dep_1998 %>% 
   arrange(idleg, -share_tot, DATA_NASCIMENTO) %>% 
-  mutate(dist_share_tot_bh = ifelse(dist_pos>0, (share_tot - first_sh_tot), (last_sh_tot - share_tot)))
+  mutate(dist_share_tot_bh_r = ifelse(dist_pos>0, (share_tot - first_sh_tot), (share_tot - last_sh_tot)))
 
 fed_dep_2002<-fed_dep_2002 %>% 
   arrange(idleg, -share_tot, DATA_NASCIMENTO) %>% 
-  mutate(dist_share_tot_bh = ifelse(dist_pos>0, (share_tot - first_sh_tot), (last_sh_tot - share_tot)))
+  mutate(dist_share_tot_bh_r = ifelse(dist_pos>0, (share_tot - first_sh_tot), (share_tot - last_sh_tot)))
 
 fed_dep_2006<-fed_dep_2006 %>% 
   arrange(idleg, -share_tot, DATA_NASCIMENTO) %>% 
-  mutate(dist_share_tot_bh = ifelse(dist_pos>0, (share_tot - first_sh_tot), (last_sh_tot - share_tot)))
+  mutate(dist_share_tot_bh_r = ifelse(dist_pos>0, (share_tot - first_sh_tot), (share_tot - last_sh_tot)))
 
 fed_dep_2010<-fed_dep_2010 %>% 
   arrange(idleg, -share_tot, DATA_NASCIMENTO) %>% 
-  mutate(dist_share_tot_bh = ifelse(dist_pos>0, (share_tot - first_sh_tot), (last_sh_tot - share_tot)))
+  mutate(dist_share_tot_bh_r = ifelse(dist_pos>0, (share_tot - first_sh_tot), (share_tot - last_sh_tot)))
 
 fed_dep_2014<-fed_dep_2014 %>% 
   arrange(idleg, -share_tot, DATA_NASCIMENTO) %>% 
-  mutate(dist_share_tot_bh = ifelse(dist_pos>0, (share_tot - first_sh_tot), (last_sh_tot - share_tot)))
+  mutate(dist_share_tot_bh_r = ifelse(dist_pos>0, (share_tot - first_sh_tot), (share_tot - last_sh_tot)))
 
 #state dep
 state_dep_1998<-state_dep_1998 %>% 
   arrange(idleg, -share_tot, DATA_NASCIMENTO) %>% 
-  mutate(dist_share_tot_bh = ifelse(dist_pos>0, (share_tot - first_sh_tot), (last_sh_tot - share_tot)))
+  mutate(dist_share_tot_bh_r = ifelse(dist_pos>0, (share_tot - first_sh_tot), (share_tot - last_sh_tot)))
 
 state_dep_2002<-state_dep_2002 %>% 
   arrange(idleg, -share_tot, DATA_NASCIMENTO) %>% 
-  mutate(dist_share_tot_bh = ifelse(dist_pos>0, (share_tot - first_sh_tot), (last_sh_tot - share_tot)))
+  mutate(dist_share_tot_bh_r = ifelse(dist_pos>0, (share_tot - first_sh_tot), (share_tot - last_sh_tot)))
 
 state_dep_2006<-state_dep_2006 %>% 
   arrange(idleg, -share_tot, DATA_NASCIMENTO) %>% 
-  mutate(dist_share_tot_bh = ifelse(dist_pos>0, (share_tot - first_sh_tot), (last_sh_tot - share_tot)))
+  mutate(dist_share_tot_bh_r = ifelse(dist_pos>0, (share_tot - first_sh_tot), (share_tot - last_sh_tot)))
 
 state_dep_2010<-state_dep_2010 %>% 
   arrange(idleg, -share_tot, DATA_NASCIMENTO) %>% 
-  mutate(dist_share_tot_bh = ifelse(dist_pos>0, (share_tot - first_sh_tot), (last_sh_tot - share_tot)))
+  mutate(dist_share_tot_bh_r = ifelse(dist_pos>0, (share_tot - first_sh_tot), (share_tot - last_sh_tot)))
 
 state_dep_2014<-state_dep_2014 %>% 
   arrange(idleg, -share_tot, DATA_NASCIMENTO) %>% 
-  mutate(dist_share_tot_bh = ifelse(dist_pos>0, (share_tot - first_sh_tot), (last_sh_tot - share_tot)))
+  mutate(dist_share_tot_bh_r = ifelse(dist_pos>0, (share_tot - first_sh_tot), (share_tot - last_sh_tot)))
 
 
 #distrital dep
 distrital_dep_1998<-distrital_dep_1998 %>% 
   arrange(idleg, -share_tot, DATA_NASCIMENTO) %>% 
-  mutate(dist_share_tot_bh = ifelse(dist_pos>0, (share_tot - first_sh_tot), (last_sh_tot - share_tot)))
+  mutate(dist_share_tot_bh_r = ifelse(dist_pos>0, (share_tot - first_sh_tot), (share_tot - last_sh_tot)))
 
 distrital_dep_2002<-distrital_dep_2002 %>% 
   arrange(idleg, -share_tot, DATA_NASCIMENTO) %>% 
-  mutate(dist_share_tot_bh = ifelse(dist_pos>0, (share_tot - first_sh_tot), (last_sh_tot - share_tot)))
+  mutate(dist_share_tot_bh_r = ifelse(dist_pos>0, (share_tot - first_sh_tot), (share_tot - last_sh_tot)))
 
 distrital_dep_2006<-distrital_dep_2006 %>% 
   arrange(idleg, -share_tot, DATA_NASCIMENTO) %>% 
-  mutate(dist_share_tot_bh = ifelse(dist_pos>0, (share_tot - first_sh_tot), (last_sh_tot - share_tot)))
+  mutate(dist_share_tot_bh_r = ifelse(dist_pos>0, (share_tot - first_sh_tot), (share_tot - last_sh_tot)))
 
 distrital_dep_2010<-distrital_dep_2010 %>% 
   arrange(idleg, -share_tot, DATA_NASCIMENTO) %>% 
-  mutate(dist_share_tot_bh = ifelse(dist_pos>0, (share_tot - first_sh_tot), (last_sh_tot - share_tot)))
+  mutate(dist_share_tot_bh_r = ifelse(dist_pos>0, (share_tot - first_sh_tot), (share_tot - last_sh_tot)))
 
 distrital_dep_2014<-distrital_dep_2014 %>% 
   arrange(idleg, -share_tot, DATA_NASCIMENTO) %>% 
-  mutate(dist_share_tot_bh = ifelse(dist_pos>0, (share_tot - first_sh_tot), (last_sh_tot - share_tot)))
+  mutate(dist_share_tot_bh_r = ifelse(dist_pos>0, (share_tot - first_sh_tot), (share_tot - last_sh_tot)))
 
 # vereador
 ver_2000<-ver_2000 %>% 
   arrange(idleg, -share_tot, DATA_NASCIMENTO) %>% 
-  mutate(dist_share_tot_bh = ifelse(dist_pos>0, (share_tot - first_sh_tot), (last_sh_tot - share_tot)))
+  mutate(dist_share_tot_bh_r = ifelse(dist_pos>0, (share_tot - first_sh_tot), (share_tot - last_sh_tot)))
 
 ver_2004<-ver_2004 %>% 
   arrange(idleg, -share_tot, DATA_NASCIMENTO) %>% 
-  mutate(dist_share_tot_bh = ifelse(dist_pos>0, (share_tot - first_sh_tot), (last_sh_tot - share_tot)))
+  mutate(dist_share_tot_bh_r = ifelse(dist_pos>0, (share_tot - first_sh_tot), (share_tot - last_sh_tot)))
 
 ver_2008<-ver_2008 %>% 
   arrange(idleg, -share_tot, DATA_NASCIMENTO) %>% 
-  mutate(dist_share_tot_bh = ifelse(dist_pos>0, (share_tot - first_sh_tot), (last_sh_tot - share_tot)))
+  mutate(dist_share_tot_bh_r = ifelse(dist_pos>0, (share_tot - first_sh_tot), (share_tot - last_sh_tot)))
 
 ver_2012<-ver_2012 %>% 
   arrange(idleg, -share_tot, DATA_NASCIMENTO) %>% 
-  mutate(dist_share_tot_bh = ifelse(dist_pos>0, (share_tot - first_sh_tot), (last_sh_tot - share_tot)))
+  mutate(dist_share_tot_bh_r = ifelse(dist_pos>0, (share_tot - first_sh_tot), (share_tot - last_sh_tot)))
 
 ver_2016<-ver_2016 %>% 
   arrange(idleg, -share_tot, DATA_NASCIMENTO) %>% 
-  mutate(dist_share_tot_bh = ifelse(dist_pos>0, (share_tot - first_sh_tot), (last_sh_tot - share_tot)))
+  mutate(dist_share_tot_bh_r = ifelse(dist_pos>0, (share_tot - first_sh_tot), (share_tot - last_sh_tot)))
 
 ########## share ue nom
 
 #fed dep
 fed_dep_1998<-fed_dep_1998 %>% 
   arrange(idleg, -shareue_nom, DATA_NASCIMENTO) %>% 
-  mutate(dist_shareue_nom_bh = ifelse(dist_pos>0, (shareue_nom - first_shue_nom), (last_shue_nom - shareue_nom)))
+  mutate(dist_shareue_nom_bh_r = ifelse(dist_pos>0, (shareue_nom - first_shue_nom), (shareue_nom - last_shue_nom)))
 
 fed_dep_2002<-fed_dep_2002 %>% 
   arrange(idleg, -shareue_nom, DATA_NASCIMENTO) %>% 
-  mutate(dist_shareue_nom_bh = ifelse(dist_pos>0, (shareue_nom - first_shue_nom), (last_shue_nom - shareue_nom)))
+  mutate(dist_shareue_nom_bh_r = ifelse(dist_pos>0, (shareue_nom - first_shue_nom), (shareue_nom - last_shue_nom)))
 
 fed_dep_2006<-fed_dep_2006 %>% 
   arrange(idleg, -shareue_nom, DATA_NASCIMENTO) %>% 
-  mutate(dist_shareue_nom_bh = ifelse(dist_pos>0, (shareue_nom - first_shue_nom), (last_shue_nom - shareue_nom)))
+  mutate(dist_shareue_nom_bh_r = ifelse(dist_pos>0, (shareue_nom - first_shue_nom), (shareue_nom - last_shue_nom)))
 
 fed_dep_2010<-fed_dep_2010 %>% 
   arrange(idleg, -shareue_nom, DATA_NASCIMENTO) %>% 
-  mutate(dist_shareue_nom_bh = ifelse(dist_pos>0, (shareue_nom - first_shue_nom), (last_shue_nom - shareue_nom)))
+  mutate(dist_shareue_nom_bh_r = ifelse(dist_pos>0, (shareue_nom - first_shue_nom), (shareue_nom - last_shue_nom)))
 
 fed_dep_2014<-fed_dep_2014 %>% 
   arrange(idleg, -shareue_nom, DATA_NASCIMENTO) %>% 
-  mutate(dist_shareue_nom_bh = ifelse(dist_pos>0, (shareue_nom - first_shue_nom), (last_shue_nom - shareue_nom)))
+  mutate(dist_shareue_nom_bh_r = ifelse(dist_pos>0, (shareue_nom - first_shue_nom), (shareue_nom - last_shue_nom)))
 
 #state dep
 state_dep_1998<-state_dep_1998 %>% 
   arrange(idleg, -shareue_nom, DATA_NASCIMENTO) %>% 
-  mutate(dist_shareue_nom_bh = ifelse(dist_pos>0, (shareue_nom - first_shue_nom), (last_shue_nom - shareue_nom)))
+  mutate(dist_shareue_nom_bh_r = ifelse(dist_pos>0, (shareue_nom - first_shue_nom), (shareue_nom - last_shue_nom)))
 
 state_dep_2002<-state_dep_2002 %>% 
   arrange(idleg, -shareue_nom, DATA_NASCIMENTO) %>% 
-  mutate(dist_shareue_nom_bh = ifelse(dist_pos>0, (shareue_nom - first_shue_nom), (last_shue_nom - shareue_nom)))
+  mutate(dist_shareue_nom_bh_r = ifelse(dist_pos>0, (shareue_nom - first_shue_nom), (shareue_nom - last_shue_nom)))
 
 state_dep_2006<-state_dep_2006 %>% 
   arrange(idleg, -shareue_nom, DATA_NASCIMENTO) %>% 
-  mutate(dist_shareue_nom_bh = ifelse(dist_pos>0, (shareue_nom - first_shue_nom), (last_shue_nom - shareue_nom)))
+  mutate(dist_shareue_nom_bh_r = ifelse(dist_pos>0, (shareue_nom - first_shue_nom), (shareue_nom - last_shue_nom)))
 
 state_dep_2010<-state_dep_2010 %>% 
   arrange(idleg, -shareue_nom, DATA_NASCIMENTO) %>% 
-  mutate(dist_shareue_nom_bh = ifelse(dist_pos>0, (shareue_nom - first_shue_nom), (last_shue_nom - shareue_nom)))
+  mutate(dist_shareue_nom_bh_r = ifelse(dist_pos>0, (shareue_nom - first_shue_nom), (shareue_nom - last_shue_nom)))
 
 state_dep_2014<-state_dep_2014 %>% 
   arrange(idleg, -shareue_nom, DATA_NASCIMENTO) %>% 
-  mutate(dist_shareue_nom_bh = ifelse(dist_pos>0, (shareue_nom - first_shue_nom), (last_shue_nom - shareue_nom)))
+  mutate(dist_shareue_nom_bh_r = ifelse(dist_pos>0, (shareue_nom - first_shue_nom), (shareue_nom - last_shue_nom)))
 
 
 #distrital dep
 distrital_dep_1998<-distrital_dep_1998 %>% 
   arrange(idleg, -shareue_nom, DATA_NASCIMENTO) %>% 
-  mutate(dist_shareue_nom_bh = ifelse(dist_pos>0, (shareue_nom - first_shue_nom), (last_shue_nom - shareue_nom)))
+  mutate(dist_shareue_nom_bh_r = ifelse(dist_pos>0, (shareue_nom - first_shue_nom), (shareue_nom - last_shue_nom)))
 
 distrital_dep_2002<-distrital_dep_2002 %>% 
   arrange(idleg, -shareue_nom, DATA_NASCIMENTO) %>% 
-  mutate(dist_shareue_nom_bh = ifelse(dist_pos>0, (shareue_nom - first_shue_nom), (last_shue_nom - shareue_nom)))
+  mutate(dist_shareue_nom_bh_r = ifelse(dist_pos>0, (shareue_nom - first_shue_nom), (shareue_nom - last_shue_nom)))
 
 distrital_dep_2006<-distrital_dep_2006 %>% 
   arrange(idleg, -shareue_nom, DATA_NASCIMENTO) %>% 
-  mutate(dist_shareue_nom_bh = ifelse(dist_pos>0, (shareue_nom - first_shue_nom), (last_shue_nom - shareue_nom)))
+  mutate(dist_shareue_nom_bh_r = ifelse(dist_pos>0, (shareue_nom - first_shue_nom), (shareue_nom - last_shue_nom)))
 
 distrital_dep_2010<-distrital_dep_2010 %>% 
   arrange(idleg, -shareue_nom, DATA_NASCIMENTO) %>% 
-  mutate(dist_shareue_nom_bh = ifelse(dist_pos>0, (shareue_nom - first_shue_nom), (last_shue_nom - shareue_nom)))
+  mutate(dist_shareue_nom_bh_r = ifelse(dist_pos>0, (shareue_nom - first_shue_nom), (shareue_nom - last_shue_nom)))
 
 distrital_dep_2014<-distrital_dep_2014 %>% 
   arrange(idleg, -shareue_nom, DATA_NASCIMENTO) %>% 
-  mutate(dist_shareue_nom_bh = ifelse(dist_pos>0, (shareue_nom - first_shue_nom), (last_shue_nom - shareue_nom)))
+  mutate(dist_shareue_nom_bh_r = ifelse(dist_pos>0, (shareue_nom - first_shue_nom), (shareue_nom - last_shue_nom)))
 
 # vereador
 ver_2000<-ver_2000 %>% 
   arrange(idleg, -shareue_nom, DATA_NASCIMENTO) %>% 
-  mutate(dist_shareue_nom_bh = ifelse(dist_pos>0, (shareue_nom - first_shue_nom), (last_shue_nom - shareue_nom)))
+  mutate(dist_shareue_nom_bh_r = ifelse(dist_pos>0, (shareue_nom - first_shue_nom), (shareue_nom - last_shue_nom)))
 
 ver_2004<-ver_2004 %>% 
   arrange(idleg, -shareue_nom, DATA_NASCIMENTO) %>% 
-  mutate(dist_shareue_nom_bh = ifelse(dist_pos>0, (shareue_nom - first_shue_nom), (last_shue_nom - shareue_nom)))
+  mutate(dist_shareue_nom_bh_r = ifelse(dist_pos>0, (shareue_nom - first_shue_nom), (shareue_nom - last_shue_nom)))
 
 ver_2008<-ver_2008 %>% 
   arrange(idleg, -shareue_nom, DATA_NASCIMENTO) %>% 
-  mutate(dist_shareue_nom_bh = ifelse(dist_pos>0, (shareue_nom - first_shue_nom), (last_shue_nom - shareue_nom)))
+  mutate(dist_shareue_nom_bh_r = ifelse(dist_pos>0, (shareue_nom - first_shue_nom), (shareue_nom - last_shue_nom)))
 
 ver_2012<-ver_2012 %>% 
   arrange(idleg, -shareue_nom, DATA_NASCIMENTO) %>% 
-  mutate(dist_shareue_nom_bh = ifelse(dist_pos>0, (shareue_nom - first_shue_nom), (last_shue_nom - shareue_nom)))
+  mutate(dist_shareue_nom_bh_r = ifelse(dist_pos>0, (shareue_nom - first_shue_nom), (shareue_nom - last_shue_nom)))
 
 ver_2016<-ver_2016 %>% 
   arrange(idleg, -shareue_nom, DATA_NASCIMENTO) %>% 
-  mutate(dist_shareue_nom_bh = ifelse(dist_pos>0, (shareue_nom - first_shue_nom), (last_shue_nom - shareue_nom)))
+  mutate(dist_shareue_nom_bh_r = ifelse(dist_pos>0, (shareue_nom - first_shue_nom), (shareue_nom - last_shue_nom)))
 
 #### Share ue TOT
 fed_dep_1998<-fed_dep_1998 %>% 
   arrange(idleg, -shareue_tot, DATA_NASCIMENTO) %>% 
-  mutate(dist_shareue_tot_bh = ifelse(dist_pos>0, (shareue_tot - first_shue_tot), (last_shue_tot - shareue_tot)))
+  mutate(dist_shareue_tot_bh_r = ifelse(dist_pos>0, (shareue_tot - first_shue_tot), (shareue_tot - last_shue_tot)))
 
 fed_dep_2002<-fed_dep_2002 %>% 
   arrange(idleg, -shareue_tot, DATA_NASCIMENTO) %>% 
-  mutate(dist_shareue_tot_bh = ifelse(dist_pos>0, (shareue_tot - first_shue_tot), (last_shue_tot - shareue_tot)))
+  mutate(dist_shareue_tot_bh_r = ifelse(dist_pos>0, (shareue_tot - first_shue_tot), (shareue_tot - last_shue_tot)))
 
 fed_dep_2006<-fed_dep_2006 %>% 
   arrange(idleg, -shareue_tot, DATA_NASCIMENTO) %>% 
-  mutate(dist_shareue_tot_bh = ifelse(dist_pos>0, (shareue_tot - first_shue_tot), (last_shue_tot - shareue_tot)))
+  mutate(dist_shareue_tot_bh_r = ifelse(dist_pos>0, (shareue_tot - first_shue_tot), (shareue_tot - last_shue_tot)))
 
 fed_dep_2010<-fed_dep_2010 %>% 
   arrange(idleg, -shareue_tot, DATA_NASCIMENTO) %>% 
-  mutate(dist_shareue_tot_bh = ifelse(dist_pos>0, (shareue_tot - first_shue_tot), (last_shue_tot - shareue_tot)))
+  mutate(dist_shareue_tot_bh_r = ifelse(dist_pos>0, (shareue_tot - first_shue_tot), (shareue_tot - last_shue_tot)))
 
 fed_dep_2014<-fed_dep_2014 %>% 
   arrange(idleg, -shareue_tot, DATA_NASCIMENTO) %>% 
-  mutate(dist_shareue_tot_bh = ifelse(dist_pos>0, (shareue_tot - first_shue_tot), (last_shue_tot - shareue_tot)))
+  mutate(dist_shareue_tot_bh_r = ifelse(dist_pos>0, (shareue_tot - first_shue_tot), (shareue_tot - last_shue_tot)))
 
 #state dep
 state_dep_1998<-state_dep_1998 %>% 
   arrange(idleg, -shareue_tot, DATA_NASCIMENTO) %>% 
-  mutate(dist_shareue_tot_bh = ifelse(dist_pos>0, (shareue_tot - first_shue_tot), (last_shue_tot - shareue_tot)))
+  mutate(dist_shareue_tot_bh_r = ifelse(dist_pos>0, (shareue_tot - first_shue_tot), (shareue_tot - last_shue_tot)))
 
 state_dep_2002<-state_dep_2002 %>% 
   arrange(idleg, -shareue_tot, DATA_NASCIMENTO) %>% 
-  mutate(dist_shareue_tot_bh = ifelse(dist_pos>0, (shareue_tot - first_shue_tot), (last_shue_tot - shareue_tot)))
+  mutate(dist_shareue_tot_bh_r = ifelse(dist_pos>0, (shareue_tot - first_shue_tot), (shareue_tot - last_shue_tot)))
 
 state_dep_2006<-state_dep_2006 %>% 
   arrange(idleg, -shareue_tot, DATA_NASCIMENTO) %>% 
-  mutate(dist_shareue_tot_bh = ifelse(dist_pos>0, (shareue_tot - first_shue_tot), (last_shue_tot - shareue_tot)))
+  mutate(dist_shareue_tot_bh_r = ifelse(dist_pos>0, (shareue_tot - first_shue_tot), (shareue_tot - last_shue_tot)))
 
 state_dep_2010<-state_dep_2010 %>% 
   arrange(idleg, -shareue_tot, DATA_NASCIMENTO) %>% 
-  mutate(dist_shareue_tot_bh = ifelse(dist_pos>0, (shareue_tot - first_shue_tot), (last_shue_tot - shareue_tot)))
+  mutate(dist_shareue_tot_bh_r = ifelse(dist_pos>0, (shareue_tot - first_shue_tot), (shareue_tot - last_shue_tot)))
 
 state_dep_2014<-state_dep_2014 %>% 
   arrange(idleg, -shareue_tot, DATA_NASCIMENTO) %>% 
-  mutate(dist_shareue_tot_bh = ifelse(dist_pos>0, (shareue_tot - first_shue_tot), (last_shue_tot - shareue_tot)))
+  mutate(dist_shareue_tot_bh_r = ifelse(dist_pos>0, (shareue_tot - first_shue_tot), (shareue_tot - last_shue_tot)))
 
 
 #distrital dep
 distrital_dep_1998<-distrital_dep_1998 %>% 
   arrange(idleg, -shareue_tot, DATA_NASCIMENTO) %>% 
-  mutate(dist_shareue_tot_bh = ifelse(dist_pos>0, (shareue_tot - first_shue_tot), (last_shue_tot - shareue_tot)))
+  mutate(dist_shareue_tot_bh_r = ifelse(dist_pos>0, (shareue_tot - first_shue_tot), (shareue_tot - last_shue_tot)))
 
 distrital_dep_2002<-distrital_dep_2002 %>% 
   arrange(idleg, -shareue_tot, DATA_NASCIMENTO) %>% 
-  mutate(dist_shareue_tot_bh = ifelse(dist_pos>0, (shareue_tot - first_shue_tot), (last_shue_tot - shareue_tot)))
+  mutate(dist_shareue_tot_bh_r = ifelse(dist_pos>0, (shareue_tot - first_shue_tot), (shareue_tot - last_shue_tot)))
 
 distrital_dep_2006<-distrital_dep_2006 %>% 
   arrange(idleg, -shareue_tot, DATA_NASCIMENTO) %>% 
-  mutate(dist_shareue_tot_bh = ifelse(dist_pos>0, (shareue_tot - first_shue_tot), (last_shue_tot - shareue_tot)))
+  mutate(dist_shareue_tot_bh_r = ifelse(dist_pos>0, (shareue_tot - first_shue_tot), (shareue_tot - last_shue_tot)))
 
 distrital_dep_2010<-distrital_dep_2010 %>% 
   arrange(idleg, -shareue_tot, DATA_NASCIMENTO) %>% 
-  mutate(dist_shareue_tot_bh = ifelse(dist_pos>0, (shareue_tot - first_shue_tot), (last_shue_tot - shareue_tot)))
+  mutate(dist_shareue_tot_bh_r = ifelse(dist_pos>0, (shareue_tot - first_shue_tot), (shareue_tot - last_shue_tot)))
 
 distrital_dep_2014<-distrital_dep_2014 %>% 
   arrange(idleg, -shareue_tot, DATA_NASCIMENTO) %>% 
-  mutate(dist_shareue_tot_bh = ifelse(dist_pos>0, (shareue_tot - first_shue_tot), (last_shue_tot - shareue_tot)))
+  mutate(dist_shareue_tot_bh_r = ifelse(dist_pos>0, (shareue_tot - first_shue_tot), (shareue_tot - last_shue_tot)))
 
 # vereador
 ver_2000<-ver_2000 %>% 
   arrange(idleg, -shareue_tot, DATA_NASCIMENTO) %>% 
-  mutate(dist_shareue_tot_bh = ifelse(dist_pos>0, (shareue_tot - first_shue_tot), (last_shue_tot - shareue_tot)))
+  mutate(dist_shareue_tot_bh_r = ifelse(dist_pos>0, (shareue_tot - first_shue_tot), (shareue_tot - last_shue_tot)))
 
 ver_2004<-ver_2004 %>% 
   arrange(idleg, -shareue_tot, DATA_NASCIMENTO) %>% 
-  mutate(dist_shareue_tot_bh = ifelse(dist_pos>0, (shareue_tot - first_shue_tot), (last_shue_tot - shareue_tot)))
+  mutate(dist_shareue_tot_bh_r = ifelse(dist_pos>0, (shareue_tot - first_shue_tot), (shareue_tot - last_shue_tot)))
 
 ver_2008<-ver_2008 %>% 
   arrange(idleg, -shareue_tot, DATA_NASCIMENTO) %>% 
-  mutate(dist_shareue_tot_bh = ifelse(dist_pos>0, (shareue_tot - first_shue_tot), (last_shue_tot - shareue_tot)))
+  mutate(dist_shareue_tot_bh_r = ifelse(dist_pos>0, (shareue_tot - first_shue_tot), (shareue_tot - last_shue_tot)))
 
 ver_2012<-ver_2012 %>% 
   arrange(idleg, -shareue_tot, DATA_NASCIMENTO) %>% 
-  mutate(dist_shareue_tot_bh = ifelse(dist_pos>0, (shareue_tot - first_shue_tot), (last_shue_tot - shareue_tot)))
+  mutate(dist_shareue_tot_bh_r = ifelse(dist_pos>0, (shareue_tot - first_shue_tot), (shareue_tot - last_shue_tot)))
 
 ver_2016<-ver_2016 %>% 
   arrange(idleg, -shareue_tot, DATA_NASCIMENTO) %>% 
-  mutate(dist_shareue_tot_bh = ifelse(dist_pos>0, (shareue_tot - first_shue_tot), (last_shue_tot - shareue_tot)))
+  mutate(dist_shareue_tot_bh_r = ifelse(dist_pos>0, (shareue_tot - first_shue_tot), (shareue_tot - last_shue_tot)))
 
 
 
