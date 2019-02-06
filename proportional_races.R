@@ -117,7 +117,7 @@ cand_2016 <- get_tse(url_cand16, file_d, file_un)
 url_cand18 <- "http://agencia.tse.jus.br/estatistica/sead/odsele/consulta_cand/consulta_cand_2018.zip"
 file_d <- paste0(dir_d, "original_data/consulta_cand/consulta_cand_2018.zip")
 file_un <- paste0(dir_d, "original_unzipped/consulta_cand/consulta_cand_2018")
-cand_2018 <- get_tse(url_cand16, file_d, file_un)
+cand_2018 <- get_tse(url_cand18, file_d, file_un)
 
 
 #Voting data
